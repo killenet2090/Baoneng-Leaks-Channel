@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ble.mapper.BleDeviceInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ble.model.entity.DeviceBleInfoPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_mac" property="deviceMac" />
+        <result column="product_key" property="productKey" />
+        <result column="device_config" property="deviceConfig" />
+        <result column="product_code" property="productCode" />
+        <result column="software_vesion" property="softwareVesion" />
+        <result column="status" property="status" />
+        <result column="del_flag" property="delFlag" />
+        <result column="version" property="version" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, device_id, device_mac,  product_key,  device_config, product_code, software_vesion, status,del_flag,version, create_by, create_time, update_by, update_time
+    </sql>
+
+    <sql id="updateColumns">
+        <set>
+            <if test="id != null">
+                id = #{id},
+            </if>
+            <if test="projectId != null">
+                project_id = #{projectId},
+            </if>
+            <if test="deviceId != null">
+                device_id = #{deviceId},
+            </if>
+            <if test="deviceMac != null">
+                device_mac = #{deviceMac},
+            </if>
+            <if test="productKey != null">
+                product_key = #{productKey},
+            </if>
+            <if test="deviceConfig != null">
+                device_config = #{deviceConfig},
+            </if>
+            <if test="productCode != null">
+                product_code = #{productCode},
+            </if>
+            <if test="softwareVesion != null">
+                software_vesion = #{softwareVesion},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="version != null">
+                version = #{version},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+    </sql>
+    <sql id="insertAllColumns">
+               #{id},
+               #{projectId},
+               #{deviceId},
+               #{deviceMac},
+               #{productKey},
+               #{deviceConfig},
+               #{productCode},
+               #{softwareVesion},
+               #{status},
+               #{delFlag},
+               #{version},
+               #{createBy},
+               #{createTime},
+               #{updateBy},
+               #{updateTime}
+    </sql>
+    <sql id="whereClause">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+            <if test="deviceMac != null">
+                AND ${columnPrefix}device_mac = #{deviceMac}
+            </if>
+            <if test="productKey != null">
+                AND ${columnPrefix}product_key = #{productKey}
+            </if>
+            <if test="deviceConfig != null">
+                AND ${columnPrefix}device_config = #{deviceConfig}
+            </if>
+            <if test="productCode != null">
+                AND ${columnPrefix}product_code = #{productCode}
+            </if>
+            <if test="softwareVesion != null">
+                AND ${columnPrefix}software_vesion = #{softwareVesion}
+            </if>
+            <if test="status != null">
+                AND ${columnPrefix}status = #{status}
+            </if>
+            <if test="delFlag != null">
+                AND ${columnPrefix}del_flag = #{delFlag}
+            </if>
+            <if test="version != null">
+                AND ${columnPrefix}version = #{version}
+            </if>
+            <if test="createBy != null">
+                AND ${columnPrefix}create_by = #{createBy}
+            </if>
+            <if test="createTime != null">
+                AND ${columnPrefix}create_time = #{createTime}
+            </if>
+            <if test="updateBy != null">
+                AND ${columnPrefix}update_by = #{updateBy}
+            </if>
+            <if test="updateTime != null">
+                AND ${columnPrefix}update_time = #{updateTime}
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="updateWhereColumns">
+        <trim prefix="WHERE" prefixOverrides="AND">
+        <if test="id != null">
+            AND ${columnPrefix}id = #{id}
+        </if>
+        <if test="projectId != null">
+            AND ${columnPrefix}project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND ${columnPrefix}device_id = #{deviceId}
+        </if>
+        </trim>
+    </sql>
+
+    <select id="queryBleDeviceInfo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.DeviceBleInfoPo" resultType="com.bnmotor.icv.tsp.ble.model.entity.DeviceBleInfoPo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_tsp_device_ble_info
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+
+    <select id="queryBleDeviceInfoList" parameterType="com.bnmotor.icv.tsp.ble.model.entity.DeviceBleInfoPo" resultType="com.bnmotor.icv.tsp.ble.model.entity.DeviceBleInfoPo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_tsp_device_ble_info
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+
+    <insert id="addBleDeviceInfo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.DeviceBleInfoPo">
+         INSERT INTO tb_tsp_device_ble_info
+        (<include refid="Base_Column_List"/> )
+        values
+        (<include refid="insertAllColumns"/>)
+    </insert>
+
+    <delete id="deleteBleDeviceInfo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.DeviceBleInfoPo">
+        delete from tb_tsp_device_ble_info
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </delete>
+
+    <update id="updateBleDeviceInfo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.DeviceBleInfoPo">
+        UPDATE tb_tsp_device_ble_info
+        <include refid="updateColumns" />
+        <include refid="updateWhereColumns">
+            <property name="columnPrefix" value=""/>
+        </include>
+        and status != 2 and  del_flag != 1
+    </update>
+</mapper>

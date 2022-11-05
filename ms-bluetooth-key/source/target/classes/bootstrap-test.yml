@@ -1,0 +1,93 @@
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.210.100.17:3306/bnmotor_icv_vehicle_ble?useUnicode=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=utf-8
+    username: root
+    password: Bnqc@2020
+    type: com.alibaba.druid.pool.DruidDataSource
+    # 初始化大小，最小等待连接数量，最大等待连接数量，最大连接数
+    initialSize: 1
+    minIdle: 1
+    maxIdle: 5
+    maxActive: 20
+    # 配置获取连接等待超时的时间
+    maxWait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 300000
+    #用来检测连接是否有效的sql，要求是一个查询语句
+    validationQuery: SELECT 1 FROM DUAL
+    #建议配置为true，不影响性能，并且保证安全性。指明连接是否被空闲连接回收器(如果有)进行检验.如果检测失败,则连接将被从池中去除. 。
+    testWhileIdle: true
+    #申请连接时执行validationQuery检测连接是否有效，做了这个配置会 降低性能。
+    testOnBorrow: true
+    #归还连接时执行validationQuery检测连接是否有效，做了这个配置会降 低性能。
+    testOnReturn: false
+
+  redis:
+    database: 10
+    host: 10.210.100.17
+    port: 6379
+    password: Bnqc@2020
+    timeout: 3000
+    lettuce:
+      pool:
+        max-active: 1000
+        max-idle: 100
+        min-idle: 10
+        max-wait: 3000
+
+    mvc:
+      throw-exception-if-no-handler-found: true
+    jackson:
+      time-zone: GMT+8
+
+  logging:
+    level:
+      java.sql.PreparedStatement: debug
+    path: logs/
+    file:
+      max-size: 1GB
+swagger:
+  enabled: true
+adam:
+  logging:
+    path: logs/
+    config: log4j2-dev.xml
+
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+  typeAliasesPackage: com.bnmotor.icv.tsp.ble.entity.domain;
+  configuration:
+    global-config:
+      db-config:
+        # 表名前缀
+        #table-prefix: tb_
+        dbColumnUnderline: true
+#        id-type: 3
+#          #机器 ID 部分(影响雪花ID)
+#        workerId: 1
+#        #数据标识 ID 部分(影响雪花ID)(workerId 和 datacenterId 一起配置才能重新初始化 Sequence)
+#        datacenterId: 18
+#        #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+#        field-strategy: 2
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+ble:
+  project-id: 1
+  init-version: 0
+  init-status: 0
+  init-key-model: 2
+  init-del-flag: 0
+  user-master-type: 1
+  user-slave-type: 2
+
+jwt:
+  subject: bnmotor
+  issuer: tsp
+  secret: authtsp@2020
+  accessTokenExpiredTime: 2
+  refreshTokenExpiredTime: 10080

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.bnmotor.icv.adam</groupId>
+        <artifactId>adam-parent</artifactId>
+        <version>1.1.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.bnmotor.icv.tsp.ble</groupId>
+    <artifactId>ms-bluetooth-key-pki</artifactId>
+    <version>1.0.0</version>
+    <name>ms-bluetooth-key-pki</name>
+    <description>ms bluetooth key</description>
+    <packaging>jar</packaging>
+    <properties>
+        <java.version>11</java.version>
+        <basedir>/source</basedir>
+        <skipTests>true</skipTests>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.bnmotor.icv.adam</groupId>
+            <artifactId>adam-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.bnmotor.icv.adam</groupId>
+            <artifactId>adam-data-mysql-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.bnmotor.icv.adam</groupId>
+            <artifactId>adam-data-redis-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.bnmotor.icv.adam</groupId>
+            <artifactId>adam-spring-cloud-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.bnmotor.icv.adam</groupId>
+            <artifactId>adam-xxl-job-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-bean-validators</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.bnmotor.icv.adam</groupId>
+            <artifactId>adam-sdk-bluetooth-domain</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bnmotor.icv.adam</groupId>
+            <artifactId>adam-sdk-bluetooth</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>Nexus Snapshot</name>
+            <url>http://nexus3.bnicvc.com/repository/maven-releases</url>
+        </repository>
+        <repository>
+            <id>public</id>
+            <name>central and jcenter</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>snapshots</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
+    <!-- 远程插件仓库 -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nexus</id>
+            <name>Nexus Snapshot</name>
+            <url>http://nexus3.bnicvc.com/repository/maven-releases</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.bnmotor.icv.tsp.ble.BleApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

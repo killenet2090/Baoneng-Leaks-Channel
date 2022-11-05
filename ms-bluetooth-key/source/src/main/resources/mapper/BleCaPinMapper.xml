@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ble.mapper.BleCaPinMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ble.model.entity.BleCaPinPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="ble_device_id" property="bleDeviceId" />
+        <result column="user_type_id" property="userTypeId" />
+        <result column="pin_code" property="pinCode" />
+        <result column="del_flag" property="delFlag" />
+        <result column="status" property="status" />
+        <result column="version" property="version" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, ble_device_id, user_type_id, pin_code, del_flag,status, version, create_by, create_time, update_by, update_time
+    </sql>
+
+    <sql id="updateColumns">
+        <set>
+            <if  test ="pinCode  != null">
+                pin_code = #{pinCode},
+            </if>
+            <if  test ="delFlag  != null">
+                del_flag = #{delFlag},
+            </if>
+            <if  test ="status  != null">
+                status = #{status},
+            </if>
+            <if  test ="version  != null">
+                version = #{version},
+            </if>
+            <if  test ="createBy  != null">
+                create_by = #{createBy},
+            </if>
+            <if  test ="createTime  != null">
+                create_time = #{createTime},
+            </if>
+            <if  test ="updateBy  != null">
+                update_by = #{updateBy},
+            </if>
+            <if  test ="updateTime  != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+    </sql>
+    <sql id="insertColumns">
+                #{id},
+                #{projectId},
+                #{bleDeviceId},
+                #{userTypeId},
+                #{pinCode},
+                #{delFlag},
+                #{status},
+                #{version},
+                #{createBy},
+                #{createTime},
+                #{updateBy},
+                #{updateTime}
+    </sql>
+    <sql id="whereClause">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if  test ="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if  test ="bleDeviceId  != null">
+                AND ${columnPrefix}ble_device_id = #{bleDeviceId}
+            </if>
+            <if  test ="userTypeId  != null">
+                AND ${columnPrefix}user_type_id = #{userTypeId}
+            </if>
+            <if  test ="delFlag  != null">
+                AND ${columnPrefix}del_flag = #{delFlag}
+            </if>
+            <if  test ="status  != null">
+                AND ${columnPrefix}status = #{status}
+            </if>
+            <if  test ="version  != null">
+                AND ${columnPrefix}version = #{version}
+            </if>
+            <if  test ="createBy  != null">
+                AND ${columnPrefix}create_by = #{createBy}
+            </if>
+            <if  test ="createTime  != null">
+                AND ${columnPrefix}create_time = #{createTime}
+            </if>
+            <if  test ="updateBy  != null">
+                AND ${columnPrefix}update_by = #{updateBy}
+            </if>
+            <if  test ="updateTime  != null">
+                AND ${columnPrefix}update_time = #{updateTime}
+            </if>
+        </trim>
+    </sql>
+    <sql id="wherePrimaryClause">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if  test ="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if  test ="bleDeviceId  != null">
+                AND ${columnPrefix}ble_device_id = #{bleDeviceId}
+            </if>
+            <if  test ="userTypeId  != null">
+                AND ${columnPrefix}user_type_id = #{userTypeId}
+            </if>
+            <if  test ="version  != null">
+                AND ${columnPrefix}version = #{version}
+            </if>
+            <if  test ="createTime  != null">
+                AND ${columnPrefix}create_time = #{createTime}
+            </if>
+            <if  test ="updateTime  != null">
+                AND ${columnPrefix}update_time = #{updateTime}
+            </if>
+        </trim>
+    </sql>
+    <insert id="addBlePin" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleCaPinPo">
+        insert into tb_tsp_ble_pin
+        (<include refid="Base_Column_List" />)
+        values
+        (<include refid="insertColumns"></include>)
+    </insert>
+    <insert id="ackAddBlePin" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleCaPinPo">
+        insert into tb_tsp_ble_pin (ble_device_id ,user_type_id ,pin_code,del_flag,status) values (#{bleDeviceId}, #{userTypeId},#{pinCode},#{delFlag},#{status} )
+    </insert>
+
+    <delete id="deleteBlePin" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleCaPinPo">
+        delete from  tb_tsp_ble_pin  where 1 = 1
+        <if test="projectId != null">
+            AND project_id = #{projectId}
+        </if>
+        <if test="bleDeviceId != null">
+            AND ble_device_id = #{bleDeviceId}
+        </if>
+        <if test="userTypeId != null">
+            AND user_type_id = #{userTypeId}
+        </if>
+    </delete>
+
+    <select id="queryBlePin" parameterType="java.util.HashMap" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleCaPinPo">
+        select
+        <include refid="Base_Column_List" />
+        from tb_tsp_ble_pin where 1 = 1
+        <if test="projectId != null">
+            AND project_id = #{projectId}
+        </if>
+        <if test="bleDeviceId != null">
+            AND ble_device_id = #{bleDeviceId}
+        </if>
+        <if test="userTypeId != null">
+            AND user_type_id = #{userTypeId}
+        </if>
+    </select>
+    <select id="queryBlePins" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleCaPinPo" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleCaPinPo">
+        select
+        <include refid="Base_Column_List" />
+        from tb_tsp_ble_pin where 1 = 1
+        <if test="projectId != null">
+            AND project_id = #{projectId}
+        </if>
+        <if test="bleDeviceId != null">
+            AND ble_device_id = #{bleDeviceId}
+        </if>
+        <if  test ="status  != null">
+            AND status = #{status}
+        </if>
+    </select>
+
+    <select id="queryBleDevicePins" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleCaPinPo" resultType="com.bnmotor.icv.tsp.ble.model.response.ble.BleDevicePinVo">
+        SELECT bp.id,bp.project_id,bp.ble_device_id,bp.user_type_id,bp.pin_code,dbi.device_mac FROM tb_tsp_ble_pin bp
+        LEFT  JOIN tb_tsp_device_ble_info dbi  ON bp.project_id = dbi.project_id AND bp.ble_device_id = dbi.device_id
+        WHERE bp.ble_device_id=#{bleDeviceId} AND bp.user_type_id=#{userTypeId} AND bp.`status` != 2
+    </select>
+    <update id="updateBlePin" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleCaPinPo">
+        update  tb_tsp_ble_pin
+        <include refid="updateColumns" />
+        <include refid="wherePrimaryClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </update>
+
+</mapper>

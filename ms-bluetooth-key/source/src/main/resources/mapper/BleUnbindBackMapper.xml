@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ble.mapper.BleUnbindBackMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ble.model.entity.BleUnbindBackPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="device_id" property="deviceId" />
+        <result column="user_id" property="userId" />
+        <result column="serial_num" property="serialNum" />
+        <result column="resp_code" property="respCode" />
+        <result column="status" property="status" />
+        <result column="del_flag" property="delFlag" />
+        <result column="op_type" property="opType" />
+        <result column="user_auth_id" property="userAuthId" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="base_Column_List">
+       	id,project_Id,device_id,user_id,serial_num, resp_code,status, del_flag,op_type,user_auth_id,create_by, update_by,create_time, update_time
+    </sql>
+
+    <sql id="insertColumns">
+        #{id},
+        #{projectId},
+        #{deviceId},
+        #{userId},
+        #{serialNum},
+        #{respCode},
+        #{status},
+        #{delFlag},
+        #{opType},
+        #{userAuthId},
+        #{createBy},
+        #{updateBy},
+        #{createTime},
+        #{updateTime}
+    </sql>
+    <sql id="updateColumns">
+        <set>
+            <if  test ="projectId != null">
+                project_id = #{projectId},
+            </if>
+            <if  test ="deviceId  != null">
+                device_id = #{deviceId},
+            </if>
+            <if  test ="userId  != null">
+                user_id = #{userId},
+            </if>
+            <if  test ="serialNum  != null">
+                serial_num = #{serialNum},
+            </if>
+            <if  test ="respCode  != null">
+                resp_code = #{respCode},
+            </if>
+            <if  test ="status  != null">
+                status = #{status},
+            </if>
+            <if  test ="delFlag  != null">
+                del_flag = #{delFlag},
+            </if>
+            <if  test ="opType  != null">
+                op_type = #{opType},
+            </if>
+            <if  test ="userAuthId  != null">
+                user_auth_id = #{userAuthId},
+            </if>
+            <if  test ="updateBy  != null">
+                update_by = #{updateBy},
+            </if>
+            <if  test ="updateTime  != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+    </sql>
+    <select id="queryUnbindBack" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleUnbindBackPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleUnbindBackPo">
+        SELECT
+        <include refid="base_Column_List"/>
+        FROM tb_tsp_ble_unbind_back where device_id = #{deviceId} and serial_num=#{serialNum} and status=#{status}
+    </select>
+
+    <select id="queryUnbindByStausList"  resultType="com.bnmotor.icv.tsp.ble.model.entity.BleUnbindBackPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleUnbindBackPo">
+        SELECT
+        <include refid="base_Column_List"/>
+        FROM tb_tsp_ble_unbind_back  where 1=1 and  project_id = #{projectId} and op_type = #{opType}  and  resp_code = #{respCode} and status = #{status}
+    </select>
+
+    <insert id="addBleUnbind" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleUnbindBackPo">
+        insert into tb_tsp_ble_unbind_back
+        (<include refid="base_Column_List" />)
+        values
+        (<include refid="insertColumns"></include>)
+    </insert>
+
+    <update id="updateBleUnbind" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleUnbindBackPo">
+        update  tb_tsp_ble_unbind_back
+        <include refid="updateColumns" />
+        where 1=1
+        <if  test ="id  != null">
+            AND id = #{id}
+        </if>
+        <if  test ="deviceId  != null">
+            AND device_id = #{deviceId}
+        </if>
+        <if  test ="serialNum  != null">
+            AND  serial_num = #{serialNum}
+        </if>
+        <if  test ="opType  != null">
+            AND  op_type = #{opType}
+        </if>
+        <if  test ="userAuthId  != null">
+            AND  user_auth_id = #{userAuthId}
+        </if>
+        <if  test ="status  != null">
+            AND  status = #{status}
+        </if>
+    </update>
+
+    <delete id="delBleUnbind" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleUnbindBackPo">
+        delete from  tb_tsp_ble_unbind_back     where 1=1
+        <if  test ="id  != null">
+            AND id = #{id}
+        </if>
+        <if  test ="deviceId  != null">
+            AND device_id = #{deviceId}
+        </if>
+        <if  test ="serialNum  != null">
+            serial_num = #{serialNum}
+        </if>
+        <if  test ="status  != null">
+            status = #{status}
+        </if>
+    </delete>
+</mapper>

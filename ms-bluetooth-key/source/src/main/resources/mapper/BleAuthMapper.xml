@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ble.mapper.BleAuthMapper">
+        <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="user_id" property="userId" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="auth_code" property="authCode" />
+        <result column="auth_time" property="authTime" />
+        <result column="auth_expire_time" property="authExpireTime" />
+        <result column="user_auth_id" property="userAuthId" />
+        <result column="encrypt_app_ble_key" property="encryptAppBleKey" />
+        <result column="encrypt_app_ble_key_sign" property="encryptAppBleKeySign" />
+        <result column="auth_voucher" property="authVoucher" />
+        <result column="auth_voucher_sign" property="authVoucherSign" />
+        <result column="authed_user_mobile_no" property="authedUserMobileNo" />
+        <result column="authed_mobile_device_id" property="authedMobileDeviceId" />
+        <result column="is_auth_confirmed" property="isAuthConfirmed" />
+        <result column="auth_confirmed_time" property="authConfirmedTime" />
+        <result column="auth_confirmed_user_id" property="authConfirmedUserId" />
+        <result column="user_type" property="userType" />
+        <result column="status" property="status" />
+        <result column="del_flag" property="delFlag" />
+        <result column="version" property="version" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="authed_user_name" property="authedUserName" />
+        <result column="auth_voucher_expire_time" property="authVoucherExpireTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="baseColumns">
+        id, project_id,user_id,authed_user_name,device_id,device_name,auth_code, auth_time, auth_expire_time, user_auth_id, encrypt_app_ble_key, encrypt_app_ble_key_sign, auth_voucher, auth_voucher_sign, authed_user_mobile_no, authed_mobile_device_id, is_auth_confirmed, auth_confirmed_time, auth_confirmed_user_id, user_type, status, del_flag, version, create_by, create_time, update_by, update_time, auth_voucher_expire_time
+    </sql>
+    <sql id="updateColumns">
+        <set>
+            <if test="projectId != null">
+                project_id = #{projectId},
+            </if>
+            <if test="userAuthId != null">
+                user_auth_id = #{userAuthId},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="encryptAppBleKey != null">
+                encrypt_app_ble_key = #{encryptAppBleKey},
+            </if>
+            <if test="encryptAppBleKeySign != null">
+                encrypt_app_ble_key_sign = #{encryptAppBleKeySign},
+            </if>
+            <if test="authVoucher != null">
+                auth_voucher = #{authVoucher},
+            </if>
+            <if test="authVoucherSign != null">
+                auth_voucher_sign = #{authVoucherSign},
+            </if>
+            <if test="authedMobileDeviceId != null">
+                authed_mobile_device_id = #{authedMobileDeviceId},
+            </if>
+            <if test="isAuthConfirmed != null">
+                is_auth_confirmed = #{isAuthConfirmed},
+            </if>
+            <if test="authConfirmedTime != null">
+                auth_confirmed_time = #{authConfirmedTime},
+            </if>
+            <if test="authConfirmedUserId != null">
+                auth_confirmed_user_id = #{authConfirmedUserId},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+        </set>
+    </sql>
+    <sql id="updateExpireColumns">
+        <set>
+            <if test="authTime != null">
+                auth_time = #{authTime},
+            </if>
+            <if test="authExpireTime != null">
+                auth_expire_time = #{authExpireTime},
+            </if>
+        </set>
+    </sql>
+    <sql id="updateCancelColumns">
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+    </sql>
+    <sql id="whereClause">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+            <if test="userId != null">
+                AND ${columnPrefix}user_id = #{userId}
+            </if>
+            <if test="authedMobileDeviceId != null">
+                AND ${columnPrefix}authed_mobile_device_id = #{authedMobileDeviceId}
+            </if>
+            <if test="authedUserMobileNo != null">
+                AND authed_user_mobile_no = #{authedUserMobileNo}
+            </if>
+            <if test="authedUserName != null">
+                AND authed_user_name = #{authedUserName}
+            </if>
+            <if test="isAuthConfirmed != null">
+                AND ${columnPrefix}is_auth_confirmed = #{isAuthConfirmed}
+            </if>
+            <if test="status != null">
+                AND ${columnPrefix}status != #{status}
+            </if>
+            <if test="delFlag != null">
+                AND ${columnPrefix}del_flag != #{delFlag}
+            </if>
+        </trim>
+    </sql>
+    <sql id="whereClausePrimary">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+            <if test="userId != null">
+                AND ${columnPrefix}user_id = #{userId}
+            </if>
+            <if test="authedMobileDeviceId != null">
+                AND ${columnPrefix}authed_mobile_device_id = #{authedMobileDeviceId}
+            </if>
+            <if test="authedUserMobileNo != null">
+                AND authed_user_mobile_no = #{authedUserMobileNo}
+            </if>
+        </trim>
+    </sql>
+    <sql id="whereOwnerAuthQuery">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+            <if test="userId != null">
+                AND ${columnPrefix}user_id = #{userId}
+            </if>
+            <if test="userAuthId != null">
+                AND ${columnPrefix}user_auth_id = #{userAuthId}
+            </if>
+            <if test="authCode != null">
+                AND ${columnPrefix}auth_code = #{authCode}
+            </if>
+            <if test="authedUserMobileNo != null">
+                AND authed_user_mobile_no = #{authedUserMobileNo}
+            </if>
+            <if test="authedMobileDeviceId != null">
+                AND ${columnPrefix}authed_mobile_device_id = #{authedMobileDeviceId}
+            </if>
+            <if test="isAuthConfirmed != null">
+                AND ${columnPrefix}is_auth_confirmed = #{isAuthConfirmed}
+            </if>
+            <if test="authExpireTime != null">
+                AND ${columnPrefix}auth_expire_time >= #{authExpireTime}
+            </if>
+        </trim>
+    </sql>
+    <sql id="whereClauseModify">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+            <if test="userId != null">
+                AND ${columnPrefix}user_id = #{userId}
+            </if>
+            <if test="authedMobileDeviceId != null">
+                AND ${columnPrefix}authed_mobile_device_id = #{authedMobileDeviceId}
+            </if>
+            <if test="userType != null">
+                AND ${columnPrefix}user_type = #{userType}
+            </if>
+            <if test="authedUserMobileNo != null">
+                AND authed_user_mobile_no = #{authedUserMobileNo}
+            </if>
+            <if test="authedUserName != null">
+                AND authed_user_name = #{authedUserName}
+            </if>
+            <if test="delFlag != null">
+                AND ${columnPrefix}del_flag = #{delFlag}
+            </if>
+            <if test="authExpireTime != null">
+                AND ${columnPrefix}auth_expire_time = #{authExpireTime}
+            </if>
+            <if test="status != null">
+                AND ${columnPrefix}status != #{status}
+            </if>
+        </trim>
+    </sql>
+    <sql id="whereClauseModifyDate">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="whereConfirmModify">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+            <if test="userType != null">
+                AND ${columnPrefix}user_type = #{userType}
+            </if>
+            <if test="authedUserMobileNo != null">
+                AND authed_user_mobile_no = #{authedUserMobileNo}
+            </if>
+            <if test="authedUserName != null">
+                AND authed_user_name = #{authedUserName}
+            </if>
+        </trim>
+    </sql>
+    <sql id="whereModifyAuth">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+            <if test="userId != null">
+                AND ${columnPrefix}user_id = #{userId}
+            </if>
+            <if test="authedMobileDeviceId != null">
+                AND ${columnPrefix}authed_mobile_device_id = #{authedMobileDeviceId}
+            </if>
+            <if test="userType != null">
+                AND ${columnPrefix}user_type = #{userType}
+            </if>
+            <if test="authedUserMobileNo != null">
+                AND authed_user_mobile_no = #{authedUserMobileNo}
+            </if>
+            <if test="authedUserName != null">
+                AND authed_user_name = #{authedUserName}
+            </if>
+            <if test="delFlag != null">
+                AND ${columnPrefix}del_flag = #{delFlag}
+            </if>
+            <if test="authExpireTime != null">
+                AND ${columnPrefix}auth_expire_time = #{authExpireTime}
+            </if>
+            <if test="status != null">
+                AND ${columnPrefix}status = #{status}
+            </if>
+            <if test="version != null">
+                AND ${columnPrefix}version = #{version}
+            </if>
+            <if test="isAuthConfirmed != null">
+                AND ${columnPrefix}is_auth_confirmed = #{isAuthConfirmed}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="queryBleAuth" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM tb_tsp_ble_auth
+        <include refid="whereOwnerAuthQuery">
+            <property name="columnPrefix" value=""/>
+        </include>
+        <if test="userType != null">
+            AND user_type != #{userType}
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="delFlag != null">
+            AND del_flag = #{delFlag}
+        </if>
+    </select>
+
+    <select id="queryDeviceBleAuth" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM tb_tsp_ble_auth
+        <include refid="whereOwnerAuthQuery">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+
+    <select id="queryBleAuthToActive" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM tb_tsp_ble_auth
+        <include refid="whereOwnerAuthQuery">
+            <property name="columnPrefix" value=""/>
+        </include>
+        <if test="userType != null">
+            AND user_type = #{userType}
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="delFlag != null">
+            AND del_flag = #{delFlag}
+        </if>
+    </select>
+
+
+    <select id="queryExistBleAuth" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM tb_tsp_ble_auth
+        <include refid="whereOwnerAuthQuery">
+            <property name="columnPrefix" value=""/>
+        </include>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="delFlag != null">
+            AND del_flag = #{delFlag}
+        </if>
+    </select>
+
+    <select id="queryBleNoAuth" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM tb_tsp_ble_auth
+        <include refid="whereOwnerAuthQuery">
+            <property name="columnPrefix" value=""/>
+        </include>
+        <if test="userType != null">
+            AND user_type = #{userType}
+        </if>
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+        <if test="delFlag != null">
+            AND del_flag = #{delFlag}
+        </if>
+        and is_auth_confirmed = 0
+    </select>
+    <select id="queryBleAuthModify" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM tb_tsp_ble_auth
+        <include refid="whereModifyAuth">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+    <select id="queryUserBleAuths" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM tb_tsp_ble_auth
+        where  project_id=#{projectId} and device_id=#{deviceId} and (
+        <foreach collection="authList" item="authId" index="index" open="  user_auth_id=" close=""     separator=" or user_auth_id=">
+            #{authId}
+        </foreach>)
+        and status != 2 and  del_flag = 0
+    </select>
+
+    <select id="queryUserNameLimit" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM tb_tsp_ble_auth
+        <include refid="whereModifyAuth">
+            <property name="columnPrefix" value=""/>
+        </include>
+        and status !=  2 and authed_user_name= #{authedUserName} and auth_expire_time > cast(unix_timestamp(NOW(3))*1000 AS SIGNED)
+    </select>
+
+    <select id="cancelBleKeyCheck" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM tb_tsp_ble_auth
+        <include refid="whereModifyAuth">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+
+    <select id="queryExpiredBleAuthCode" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM tb_tsp_ble_auth ttba  where 1 = 1 and status=0 and is_auth_confirmed = 0
+        <if test="authExpireTime != null">
+            AND auth_expire_time &lt; #{authExpireTime}
+        </if>
+        <if test="projectId != null">
+            AND ttba.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND ttba.device_id = #{deviceId}
+        </if>
+    </select>
+
+    <select id="queryExpiredBleAuthLimit" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM tb_tsp_ble_auth ttba where 1 = 1 and status=0
+        <if test="authExpireTime != null">
+            AND auth_expire_time &lt; #{authExpireTime}
+        </if>
+        <if test="projectId != null">
+            AND ttba.project_id = #{projectId}
+        </if>
+        <if test="deviceId != null">
+            AND ttba.device_id = #{deviceId}
+        </if>
+    </select>
+
+    <select id="queryExpiredDayNeedTip" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        SELECT
+        <include refid="baseColumns"/>
+        FROM tb_tsp_ble_auth ttba where TIMESTAMPDIFF(DAY,ttba.auth_time,from_unixtime(ttba.auth_expire_time/1000))>1 and TIMESTAMPDIFF(DAY,NOW(),from_unixtime(ttba.auth_expire_time/1000))=1
+    </select>
+
+    <update id="updateAuthExpireDate" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        update tb_tsp_ble_auth
+        <include refid="updateExpireColumns" />
+        <include refid="whereClauseModifyDate">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </update>
+
+    <update id="cancelAuth" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        update tb_tsp_ble_auth
+        <include refid="updateCancelColumns" />
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </update>
+    <update id="moveAuthHisData" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        insert into tb_tsp_ble_auth_his select * from tb_tsp_ble_auth where project_id = #{projectId}
+        AND device_id=#{deviceId}  AND id = #{id}   AND status = #{status}  AND del_flag = #{delFlag}
+    </update>
+
+    <update id="updateBleAuth" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        update tb_tsp_ble_auth
+        <include refid="updateColumns" />
+        <include refid="whereClausePrimary">
+            <property name="columnPrefix" value=""/>
+        </include>
+        and status != 2 and  del_flag = 0
+    </update>
+    <update id="confirmUpdateBleAuth" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        update tb_tsp_ble_auth
+        <include refid="updateColumns" />
+        <include refid="whereConfirmModify">
+            <property name="columnPrefix" value=""/>
+        </include>
+        and status != 2 and  del_flag = 0
+    </update>
+
+    <delete id="deleteAuthData">
+        delete  from tb_tsp_ble_auth where project_id = #{projectId} AND device_id=#{deviceId}  AND id = #{id}
+    </delete>
+    <delete id="deleteAuthHisData" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        delete  from tb_tsp_ble_auth where device_id=#{deviceId}  AND id = #{id}   AND status = #{status}  AND del_flag = #{delFlag}
+    </delete>
+</mapper>

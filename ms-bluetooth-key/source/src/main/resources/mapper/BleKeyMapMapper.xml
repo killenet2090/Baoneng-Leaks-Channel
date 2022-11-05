@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ble.mapper.BleKeyMapMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ble.model.entity.BleKeyServicePo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="ble_id" property="bleId" />
+        <result column="service_id" property="serviceId" />
+        <result column="del_flag" property="delFlag" />
+        <result column="version" property="version" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, ble_id, service_id, del_flag, version, create_by, create_time, update_by, update_time
+    </sql>
+
+    <sql id="baseIdColumn">
+         service_id
+    </sql>
+    <sql id="updateColumns">
+        <set>
+            <if  test ="serviceId  != null">
+                service_id = #{serviceId}
+            </if>
+            <if  test ="delFlag  != null">
+                del_flag = #{delFlag}
+            </if>
+            <if  test ="version  != null">
+                version = #{version}
+            </if>
+            <if  test ="updateBy  != null">
+                update_by = #{updateBy}
+            </if>
+            <if  test ="updateTime  != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+    </sql>
+    <sql id="insertAllColumns">
+            #{id},
+            #{projectId},
+            #{bleId},
+            #{serviceId},
+            #{delFlag},
+            #{version},
+            #{createBy},
+            #{createTime},
+            #{updateBy},
+            #{updateTime}
+    </sql>
+    <sql id="whereQueryId">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="bleId != null">
+                AND ${columnPrefix}ble_id = #{bleId}
+            </if>
+
+        </trim>
+    </sql>
+    <sql id="whereQuery">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if  test ="id  != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if  test ="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if  test ="bleId  != null">
+                AND ${columnPrefix}ble_id = #{bleId}
+            </if>
+            <if  test ="serviceId  != null">
+                AND ${columnPrefix}service_id = #{serviceId}
+            </if>
+            <if  test ="delFlag  != null">
+                AND ${columnPrefix}del_flag = #{delFlag}
+            </if>
+            <if  test ="version  != null">
+                AND ${columnPrefix}version = #{version}
+            </if>
+            <if  test ="createBy  != null">
+                AND ${columnPrefix}create_by = #{createBy}
+            </if>
+            <if  test ="createTime  != null">
+                AND ${columnPrefix}create_time = #{createTime}
+            </if>
+            <if  test ="updateBy  != null">
+                AND ${columnPrefix}update_by = #{updateBy}
+            </if>
+            <if  test ="updateTime  != null">
+                AND ${columnPrefix}update_time = #{updateTime}
+            </if>
+        </trim>
+    </sql>
+    <select id="queryBleKeyInfo" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleKeyServicePo"  parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleKeyServicePo">
+        SELECT
+        service_id
+        FROM tb_tsp_ble_key_service
+        <include refid="whereQuery">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+    <select id="queryBleService"  parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleKeyServicePo">
+        SELECT
+        service_id
+        FROM tb_tsp_ble_key_service
+        <include refid="whereQuery">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+    <select id="queryServiceByBleId" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleKeyServicePo">
+        SELECT   service_id    FROM tb_tsp_ble_key_service where ble_id = #{bleId} and project_id = #{projectId}
+    </select>
+
+    <insert id="addBleKeyServiceMap"  parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleKeyServicePo">
+        INSERT INTO tb_tsp_ble_key_service
+        (<include refid="Base_Column_List" />)
+        values
+        (<include refid="insertAllColumns"/>)
+    </insert>
+
+    <delete id="deleteBleKeyServiceById" >
+        delete from  tb_tsp_ble_key_service  where 1 = 1
+        <if  test ="projectId != null">
+            and project_id = #{projectId}
+        </if>
+        <if  test ="bleId != null">
+            AND  ble_id = #{bleId}
+        </if>
+    </delete>
+
+    <delete id="deleteByBleKeyServicesByIds" >
+        delete from  tb_tsp_ble_key_service  where project_id = #{projectId} and  ble_id in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item.ble_key_Id}
+        </foreach>
+    </delete>
+
+    <update id="updateBleKeyService">
+        UPDATE tb_tsp_ble_key_service
+        <include refid="updateColumns" />
+        <include refid="whereQueryId">
+            <property name="columnPrefix" value=""/>
+        </include>
+        and  delFlag != 1
+    </update>
+
+</mapper>

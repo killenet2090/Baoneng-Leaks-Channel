@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ble.mapper.BleAuthCompeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ble.model.entity.BleAuthCompePo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="service_name" property="serviceName" />
+        <result column="service_code" property="serviceCode" />
+        <result column="service_desc" property="serviceDesc" />
+        <result column="del_flag" property="delFlag" />
+        <result column="version" property="version" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="base_Column_List">
+        id, project_id, service_name, service_code, service_desc, del_flag, version, create_by, create_time, update_by, update_time
+    </sql>
+    <sql id="baseColumn">
+        id, service_name
+    </sql>
+    <sql id="baseIdColumn">
+        id
+    </sql>
+    <select id="queryBleCompe" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthCompePo" >
+        SELECT
+        <include refid="base_Column_List"/>
+        FROM tb_tsp_ble_auth_compe
+    </select>
+    <select id="queryBleCompeId" resultType="java.util.List" >
+        SELECT
+        <include refid="baseIdColumn"/>
+        FROM tb_tsp_ble_auth_compe
+    </select>
+    <select id="queryBleCompeServerId" resultType="java.lang.Long" >
+        SELECT
+         service_code
+        FROM tb_tsp_ble_auth_compe
+    </select>
+    <select id="queryBleCompeServerByIds" resultType="java.util.Map" >
+        SELECT
+        service_code,service_name
+        FROM tb_tsp_ble_auth_compe  where service_code IN
+        <foreach collection="list" item="service_code" index="index" open="(" close=")" separator=",">
+            #{service_code}
+        </foreach>
+    </select>
+</mapper>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ble.mapper.BleAuthServiceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ble.model.entity.BleAuthServicePo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="auth_id" property="authId" />
+        <result column="service_id" property="serviceId" />
+        <result column="del_flag" property="delFlag" />
+        <result column="version" property="version" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, auth_id, service_id, del_flag, version, create_by, create_time, update_by, update_time
+    </sql>
+    <sql id="whereQueryId">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                 ${columnPrefix}id = #{id}
+            </if>
+        </trim>
+    </sql>
+    <sql id="whereClause">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if  test ="authId  != null">
+                AND ${columnPrefix}auth_id = #{authId}
+            </if>
+            <if  test ="serviceId  != null">
+                AND ${columnPrefix}service_id = #{serviceId}
+            </if>
+            <if  test ="delFlag  != null">
+                AND ${columnPrefix}del_flag = #{delFlag}
+            </if>
+            <if  test ="version  != null">
+                AND ${columnPrefix}version = #{version}
+            </if>
+            <if  test ="createBy  != null">
+                AND ${columnPrefix}create_by = #{createBy}
+            </if>
+            <if  test ="createTime  != null">
+                AND ${columnPrefix}create_time = #{createTime}
+            </if>
+            <if  test ="updateBy  != null">
+                AND ${columnPrefix}update_by = #{updateBy}
+            </if>
+            <if  test ="updateTime  != null">
+                AND ${columnPrefix}update_time = #{updateTime}
+            </if>
+        </trim>
+    </sql>
+    <sql id="wherePrimarykeyClause">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if  test ="authId  != null">
+                AND ${columnPrefix}auth_id = #{authId}
+            </if>
+            <if  test ="createBy  != null">
+                AND ${columnPrefix}create_by = #{createBy}
+            </if>
+            <if  test ="createTime  != null">
+                AND ${columnPrefix}create_time = #{createTime}
+            </if>
+        </trim>
+    </sql>
+    <sql id="updateColumns">
+        <set>
+            <if  test ="projectId != null">
+                project_id = #{projectId},
+            </if>
+            <if  test ="authId  != null">
+                auth_id = #{authId},
+            </if>
+            <if  test ="serviceId  != null">
+                service_id = #{serviceId},
+            </if>
+            <if  test ="delFlag  != null">
+                del_flag = #{delFlag},
+            </if>
+            <if  test ="version  != null">
+                version = #{version},
+            </if>
+            <if  test ="updateBy  != null">
+                update_by = #{updateBy},
+            </if>
+            <if  test ="updateTime  != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+    </sql>
+    <sql id="insertAllColumns">
+            #{id},
+            #{projectId},
+            #{authId},
+            #{serviceId},
+            #{delFlag},
+            #{version},
+            #{createBy},
+            #{createTime},
+            #{updateBy},
+            #{updateTime}
+    </sql>
+
+    <select id="queryBleAuthService" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthServicePo" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthServicePo">
+            select  <include refid="Base_Column_List"/> from tb_tsp_ble_auth_service
+            <include refid="whereClause">
+                <property name="columnPrefix" value=""/>
+            </include>
+        and del_flag != 1
+    </select>
+    <insert id="addBleAuthService" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthServicePo">
+        insert into tb_tsp_ble_auth_service
+        (<include refid="Base_Column_List" />)
+        values
+        (<include refid="insertAllColumns"></include>)
+    </insert>
+
+    <delete id="delBleAuthService" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthPo">
+        delete from  tb_tsp_ble_auth_service  where auth_id = #{id}
+    </delete>
+
+    <delete id="delBleAuthServiceByAuthId" >
+        delete from  tb_tsp_ble_auth_service  where project_id = #{projectId} and auth_id = #{authId}
+    </delete>
+
+    <delete id="delBleAuthServiceList">
+        delete from  tb_tsp_ble_auth_service  where auth_id in
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item.id}
+        </foreach>
+    </delete>
+
+    <update id="updateAuthService" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthServicePo">
+        update  tb_tsp_ble_auth_service
+        <include refid="updateColumns" />
+        <include refid="wherePrimarykeyClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+        and del_flag != 1
+    </update>
+    <select id="queryAuthServiceById" resultType="java.lang.Long" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAuthServicePo">
+        select  service_id from tb_tsp_ble_auth_service where  project_id = #{projectId} and auth_id = #{authId}
+    </select>
+</mapper>

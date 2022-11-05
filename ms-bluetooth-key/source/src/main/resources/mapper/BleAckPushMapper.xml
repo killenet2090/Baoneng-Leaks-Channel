@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ble.mapper.BleAckPushMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ble.model.entity.BleAckPushPo">
+        <result column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="device_id" property="deviceId" />
+        <result column="blekey_id" property="blekeyId" />
+        <result column="service_id" property="serviceId" />
+        <result column="owner_user_id" property="ownerUserId" />
+        <result column="used_user_id" property="usedUserId" />
+        <result column="effective_time" property="effectiveTime" />
+        <result column="expire_date" property="expireDate" />
+        <result column="encrypt_app_ble_key" property="encryptAppBleKey" />
+        <result column="encrypt_app_ble_key_sign" property="encryptAppBleKeySign" />
+        <result column="auth_voucher" property="authVoucher" />
+        <result column="auth_voucher_sign" property="authVoucherSign" />
+        <result column="registration_id" property="registrationId" />
+        <result column="pin_code" property="pinCode" />
+        <result column="user_type_id" property="userTypeId" />
+        <result column="serial_num" property="serialNum" />
+        <result column="cmd_type" property="cmdType" />
+        <result column="cmd_order" property="cmdOrder" />
+        <result column="status" property="status" />
+        <result column="ack_status" property="ackStatus" />
+        <result column="user_auth_id" property="userAuthId"/>
+        <result column="version" property="version" />
+        <result column="del_fag" property="delFag" />
+        <result column="op_type" property="opType" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, device_id, blekey_id, service_id,owner_user_id,used_user_id,effective_time,expire_date,encrypt_app_ble_key,encrypt_app_ble_key_sign,auth_voucher,auth_voucher_sign, registration_id,pin_code,user_type_id,serial_num, cmd_type, cmd_order, status, ack_status, version, del_fag, create_by, create_time, update_by, update_time
+    </sql>
+    <sql id="whereQueryId">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                 ${columnPrefix}id = #{id}
+            </if>
+        </trim>
+    </sql>
+    <sql id="whereClause">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+            <if test="serviceId != null">
+                AND ${columnPrefix}service_id = #{serviceId}
+            </if>
+            <if test="effectiveTime != null">
+                AND ${columnPrefix}effective_time = #{effectiveTime}
+            </if>
+            <if test="expireDate != null">
+                AND ${columnPrefix}expire_date = #{expireDate}
+            </if>
+            <if test="encryptAppBleKey != null">
+                AND ${columnPrefix}encrypt_app_ble_key = #{encryptAppBleKey}
+            </if>
+            <if test="encryptAppBleKeySign != null">
+                AND ${columnPrefix}encrypt_app_ble_key_sign = #{encryptAppBleKeySign}
+            </if>
+            <if test="authVoucher != null">
+                AND ${columnPrefix}auth_voucher = #{authVoucher}
+            </if>
+            <if test="authVoucherSign != null">
+                AND ${columnPrefix}auth_voucher_sign = #{authVoucherSign}
+            </if>
+            <if test="registrationId != null">
+                AND ${columnPrefix}registration_id = #{registrationId}
+            </if>
+            <if test="pinCode != null">
+                AND ${columnPrefix}pin_code = #{pinCode}
+            </if>
+            <if test="userTypeId != null">
+                AND ${columnPrefix}user_type_id = #{userTypeId}
+            </if>
+            <if test="serialNum != null">
+                AND ${columnPrefix}serial_num = #{serialNum}
+            </if>
+            <if test="blekeyId != null">
+                AND ${columnPrefix}blekey_id = #{blekeyId}
+            </if>
+            <if test="cmdType != null">
+                AND ${columnPrefix}cmd_type = #{cmdType}
+            </if>
+            <if test="cmdOrder != null">
+                AND cmd_order = #{cmdOrder}
+            </if>
+            <if test="status != null">
+                AND ${columnPrefix}status = #{status}
+            </if>
+            <if test="version != null">
+                AND ${columnPrefix}version = #{version}
+            </if>
+            <if test="delFag != null">
+                AND ${columnPrefix}del_fag = #{delFag}
+            </if>
+            <if test="opType != null">
+                AND ${columnPrefix}op_type = #{opType}
+            </if>
+            <if test="createBy != null">
+                AND ${columnPrefix}create_by = #{createBy}
+            </if>
+            <if test="createTime != null">
+                AND ${columnPrefix}create_time = #{createTime}
+            </if>
+            <if test="updateBy != null">
+                AND ${columnPrefix}update_by = #{updateBy}
+            </if>
+            <if test="updateTime != null">
+                AND ${columnPrefix}update_time = #{updateTime}
+            </if>
+        </trim>
+    </sql>
+    <sql id="whereOverLimitClause">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+            <if test="serialNum != null">
+                AND ${columnPrefix}serial_num = #{serialNum}
+            </if>
+            <if test="cmdType != null">
+                AND ${columnPrefix}cmd_type = #{cmdType}
+            </if>
+            <if test="cmdOrder != null">
+                AND cmd_order = #{cmdOrder}
+            </if>
+            <if test="createBy != null">
+                AND ${columnPrefix}create_by = #{createBy}
+            </if>
+            <if test="createTime != null">
+                AND ${columnPrefix}create_time  &lt;  #{createTime}
+            </if>
+            <if test="updateBy != null">
+                AND ${columnPrefix}update_by = #{updateBy}
+            </if>
+            <if test="updateTime != null">
+                AND ${columnPrefix}update_time = #{updateTime}
+            </if>
+        </trim>
+    </sql>
+    <sql id="updateColumns">
+        <set>
+            <if test="pinCode != null">
+                pin_code = #{pinCode}
+            </if>
+            <if test="userTypeId != null">
+                user_type_id = #{userTypeId}
+            </if>
+            <if test="ownerUserId != null">
+                owner_user_id = #{ownerUserId}
+            </if>
+            <if test="usedUserId != null">
+                used_user_id = #{usedUserId}
+            </if>
+            <if test="cmdType != null">
+                cmd_type = #{cmdType}
+            </if>
+            <if test="cmdOrder != null">
+                cmd_order = #{cmdOrder}
+            </if>
+            <if test="status != null">
+                status = #{status}
+            </if>
+            <if test="ackStatus != null">
+                ack_status = #{ackStatus}
+            </if>
+            <if test="userAuthId != null">
+                user_auth_id = #{userAuthId}
+            </if>
+            <if test="version != null">
+                version = #{version}
+            </if>
+            <if test="delFag != null">
+                del_fag = #{delFag}
+            </if>
+            <if test="opType != null">
+                op_type = #{opType}
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy}
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime}
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy}
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+    </sql>
+    <sql id="updateAckStatusColumns">
+        <set>
+            <if test="ackStatus != null">
+                ack_status = #{ackStatus},
+            </if>
+            <if test="status != null">
+                status = #{status}
+            </if>
+            <if test="opType != null">
+                op_type = #{opType}
+            </if>
+        </set>
+    </sql>
+    <delete id="deleteBleAckPushById" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckPushPo">
+        delete from  tb_tsp_ble_ack_push  where
+        <if  test ="id != null">
+            id = #{id}
+        </if>
+    </delete>
+
+    <delete id="deleteBleAckPushList">
+        delete from  tb_tsp_ble_ack_push  where  status  >0
+        <foreach collection="list" item="item" index="index"  open=" and id=" close="" separator=" or id=">
+            #{item.id}
+        </foreach>
+    </delete>
+
+    <select id="queryBleAckPush"  resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAckPushPo"  parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckPushPo">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM tb_tsp_ble_ack_push
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+
+    <select id="queryBleAckPushs"  resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAckPushPo"  parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckPushPo">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM tb_tsp_ble_ack_push
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+    <select id="queryOverLimitBleAckPush"  resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAckPushPo"  parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckPushPo">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM tb_tsp_ble_ack_push
+        <include refid="whereOverLimitClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+
+    <insert id="addBleAckPush"  parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckPushPo">
+        INSERT INTO tb_tsp_ble_ack_push
+        (project_id,device_id, service_id,owner_user_id,used_user_id,effective_time,expire_date,encrypt_app_ble_key,encrypt_app_ble_key_sign,auth_voucher,auth_voucher_sign, registration_id,blekey_id, serial_num,cmd_type, cmd_order, pin_code,user_type_id,status, version, del_fag, create_by, create_time, update_by, update_time)
+        values
+        (#{projectId}, #{deviceId} ,#{serviceId},#{ownerUserId},#{usedUserId},#{effectiveTime},#{expireDate},#{encryptAppBleKey},#{encryptAppBleKeySign},#{authVoucher},#{authVoucherSign}, #{registrationId},#{blekeyId},#{serialNum}, #{cmdType}, #{cmdOrder}, #{pinCode},#{userTypeId},#{status}, #{version}, #{delFag}, #{createBy}, #{createTime}, #{updateBy}, #{updateTime})
+    </insert>
+
+    <update id="updateBleAckPushId"  parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckPushPo">
+        update tb_tsp_ble_ack_push
+        <include refid="updateColumns" />
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </update>
+    <update id="updateBleAckPushAckStatus"  parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckPushPo">
+        update tb_tsp_ble_ack_push
+        <include refid="updateAckStatusColumns" />
+        where device_id = #{deviceId}  AND serial_num = #{serialNum} AND cmd_type = #{cmdType}  AND cmd_order = #{cmdOrder}
+    </update>
+    <update id="updateOverTimeBlePushStatus"  parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckPushPo">
+        update tb_tsp_ble_ack_push
+        <include refid="updateAckStatusColumns" />
+         where 1=1 and AND create_time  &lt;  #{createTime}
+    </update>
+    <update id="moveBleAckPushServiceList">
+        insert into tb_tsp_ble_ack_push_his select  * from tb_tsp_ble_ack_push where   status  >0
+        <foreach collection="list" item="item" index="index" open=" and id=" close="" separator=" or id=">
+            #{item.id}
+        </foreach>
+    </update>
+</mapper>

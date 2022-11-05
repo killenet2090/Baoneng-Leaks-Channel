@@ -1,0 +1,84 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ms-bluetooth-key-pki
+  hystrix:
+    command:
+      default:
+        execution:
+          timeout:
+            enabled: false
+          isolation:
+            strategy: SEMAPHORE
+logging:
+  level:
+    com:
+      bnmotor:
+        icv:
+          tsp:
+            consumerdemo:
+              service: debug
+          ble:
+            service:
+              feign:
+                DeviceFeignService: debug
+                UserFeignService: debug
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 30000
+        read-timeout: 30000
+project:
+  id: 1
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+        isolation:
+          strategy: SEMAPHORE
+---
+spring:
+  profiles: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.17:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        group: DEFAULT_GROUP
+        file-extension: yaml
+      discovery:
+        server-addr: 10.210.100.17:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        ip: ${spring.application.name}-${spring.profiles.active}.${spring.profiles.active}.bnicvc.com
+---
+spring:
+  profiles: test
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.17:8848
+        namespace: 4cb1f0ad-5a65-4f8a-9d9f-bec3a76f4ace
+        group: DEFAULT_GROUP
+        file-extension: yaml
+      discovery:
+        server-addr: 10.210.100.17:8848
+        namespace: 4cb1f0ad-5a65-4f8a-9d9f-bec3a76f4ace
+---
+spring:
+  profiles: prod
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.17:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        group: DEFAULT_GROUP
+        file-extension: yaml
+      discovery:
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7

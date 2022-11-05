@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ble.mapper.BleKeyUserHisMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ble.model.entity.UserBleKeyHisPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="owner_user_id" property="ownerUserId" />
+        <result column="ble_key_Id" property="bleKeyId" />
+        <result column="ble_key_name" property="bleKeyName" />
+        <result column="ble_auth_id" property="bleAuthId" />
+        <result column="used_user_name" property="usedUserName" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_name" property="deviceName" />
+        <result column="device_model" property="deviceModel" />
+        <result column="used_user_id" property="usedUserId" />
+        <result column="used_user_mobile_device_id" property="usedUserMobileDeviceId" />
+        <result column="used_user_mobile_no" property="usedUserMobileNo" />
+        <result column="used_user_mobile_model" property="usedUserMobileModel" />
+        <result column="encrypt_app_ble_key" property="encryptAppBleKey" />
+        <result column="ble_key_issue_time" property="bleKeyIssueTime" />
+        <result column="ble_key_effective_time" property="bleKeyEffectiveTime" />
+        <result column="ble_key_expire_time" property="bleKeyExpireTime" />
+        <result column="ble_key_refresh_time" property="bleKeyRefreshTime" />
+        <result column="ble_key_destroy_time" property="bleKeyDestroyTime" />
+        <result column="ble_key_status" property="bleKeyStatus" />
+        <result column="ble_work_model" property="bleWorkModel" />
+        <result column="del_flag" property="delFlag" />
+        <result column="version" property="version" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="user_type" property="userType" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, owner_user_id, ble_key_Id,ble_key_name,ble_auth_id,device_id, device_name, device_model, used_user_id,  used_user_mobile_device_id, used_user_mobile_no, used_user_mobile_model, encrypt_app_ble_key, ble_key_issue_time, ble_key_effective_time, ble_key_expire_time , ble_key_refresh_time, ble_key_destroy_time, ble_key_status, ble_work_model, del_flag, version, create_by, create_time, update_by, update_time, user_type,used_user_name
+    </sql>
+    <sql id="Base_Insert_List">
+        project_id, owner_user_id, ble_key_Id, ble_key_name,ble_auth_id,device_id, device_name, device_model, used_user_id,  used_user_mobile_device_id, used_user_mobile_no, used_user_mobile_model, encrypt_app_ble_key, ble_key_issue_time, ble_key_effective_time, ble_key_expire_time, ble_key_refresh_time, ble_key_destroy_time, ble_key_status, ble_work_model, del_flag, version, create_by, create_time, update_by, update_time, user_type,used_user_name
+    </sql>
+    <sql id="baseColumns">
+	    id,ble_key_id,ble_key_name,ble_auth_id,ble_key_destroy_time,ble_key_status
+    </sql>
+    <sql id="updateAllColumns">
+        <set>
+            <if test="projectId != null">
+                project_id = #{projectId},
+            </if>
+            <if test="ownerUserId != null">
+                owner_user_id = #{ownerUserId},
+            </if>
+            <if test="bleKeyId != null">
+                ble_key_Id = #{bleKeyId},
+            </if>
+            <if test="bleKeyName != null">
+                ble_key_Name = #{bleKeyName},
+            </if>
+            <if test="bleAuthId != null">
+                ble_auth_id = #{bleAuthId},
+            </if>
+            <if test="usedUserName != null">
+                used_user_name = #{usedUserName},
+            </if>
+            <if test="deviceId != null">
+                device_id = #{deviceId},
+            </if>
+            <if test="deviceName != null">
+                device_name = #{deviceName},
+            </if>
+            <if test="deviceModel != null">
+                device_model = #{deviceModel},
+            </if>
+            <if test="usedUserId != null">
+                used_user_id = #{usedUserId},
+            </if>
+            <if test="usedUserMobileDeviceId != null">
+                used_user_mobile_device_id = #{usedUserMobileDeviceId},
+            </if>
+            <if test="usedUserMobileNo != null">
+                used_user_mobile_no = #{usedUserMobileNo},
+            </if>
+            <if test="usedUserMobileModel != null">
+                used_user_mobile_model = #{usedUserMobileModel},
+            </if>
+            <if test="encryptAppBleKey != null">
+                encrypt_app_ble_key = #{encryptAppBleKey},
+            </if>
+            <if test="bleKeyIssueTime != null">
+                ble_key_issue_time = #{bleKeyIssueTime},
+            </if>
+            <if test="bleKeyEffectiveTime != null">
+                ble_key_effective_time = #{bleKeyEffectiveTime},
+            </if>
+            <if test="bleKeyExpireTime != null">
+                ble_key_expire_time = #{bleKeyExpireTime},
+            </if>
+            <if test="bleKeyRefreshTime != null">
+                ble_key_refresh_time = #{bleKeyRefreshTime},
+            </if>
+            <if test="bleKeyDestroyTime != null">
+                ble_key_destroy_time = #{bleKeyDestroyTime},
+            </if>
+            <if test="bleKeyStatus != null">
+                ble_key_status = #{bleKeyStatus},
+            </if>
+            <if test="bleWorkModel != null">
+                ble_work_model = #{bleWorkModel},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="version != null">
+                version = #{version},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="userType != null">
+                user_type = #{userType},
+            </if>
+        </set>
+    </sql>
+    <sql id="insertAllColumns">
+               #{id},
+
+               #{projectId},
+
+                #{ownerUserId},
+
+                #{bleKeyId},
+
+                #{bleKeyName},
+
+                #{bleAuthId},
+
+                #{deviceId},
+
+                 #{deviceName},
+
+                 #{deviceModel},
+
+                 #{usedUserId},
+
+                 #{usedUserMobileDeviceId},
+
+                 #{usedUserMobileNo},
+
+                 #{usedUserMobileModel},
+
+                 #{encryptAppBleKey},
+
+                 #{bleKeyIssueTime},
+
+                 #{bleKeyEffectiveTime},
+
+                 #{bleKeyExpireTime},
+
+                 #{bleKeyRefreshTime},
+
+                 #{bleKeyDestroyTime},
+
+                 #{bleKeyStatus},
+
+                 #{bleWorkModel},
+
+                 #{delFlag},
+
+                 #{version},
+
+                 #{createBy},
+
+                 #{createTime},
+
+                 #{updateBy},
+
+                 #{updateTime},
+
+                 #{userType},
+
+                 #{usedUserName},
+    </sql>
+
+
+    <sql id="whereClause">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="ownerUserId != null">
+                AND ${columnPrefix}owner_user_id = #{ownerUserId}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="usedUserId != null">
+                AND ${columnPrefix}used_user_id = #{usedUserId}
+            </if>
+            <if test="usedUserMobileDeviceId != null">
+                AND ${columnPrefix}used_user_mobile_device_id = #{usedUserMobileDeviceId}
+            </if>
+            <if test="bleKeyId != null">
+                AND ${columnPrefix}ble_key_id = #{bleKeyId}
+            </if>
+            <if test="bleAuthId != null">
+                AND ${columnPrefix}ble_auth_id = #{bleAuthId}
+            </if>
+            <if test="bleKeyStatus != null">
+                AND ${columnPrefix}ble_key_status = #{bleKeyStatus}
+            </if>
+            <if test="delFlag != null">
+                AND ${columnPrefix}del_flag = #{delFlag}
+            </if>
+            <if test="bleKeyDestroyTime != null">
+                AND ${columnPrefix}ble_key_destroy_time = #{bleKeyDestroyTime}
+            </if>
+            <if test="userType != null">
+                AND ${columnPrefix}user_type = #{userType}
+            </if>
+            <if test="usedUserMobileNo != null">
+                AND ${columnPrefix}used_user_mobile_no = #{usedUserMobileNo}
+            </if>
+            <if test="encryptAppBleKey != null">
+                AND ${columnPrefix}encrypt_app_ble_key = #{encryptAppBleKey}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="queryBleKeyInfo" resultType="com.bnmotor.icv.tsp.ble.model.entity.UserBleKeyHisPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.UserBleKeyHisPo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_user_ble_key_his
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+
+    <select id="queryDeviceAllBles" resultType="com.bnmotor.icv.tsp.ble.model.entity.UserBleKeyHisPo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.UserBleKeyPo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_user_ble_key_his
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+
+</mapper>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ble.mapper.BleAckInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ble.model.entity.BleAckInfoPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="device_id" property="deviceId" />
+        <result column="ble_key_id" property="bleKeyId" />
+        <result column="user_type" property="userType" />
+        <result column="destroy_time" property="destroyTime" />
+        <result column="ack_text" property="ackText" />
+        <result column="status" property="status" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,project_id,device_id,ble_key_id,user_type,destroy_time,ack_text,status,version,del_flag,create_by,create_time,update_by,update_time
+    </sql>
+
+    <sql id="updateColumns">
+        <set>
+            <if test="id != null">
+                id = #{id},
+            </if>
+            <if test="projectId != null">
+                project_id = #{projectId},
+            </if>
+            <if test="deviceId != null">
+                device_id = #{deviceId},
+            </if>
+            <if test="bleKeyId != null">
+                ble_key_id = #{bleKeyId},
+            </if>
+            <if test="userType != null">
+                user_type = #{userType},
+            </if>
+            <if test="destroyTime != null">
+                destroy_time = #{destroyTime},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="ackText != null">
+                ack_text = #{ackText},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+            <if test="version != null">
+                version = #{version},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime}
+            </if>
+        </set>
+    </sql>
+    <sql id="insertAllColumns">
+               #{id},
+               #{projectId},
+               #{deviceId},
+               #{bleKeyId},
+               #{userType},
+               #{destroyTime},
+               #{ackText},
+               #{status},
+               #{version},
+               #{delFlag},
+               #{createBy},
+               #{createTime},
+               #{updateBy},
+               #{updateTime}
+    </sql>
+    <sql id="whereClause">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+            <if test="bleKeyId != null">
+                AND ${columnPrefix}ble_key_id = #{bleKeyId}
+            </if>
+            <if test="userType != null">
+                AND ${columnPrefix}user_type = #{userType}
+            </if>
+            <if test="destroyTime != null">
+                AND  destroy_time = #{destroyTime}
+            </if>
+            <if test="status != null">
+                AND ${columnPrefix}status = #{status}
+            </if>
+            <if test="delFlag != null">
+                AND ${columnPrefix}del_flag = #{delFlag}
+            </if>
+            <if test="version != null">
+                AND ${columnPrefix}version = #{version}
+            </if>
+            <if test="createBy != null">
+                AND ${columnPrefix}create_by = #{createBy}
+            </if>
+            <if test="createTime != null">
+                AND ${columnPrefix}create_time = #{createTime}
+            </if>
+            <if test="updateBy != null">
+                AND ${columnPrefix}update_by = #{updateBy}
+            </if>
+            <if test="updateTime != null">
+                AND ${columnPrefix}update_time = #{updateTime}
+            </if>
+        </trim>
+    </sql>
+
+    <sql id="updateWhereColumns">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="id != null">
+                AND ${columnPrefix}id = #{id}
+            </if>
+            <if test="projectId != null">
+                AND ${columnPrefix}project_id = #{projectId}
+            </if>
+            <if test="deviceId != null">
+                AND ${columnPrefix}device_id = #{deviceId}
+            </if>
+        </trim>
+    </sql>
+
+    <select id="queryBleAckInfo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckInfoPo" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAckInfoPo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_tsp_ble_ack_info
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+
+    <select id="queryBleAckInfoList" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckInfoPo" resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAckInfoPo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_tsp_ble_ack_info
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </select>
+
+    <select id="queryDelBleAckInfoList"  resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAckInfoPo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_tsp_ble_ack_info where status = 2 and del_flag=1
+    </select>
+    <select id="queryActiveBleAckInfoList"  resultType="com.bnmotor.icv.tsp.ble.model.entity.BleAckInfoPo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_tsp_ble_ack_info where status != 2 and del_flag=0
+    </select>
+    <insert id="addBleAckInfo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckInfoPo">
+        INSERT INTO tb_tsp_ble_ack_info
+        (<include refid="Base_Column_List"/> )
+        values
+        (<include refid="insertAllColumns"/>)
+    </insert>
+
+    <delete id="deleteBleAckInfo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckInfoPo">
+        delete from tb_tsp_ble_ack_info
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </delete>
+    <delete id="moveBleAckInfoToHis" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckInfoPo">
+        insert into tb_tsp_ble_ack_info_his select *  from tb_tsp_ble_ack_info
+        <include refid="whereClause">
+            <property name="columnPrefix" value=""/>
+        </include>
+    </delete>
+    <update id="updateBleAckInfo" parameterType="com.bnmotor.icv.tsp.ble.model.entity.BleAckInfoPo">
+        UPDATE tb_tsp_ble_ack_info
+        <include refid="updateColumns" />
+        <include refid="updateWhereColumns">
+            <property name="columnPrefix" value=""/>
+        </include>
+        and status != 2 and  del_flag != 1
+    </update>
+</mapper>
