@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.FotaVersionCheckVerifyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.FotaVersionCheckVerifyPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="object_id" property="objectId" />
+        <result column="vehicle_id" property="vehicleId" />
+        <result column="task_id" property="taskId" />
+        <result column="business_id" property="businessId" />
+        <result column="source_type" property="sourceType" />
+        <result column="upgrade_verify_status" property="upgradeVerifyStatus" />
+        <result column="upgrade_verify_source" property="upgradeVerifySource" />
+        <result column="upgrade_verify_immediate" property="upgradeVerifyImmediate" />
+        <result column="upgrade_verify_time" property="upgradeVerifyTime" />
+        <result column="upgrade_verify_push" property="upgradeVerifyPush" />
+        <result column="download_percent_rate" property="downloadPercentRate" />
+        <result column="download_spend_time" property="downloadSpendTime" />
+        <result column="download_remain_time" property="downloadRemainTime" />
+        <result column="download_report_time" property="downloadReportTime" />
+        <result column="download_status" property="downloadStatus" />
+        <result column="installed_verify_status" property="installedVerifyStatus" />
+        <result column="installed_verify_source" property="installedVerifySource" />
+        <result column="installed_verify_time" property="installedVerifyTime" />
+        <result column="installed_verify_push" property="installedVerifyPush" />
+        <result column="installed_percent_rate" property="installedPercentRate" />
+        <result column="installed_spend_time" property="installedSpendTime" />
+        <result column="installed_report_time" property="installedReportTime" />
+        <result column="installed_status" property="installedStatus" />
+        <result column="installed_complete_status" property="installedCompleteStatus" />
+        <result column="installed_complete_time" property="installedCompleteTime" />
+        <result column="installed_start_time" property="installedStartTime" />
+        <result column="installed_end_time" property="installedEndTime" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="upgrade_log" property="upgradeLog" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, object_id, vehicle_id, task_id, business_id, source_type, upgrade_verify_status, upgrade_verify_source, upgrade_verify_immediate, upgrade_verify_time, upgrade_verify_push, download_percent_rate, download_spend_time, download_remain_time, download_report_time, download_status, installed_verify_status, installed_verify_source, installed_verify_time, installed_verify_push, installed_percent_rate, installed_spend_time, installed_report_time, installed_status, installed_complete_status, installed_complete_time, installed_start_time, installed_end_time, version, del_flag, create_by, create_time, update_by, update_time, upgrade_log
+    </sql>
+
+</mapper>

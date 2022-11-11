@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.vehicle.basic.service.dao.VehicleOemMapper">
+
+    <insert id="insertVehicleOem" parameterType="vehicleOem" useGeneratedKeys="true" keyProperty="id">
+     INSERT INTO tb_vehicle_oem
+     (
+    	oem_name,
+    	create_time,
+    	update_time
+     ) 
+      VALUES 
+     (
+    	#{oemName},
+    	SYSDATE(),
+    	SYSDATE()
+     )
+    </insert>
+  
+    <delete id="deleteById" parameterType="Long">
+      DELETE FROM tb_vehicle_oem WHERE id = #{value}
+    </delete>
+  	
+  	<sql id="pageWhere">
+		<where>
+	    </where>
+  	</sql>
+  	  
+    <select id="countPage" resultType="int">
+     SELECT count(*) FROM tb_vehicle_oem
+ 	  <include refid="pageWhere"/>
+    </select>
+  
+    <select id="queryPage" resultType="vehicleOem">
+      SELECT 
+    	id,
+    	oem_name oemName,
+    	create_time createTime,
+    	update_time updateTime
+      FROM tb_vehicle_oem
+      <include refid="pageWhere"/>
+      ORDER BY id DESC
+      LIMIT #{startRow},#{pageSize}
+    </select>
+  
+    <select id="queryById" parameterType="Long" resultType="vehicleOem">
+      SELECT
+    	id,
+    	oem_name oemName,
+    	create_time createTime,
+    	update_time updateTime
+      FROM tb_vehicle_oem
+      WHERE id = #{value}
+    </select>
+  
+    <update id="updateVehicleOem" parameterType="vehicleOem">
+      UPDATE tb_vehicle_oem
+      SET
+    	oem_name = #{oemName},
+    	update_time = SYSDATE()
+      WHERE id = #{id}
+    </update>
+  
+</mapper>

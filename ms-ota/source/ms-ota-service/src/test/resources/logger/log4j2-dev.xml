@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+
+    <properties>
+        <property name="LOG_HOME">${sys:logPath}</property>
+        <property name="fileName">${sys:appName}</property>
+        <property name="PID">${sys:pid}</property>
+    </properties>
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" ignoreExceptions="true">
+
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%highlight{%-5level}]  [%t] %highlight{%c{1.}.%M(%L)}: %msg%n  </Pattern>
+            </PatternLayout>
+
+            <!--
+            <JsonLayout compact="true" eventEol="true" />
+            -->
+
+        </Console>
+        <RollingFile name="INFO_ROLLING_FILE"
+                     fileName="${LOG_HOME}/${fileName}-${date:yyyy-MM-dd}-info.log"
+                     filePattern="${LOG_HOME}/${fileName}/${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log.gz" ignoreExceptions="true">
+            <!--ThresholdFilter :日志输出过滤-->
+            <!--level="info" :日志级别,onMatch="ACCEPT" :级别在info之上则接受,onMismatch="DENY" :级别在info之下则拒绝-->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <JsonLayout/>
+            <!--<PatternLayout
+                    pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} [%level] [${fileName}] - [PID: ${PID}][%thread][%file:%line] - %msg%n"/>-->
+            <PatternLayout>
+                <Pattern>%%date{yyyy-MM-dd HH:mm:ss.SSS} [%level] [${fileName}] - [PID: ${PID}][%thread][%file:%line] - %msg%n  </Pattern>
+            </PatternLayout>
+
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="4" modulate="true" />
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+        <RollingFile name="WARN_ROLLING_FILE"
+                     fileName="${LOG_HOME}/${fileName}-${date:yyyy-MM-dd}-warn.log"
+                     filePattern="${LOG_HOME}/${fileName}/${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log.gz" ignoreExceptions="true">
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            <JsonLayout/>
+            <!--
+            <PatternLayout>
+                <Pattern>%%date{yyyy-MM-dd HH:mm:ss.SSS} [%level] [${fileName}] - [PID: ${PID}][%thread][%file:%line] - %msg%n  </Pattern>
+            </PatternLayout>
+            -->
+            <Policies>
+                <!-- TimeBasedTriggeringPolicy :时间滚动策略,默认0点小时产生新的文件,interval="6" : 自定义文件滚动时间间隔,每隔6小时产生新文件, modulate="true" : 产生文件是否以0点偏移时间,即6点,12点,18点,0点-->
+                <TimeBasedTriggeringPolicy interval="4" modulate="true" />
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+        <RollingFile name="ERROR_ROLLING_FILE"
+                     fileName="${LOG_HOME}/${fileName}-${date:yyyy-MM-dd}-error.log"
+                     filePattern="${LOG_HOME}/${fileName}/${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz" ignoreExceptions="true">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <JsonLayout/>
+            <!--
+            <PatternLayout>
+                <Pattern>%%date{yyyy-MM-dd HH:mm:ss.SSS} [%level] [${fileName}] - [PID: ${PID}][%thread][%file:%line] - %msg%n  </Pattern>
+            </PatternLayout>
+            -->
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="4" modulate="true" />
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+
+        <!--SMTP :邮件发送日志
+        <SMTP name="Mail" subject="****SaaS系统正式版异常信息" to="message@message.info" from="message@XXXX.info" smtpUsername="message@message.info" smtpPassword="XXX****1234" smtpHost="mail.XXX.info" smtpDebug="false" smtpPort="25" bufferSize="10">
+            <PatternLayout pattern="[%-5p]:%d{YYYY-MM-dd HH:mm:ss} [%t] %c{1}:%L - %msg%n" />
+        </SMTP>
+        -->
+    </Appenders>
+
+    <Loggers>
+        <!--过滤掉spring和mybatis的一些无用的DEBUG信息-->
+        <!--Logger节点用来单独指定日志的形式，name为包路径,比如要为org.springframework包下所有日志指定为INFO级别等。 -->
+        <logger name="org.springframework" level="INFO"></logger>
+        <logger name="org.mybatis" level="INFO"></logger>
+
+        <!--AsyncLogger :异步日志,LOG4J有三种日志模式,全异步日志,混合模式,同步日志,性能从高到底,线程越多效率越高,也可以避免日志卡死线程情况发生-->
+        <!--additivity="false" : additivity设置事件是否在root logger输出，为了避免重复输出，可以在Logger 标签下设置additivity为”false”-->
+        <AsyncLogger name="ASYNC_INFO_ROLLING_FILE" level="info" additivity="false">
+            <appender-ref ref="INFO_ROLLING_FILE"/>
+        </AsyncLogger>
+
+        <!-- 将业务dao接口填写进去,并用控制台输出即可 -->
+        <logger name="gaea.user.center.service.dao" level="DEBUG" additivity="false">
+            <appender-ref ref="Console"/>
+        </logger>
+
+        <!--配置输出sql语句-->
+        <logger name="org.apache.ibatis" level="DEBUG"/>
+        <logger name="java.sql.Statement" level="DEBUG"/>
+        <logger name="java.sql.PreparedStatement" level="DEBUG"/>
+
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="WARN_ROLLING_FILE"/>
+            <AppenderRef ref="INFO_ROLLING_FILE"/>
+            <AppenderRef ref="ERROR_ROLLING_FILE"/>
+        </Root>
+    </Loggers>
+</configuration>

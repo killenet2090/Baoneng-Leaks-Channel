@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.OrganizationMapper">
+    <resultMap id="BaseResultMap" type="gaea.user.center.service.model.entity.OrganizationPo" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="level" property="level" jdbcType="INTEGER" />
+        <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_by" property="createBy" jdbcType="BIGINT" />
+		<result column="update_by" property="updateBy" jdbcType="BIGINT" />
+    </resultMap>
+    <resultMap id="CustomResultMap" type="gaea.user.center.service.model.response.OrganizationResp" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id,
+        name,
+        code,
+        level,
+		del_flag,
+        create_time,
+        update_time,
+		create_by,
+		update_by
+    </sql>
+    <select id="queryOrganization" resultMap="BaseResultMap" parameterType="gaea.user.center.service.model.entity.OrganizationPo">
+        SELECT 
+        <include refid="Base_Column_List" />
+         FROM tb_organization 
+        <where>
+	        <if test="id!=null">
+	        	id=#{id}
+	        </if>
+	        <if test="name!=null and name!=''">
+	        	and name like #{name}
+	        </if>
+	        <if test="code!=null and code!=''">
+	        	and code=#{code}
+	        </if>
+	        <if test="level!=null">
+	        	and level=#{level}
+	        </if>
+	        <if test="delFlag!=null">
+	        	and del_flag=#{delFlag}
+	        </if>
+			<if test="createBy!=null">
+				and create_by=#{createBy}
+			</if>
+			<if test="updateBy!=null">
+				and update_by=#{updateBy}
+			</if>
+        </where>
+    </select>
+    <select id="queryOrganizationByUserId" resultMap="CustomResultMap" parameterType="java.lang.Integer">
+		SELECT 
+			t.id,
+			t.name,
+			t.code
+		FROM
+		    tb_organization t
+		WHERE
+		    t.code LIKE (SELECT
+		            concat(tbo.code,'%')
+		        FROM
+		            tb_organization tbo,
+		            tb_user tu
+		        WHERE
+		            tbo.id = tu.org_id AND tu.id = #{userId})
+    </select>
+    <select id="queryOrganizationById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT 
+		<include refid="Base_Column_List" />
+		FROM
+		    tb_organization tbo
+		WHERE
+		    tbo.id = #{id}
+    </select>
+</mapper>

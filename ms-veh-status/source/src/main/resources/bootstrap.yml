@@ -1,0 +1,50 @@
+server:
+  port: 8891
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ms-veh-status
+
+---
+spring:
+  profiles: dev
+  cloud:
+    nacos:
+      config:
+        #server-addr: http://127.0.0.1:8848
+        #namespace: 06cee523-0dca-41ff-a2bc-516823587d4f
+        server-addr: http://10.210.100.17:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        group: DEVICE_GROUP
+        file-extension: yaml
+      discovery:
+        server-addr: http://10.210.100.17:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        #server-addr: http://127.0.0.1:8848
+---
+spring:
+  profiles: test
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.120:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        group: DEVICE_GROUP
+        file-extension: yaml
+      discovery:
+        server-addr: http://10.210.100.120:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+---
+spring:
+  profiles: prod
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.120:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        group: DEVICE_GROUP
+        file-extension: yaml
+      discovery:
+        server-addr: http://10.210.100.120:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7

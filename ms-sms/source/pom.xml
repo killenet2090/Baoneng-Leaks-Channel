@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.bnmotor.icv.adam</groupId>
+        <artifactId>adam-parent</artifactId>
+        <version>1.1.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.bnmotor.icv.tsp.supporting</groupId>
+    <artifactId>ms-sms</artifactId>
+    <version>1.0.0</version>
+    <name>ms-sms</name>
+    <description>消息服务系统</description>
+    <packaging>jar</packaging>
+    <properties>
+        <java.version>11</java.version>
+        <basedir>./source</basedir>
+        <jsms-client.version>1.2.9</jsms-client.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.bnmotor.icv.adam</groupId>
+            <artifactId>adam-data-mysql-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.bnmotor.icv.adam</groupId>
+            <artifactId>adam-spring-cloud-spring-boot-starter</artifactId>
+        </dependency>
+        <!-- 短信发送 -->
+        <dependency>
+            <groupId>cn.jpush.api</groupId>
+            <artifactId>jsms-client</artifactId>
+            <version>${jsms-client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bnmotor.icv.adam</groupId>
+            <artifactId>adam-data-redis-spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

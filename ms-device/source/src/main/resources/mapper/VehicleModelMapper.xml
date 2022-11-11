@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.device.mapper.VehicleModelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.device.model.entity.VehicleModelPo">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectId"/>
+        <result column="series_id" property="seriesId"/>
+        <result column="code" property="code"/>
+        <result column="name" property="name"/>
+        <result column="veh_level" property="vehLevel"/>
+        <result column="veh_category" property="vehCategory"/>
+        <result column="veh_type" property="vehType"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, series_id, code, `name`, veh_level, veh_category, veh_type, del_flag, version, create_by, create_time, update_by, update_time
+    </sql>
+
+    <select id="listBySeriesId" resultType="VehicleModelPo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_vehicle_model
+        <where>
+            <if test="seriesId != null">
+                series_id = #{ser}
+            </if>
+            and del_flag = 0
+        </where>
+    </select>
+    <select id="selectAll" resultType="VehicleModelPo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_vehicle_model
+        where del_flag = 0
+    </select>
+
+    <select id="getVehicleModelDetailByConfigId"
+            resultType="com.bnmotor.icv.tsp.device.model.response.vehModel.VehConfigDetailVo">
+        SELECT
+        vm.`name` AS modelName,
+        vm.`code` AS modelCode,
+        vm.veh_type AS vehType,
+        info.supplier_name AS supplierName
+        FROM tb_veh_model_device as d
+        left join tb_vehicle_model vm on d.model_id = vm.id
+        left join tb_device_model_info info on d.device_model = info.device_model
+        WHERE d.del_flag = 0 AND vm.del_flag = 0 AND info.del_flag = 0 AND d.config_id = #{configId}
+        limit 1
+    </select>
+
+    <select id="listByFromId" resultType="VehicleModelPo">
+        select <include refid="Base_Column_List" />
+        from tb_vehicle_model
+        where id > #{fromId} and del_flag = 0
+        limit #{limit}
+    </select>
+</mapper>

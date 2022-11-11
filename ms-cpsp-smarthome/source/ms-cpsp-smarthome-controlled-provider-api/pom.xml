@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ms-cpsp-smarthome</artifactId>
+        <groupId>com.bnmotor.icv.tsp.cpsp</groupId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>ms-cpsp-smarthome-controlled-provider-api</artifactId>
+    <description>智能家居家控车对外标准接口定义</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.bnmotor.icv.tsp.cpsp</groupId>
+            <artifactId>ms-cpsp-engine</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+</project>

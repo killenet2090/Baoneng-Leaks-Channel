@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.vehicle.basic.service.dao.VehicleEcuBomMapper">
+
+    <insert id="insertVehicleEcuBom" parameterType="vehicleEcuBom" useGeneratedKeys="true" keyProperty="id">
+     INSERT INTO tb_vehicle_ecu_bom
+     (
+    	vin,
+    	ecu_name,
+    	ecu_id,
+    	supplier,
+    	serial_numbe,
+    	firmware_version_number,
+    	hardware_version_number,
+    	boot_version_number,
+    	diagnostic_id,
+    	differential_support,
+    	remark,
+    	create_time,
+    	update_time
+     ) 
+      VALUES 
+     (
+    	#{vin},
+    	#{ecuName},
+    	#{ecuId},
+    	#{supplier},
+    	#{serialNumbe},
+    	#{firmwareVersionNumber},
+    	#{hardwareVersionNumber},
+    	#{bootVersionNumber},
+    	#{diagnosticId},
+    	#{differentialSupport},
+    	#{remark},
+    	SYSDATE(),
+    	SYSDATE()     )
+    </insert>
+  
+    <delete id="deleteById" parameterType="Long">
+      DELETE FROM tb_vehicle_ecu_bom WHERE id = #{value}
+    </delete>
+  	
+  	<sql id="pageWhere">
+		<where>
+	    </where>
+  	</sql>
+  	  
+    <select id="countPage" resultType="int">
+     SELECT count(*) FROM tb_vehicle_ecu_bom
+ 	  <include refid="pageWhere"/>
+    </select>
+  
+    <select id="queryPage" resultType="vehicleEcuBom">
+      SELECT 
+    	id,
+    	vin,
+    	ecu_name ecuName,
+    	ecu_id ecuId,
+    	supplier,
+    	serial_numbe serialNumbe,
+    	firmware_version_number firmwareVersionNumber,
+    	hardware_version_number hardwareVersionNumber,
+    	boot_version_number bootVersionNumber,
+    	diagnostic_id diagnosticId,
+    	differential_support differentialSupport,
+    	remark,
+    	create_time createTime,
+    	update_time updateTime,
+    	is_active isActive
+      FROM tb_vehicle_ecu_bom
+      <include refid="pageWhere"/>
+      ORDER BY id DESC
+      LIMIT #{startRow},#{pageSize}
+    </select>
+  
+    <select id="queryById" parameterType="Long" resultType="vehicleEcuBom">
+      SELECT
+    	id,
+    	vin,
+    	ecu_name ecuName,
+    	ecu_id ecuId,
+    	supplier,
+    	serial_numbe serialNumbe,
+    	firmware_version_number firmwareVersionNumber,
+    	hardware_version_number hardwareVersionNumber,
+    	boot_version_number bootVersionNumber,
+    	diagnostic_id diagnosticId,
+    	differential_support differentialSupport,
+    	remark,
+    	create_time createTime,
+    	update_time updateTime,
+    	is_active isActive
+      FROM tb_vehicle_ecu_bom
+      WHERE id = #{value}
+    </select>
+
+	<select id="queryByVin" parameterType="vehicleEcuBom" resultType="vehicleEcuBom">
+      SELECT
+    	id,
+    	vin,
+    	ecu_name ecuName,
+    	ecu_id ecuId,
+    	supplier,
+    	serial_numbe serialNumbe,
+    	firmware_version_number firmwareVersionNumber,
+    	hardware_version_number hardwareVersionNumber,
+    	boot_version_number bootVersionNumber,
+    	diagnostic_id diagnosticId,
+    	differential_support differentialSupport,
+    	remark,
+    	create_time createTime,
+    	update_time updateTime,
+    	is_active isActive
+      FROM tb_vehicle_ecu_bom
+      <where>
+			<if test="ecuName !=null and ecuName !=''">
+				AND ecu_name like #{ecuName} '%'
+			</if>
+			<if test="vin !=null and vin !=''">
+				AND vin = #{vin}
+			</if>
+		    <if test="isActive !=null and isActive !=''">
+			    AND is_active = #{isActive}
+		    </if>
+	  </where>
+	ORDER BY ecuName DESC
+    </select>
+
+
+
+  
+    <update id="updateVehicleEcuBom" parameterType="vehicleEcuBom">
+      UPDATE tb_vehicle_ecu_bom
+      SET
+    	vin = #{vin},
+    	ecu_name = #{ecuName},
+    	ecu_id = #{ecuId},
+    	supplier = #{supplier},
+    	serial_numbe = #{serialNumbe},
+    	firmware_version_number = #{firmwareVersionNumber},
+    	hardware_version_number = #{hardwareVersionNumber},
+    	boot_version_number = #{bootVersionNumber},
+    	diagnostic_id = #{diagnosticId},
+    	differential_support = #{differentialSupport},
+    	remark = #{remark},
+    	update_time = SYSDATE(),
+    	is_active = #{isActive}
+      WHERE id = #{id}
+    </update>
+  
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.FotaComponentListMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.FotaComponentListPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="device_component_id" property="deviceComponentId" />
+        <result column="tree_node_id" property="treeNodeId" />
+        <result column="tree_node_code_path" property="treeNodeCodePath" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, device_component_id, tree_node_id, tree_node_code_path, version, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+</mapper>

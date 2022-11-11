@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.common.data.mapper.GeoRelationshipMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.common.data.model.entity.GeoRelationshipPo">
+        <id column="id" property="id" />
+        <result column="ancestor" property="ancestor" />
+        <result column="descendant" property="descendant" />
+        <result column="distance" property="distance" />
+        <result column="del_flag" property="delFlag" />
+        <result column="version" property="version" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, ancestor, descendant, distance, del_flag, version, create_by, create_time, update_by, update_time
+    </sql>
+    <select id="findAll" parameterType="com.bnmotor.icv.tsp.common.data.model.dto.GeoRelationshipDto"
+            resultType="com.bnmotor.icv.tsp.common.data.model.entity.GeoRelationshipPo">
+        select * from tb_geo_relationship
+        <where>
+            ancestor = #{query.ancestor}
+            <if test="query.descendant != null">
+                AND descendant = #{query.descendant}
+            </if>
+            <if test="query.distance != null">
+                <if test='query.distanceCompare == "eq"'>
+                    AND distance = #{query.parentId}
+                </if>
+                <if test='query.distanceCompare == "gt"'>
+                    AND distance > #{query.parentId}
+                </if>
+                <if test='query.distanceCompare == "lt"'>
+                    AND distance <![CDATA[<]]> #{query.parentId}
+                </if>
+                <if test='query.distanceCompare == "ge"'>
+                    AND distance >= #{query.parentId}
+                </if>
+                <if test='query.distanceCompare == "le"'>
+                    AND distance <![CDATA[<=]]> #{query.parentId}
+                </if>
+            </if>
+            AND del_flag = 0
+        </where>
+    </select>
+
+    <select id="selectOne" parameterType="com.bnmotor.icv.tsp.common.data.model.dto.GeoRelationshipDto"
+            resultType="com.bnmotor.icv.tsp.common.data.model.entity.GeoRelationshipPo">
+        select * from tb_geo_relationship
+        <where>
+            ancestor = #{query.ancestor}
+            <if test="query.descendant != null">
+                AND descendant = #{query.descendant}
+            </if>
+            AND del_flag = 0
+        </where>
+    </select>
+
+</mapper>

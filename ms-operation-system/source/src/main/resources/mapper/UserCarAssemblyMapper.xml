@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.UserCarAssemblyMapper">
+	<!--根据用户id批量删除中间表数据-->
+    <delete id="deleteBatchUserAssembly" parameterType="Long">
+		DELETE
+		FROM
+			tb_user_car_assembly
+		WHERE
+			user_id = #{userId}
+    </delete>
+
+	<!--查询用户车辆集列表-->
+	<select id="queryUserCarAssemblyListByUserId" parameterType="Long" resultType="gaea.user.center.service.model.entity.UserCarAssemblyPo">
+		SELECT
+			id,
+			user_id,
+			cid,
+			cname,
+			type,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			del_flag
+		FROM
+			tb_user_car_assembly
+		WHERE
+			user_id = #{userId}
+	</select>
+
+	<!--根据配置获取用户车辆集列表-->
+	<select id="getCarAssemblyListByConfig" parameterType="gaea.user.center.service.model.entity.UserCarAssemblyPo" resultType="gaea.user.center.service.model.entity.UserCarAssemblyPo">
+		SELECT
+			id,
+			user_id,
+			cid,
+			cname,
+			type,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			del_flag
+		FROM
+			tb_user_car_assembly
+		WHERE
+			1 = 1
+			<if test="param.type != null">
+				AND type = #{param.type}
+			</if>
+			<if test="param.cid != null">
+				AND cid = #{param.cid}
+			</if>
+	</select>
+
+	<!--根据标签列表获取用户车辆集列表-->
+	<select id="getCarAssemblyListByTags" parameterType="gaea.user.center.service.model.response.UserCarAssemblyVO" resultType="gaea.user.center.service.model.entity.UserCarAssemblyPo">
+		SELECT
+			id,
+			user_id,
+			cid,
+			cname,
+			type,
+			create_by,
+			create_time,
+			update_by,
+			update_time,
+			del_flag
+		FROM
+			tb_user_car_assembly
+		WHERE
+		1 = 1
+		<if test="param.type != null">
+			AND type = #{param.type}
+		</if>
+		<if test="param.cids != null and param.cids.size() > 0">
+			AND cid IN
+			<foreach collection="param.cids" item="item" separator="," open="(" close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+</mapper>

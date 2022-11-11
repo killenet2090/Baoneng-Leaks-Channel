@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.device.mapper.DeviceReplacementMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.device.model.entity.DeviceReplacementPo">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectId"/>
+        <result column="vin" property="vin"/>
+        <result column="device_type" property="deviceType"/>
+        <result column="device_id" property="deviceId"/>
+        <result column="device_model_info_id" property="deviceModelInfoId"/>
+        <result column="hardware_version" property="hardwareVersion"/>
+        <result column="software_version" property="softwareVersion"/>
+        <result column="bind_time" property="bindTime"/>
+        <result column="replace_reason" property="replaceReason"/>
+        <result column="replace_channel" property="replaceChannel"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, vin, device_type, device_id,  device_model_info_id, hardware_version, software_version, bind_time, replace_reason, replace_channel, del_flag, version, create_by, create_time, update_by, update_time
+    </sql>
+
+    <select id="listReplacements" resultType="DeviceReplacementPo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device_replacement
+        <where>
+            vin = #{vin} and del_flag = 0
+            <if test="deviceType != null">
+                and device_type = #{deviceType}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="countReplacementTimes"
+            resultType="com.bnmotor.icv.tsp.device.model.response.vehDevice.ReplacementTimesVo">
+        select device_type as deviceType, count(1) as replacementTimes
+        from tb_device_replacement
+        where vin = #{vin} and del_flag = 0
+        group by vin, device_type
+    </select>
+
+    <select id="countBindedRecords" resultType="ReplaceTimesVo">
+        select device_id, count(1) as num
+        from tb_device_replacement
+        <where>
+            del_flag = 0
+            <if test="deviceIds != null and deviceIds.size > 0">
+                and device_id in
+                <foreach collection="deviceIds" item="deviceId" open="(" close=")" separator=",">
+                    #{deviceId}
+                </foreach>
+            </if>
+        </where>
+        group by device_id
+    </select>
+
+    <select id="selectPageBindedRecords" resultType="DeviceReplacementPo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device_replacement
+        <where>
+            del_flag = 0 and device_id = #{deviceId} and vin is not null
+        </where>
+    </select>
+</mapper>

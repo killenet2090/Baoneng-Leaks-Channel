@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.device.mapper.DeviceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.device.model.entity.DevicePo">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectId"/>
+        <result column="device_type" property="deviceType"/>
+        <result column="device_model" property="deviceModel"/>
+        <result column="device_id" property="deviceId"/>
+        <result column="device_name" property="deviceName"/>
+        <result column="hardware_version" property="hardwareVersion"/>
+        <result column="software_version" property="softwareVersion"/>
+        <result column="supplier_hardware_version" property="supplierHardwareVersion"/>
+        <result column="supplier_software_version" property="supplierSoftwareVersion"/>
+        <result column="batch_no" property="batchNo"/>
+        <result column="enroll_status" property="enrollStatus"/>
+        <result column="enroll_time" property="enrollTime"/>
+        <result column="iccid" property="iccid"/>
+        <result column="product_sn" property="productSn"/>
+        <result column="product_time" property="productTime"/>
+        <result column="out_factory_time" property="outFactoryTime"/>
+        <result column="supplier_name" property="supplierName"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, device_type, device_model, device_id, device_name, hardware_version, software_version,
+        batch_no, enroll_status, enroll_time, iccid, product_sn, product_time, out_factory_time, supplier_name,
+         del_flag, version, create_by, create_time, update_by, update_time
+    </sql>
+
+    <select id="listAll" resultType="DeviceVo">
+        select d.id, d.device_id, d.product_sn, veh.driving_lic_plate, vehDevice.vin, d.device_type, d.device_model,
+        d.supplier_name, d.enroll_status
+        from tb_device as d
+        left join tb_vehicle_device as vehDevice on d.device_id = vehDevice.device_id and vehDevice.del_flag = 0
+        left join tb_vehicle as veh on vehDevice.vin = veh.vin and veh.del_flag = 0
+        <where>
+            d.del_flag = 0
+            <if test="searchKey != null and searchValue != null">
+                <if test="searchKey == 'vin'">
+                    and vehDevice.vin like CONCAT('%', #{searchValue}, '%')
+                </if>
+                <if test="searchKey == 'productSn'">
+                    and d.product_sn like CONCAT('%', #{searchValue}, '%')
+                </if>
+                <if test="searchKey == 'drivingLicPlate'">
+                    and veh.driving_lic_plate like CONCAT('%', #{searchValue}, '%')
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <select id="listByDeviceIds" resultType="DevicePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device
+        <where>
+            del_flag = 0
+            <if test="deviceIds != null and deviceIds.size > 0">
+                and device_id in
+                <foreach collection="deviceIds" separator="," open="(" close=")" item="deviceId">
+                    #{deviceId}
+                </foreach>
+            </if>
+        </where>
+        limit 1000
+    </select>
+
+    <select id="listDevicesByModel" resultType="com.bnmotor.icv.tsp.device.model.response.device.ModelDeviceVo">
+        SELECT
+        d.id AS id,
+        t.type_name AS deviceType,
+        d.device_model AS deviceModel,
+        info.supplier_name AS supplierName
+        FROM tb_device d
+        join tb_device_model_info info on d.device_model = info.device_model
+        join tb_device_type t on d.device_type = t.device_type
+        <where>
+            d.del_flag = 0 AND info.del_flag = 0 and t.del_flag = 0
+            <if test="deviceModels != null and deviceModels.size > 0">
+                AND d.device_model in
+                <foreach collection="deviceModels" open="(" close=")" item="deviceModel" separator=",">
+                    #{deviceModel}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="listByFromId" resultType="DevicePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device
+        <where>
+            <if test="fromId != null">
+                id > #{fromId}
+            </if>
+            <if test="createTime != null">
+                and create_time &lt;= #{createTime}
+            </if>
+        </where>
+        limit #{limit}
+    </select>
+
+    <select id="getByDeviceId" resultType="DevicePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device
+        where del_flag = 0 and device_id = #{deviceId}
+        limit 1
+    </select>
+
+    <select id="getNotBindingBySn" resultType="DevicePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device
+        where product_sn = #{sn} and device_id not in(
+        select dev.device_id
+        from tb_device dev
+        left join tb_vehicle_device vehDev
+        on dev.device_id = vehDev.device_id
+        where dev.del_flag = 0 and dev.product_sn = #{sn} and vehDev.device_id is not null
+        )
+        limit 1
+    </select>
+
+    <select id="getByIccidId" resultType="DevicePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device
+        where del_flag = 0 and iccid = #{iccid}
+        limit 1
+    </select>
+
+    <select id="listBySn" resultType="DevicePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device
+        where del_flag = 0 and product_sn = #{sn}
+    </select>
+</mapper>

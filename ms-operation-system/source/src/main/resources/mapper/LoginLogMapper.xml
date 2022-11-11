@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.LoginLogMapper">
+	<!--分页查询项目信息-->
+	<select id="queryLoginLogList" resultType="gaea.user.center.service.model.entity.LoginLogPo">
+		SELECT
+			*
+		FROM
+			(
+			SELECT
+				id,
+				user_name,
+				login_time
+			FROM
+				tb_login_log
+			ORDER BY
+				login_time DESC
+			LIMIT 1000
+			) AS result
+		GROUP BY
+			result.user_name
+	</select>
+</mapper>

@@ -1,0 +1,27 @@
+server:
+  port: 80
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ms-cpsp-smarthome-master-service
+  cloud:
+    nacos:
+      config:
+        group: CPSP_GROUP
+        file-extension: yaml
+
+---
+spring:
+  profiles: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.17:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+#      discovery:
+#        server-addr: http://10.210.100.17:8848
+#        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+#        enable: false
+  main:
+    allow-bean-definition-overriding: true

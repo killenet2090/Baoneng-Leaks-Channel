@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.common.data.mapper.GeoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.common.data.model.entity.GeoPo">
+        <id column="id" property="id" />
+        <result column="parent_id" property="parentId" />
+        <result column="type_id" property="typeId" />
+        <result column="type" property="type" />
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <result column="abbreviation" property="abbreviation" />
+        <result column="pinyin" property="pinyin" />
+        <result column="first_letter" property="firstLetter" />
+        <result column="lng" property="lng" />
+        <result column="lat" property="lat" />
+        <result column="del_flag" property="delFlag" />
+        <result column="version" property="version" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, parent_id, type_id, type, name, code, abbreviation, pinyin, first_letter, lng, lat, del_flag, version, create_by, create_time, update_by, update_time
+    </sql>
+    <select id="findAll" parameterType="com.bnmotor.icv.tsp.common.data.model.request.GeoQueryVo"
+            resultType="com.bnmotor.icv.tsp.common.data.model.entity.GeoPo">
+        select <include refid="Base_Column_List"/>
+        from tb_geo
+        <where>
+            <if test="query.parentId != null">
+                AND parent_id = #{query.parentId}
+            </if>
+            <if test="query.typeId != null">
+                AND type_id = #{query.typeId}
+            </if>
+            <if test="query.searchKey != null">
+                AND (code = #{query.searchKey} OR name like concat(#{query.searchKey}, '%'))
+            </if>
+            AND del_flag = 0
+        </where>
+    </select>
+    <select id="findByCode" resultType="com.bnmotor.icv.tsp.common.data.model.entity.GeoPo">
+        select <include refid="Base_Column_List"/>
+        from tb_geo where code = #{code} AND del_flag = 0
+    </select>
+
+    <select id="findById" resultType="com.bnmotor.icv.tsp.common.data.model.entity.GeoPo">
+        select <include refid="Base_Column_List"/>
+        from tb_geo where id = #{id} AND del_flag = 0
+    </select>
+
+    <select id="findByKeyword" resultType="com.bnmotor.icv.tsp.common.data.model.entity.GeoPo">
+        select <include refid="Base_Column_List"/>
+        from tb_geo where (code like concat(#{keyword}, '%') OR name like concat(#{keyword}, '%') OR abbreviation like concat(#{keyword}, '%')) AND del_flag = 0
+    </select>
+
+    <select id="findByCodes" resultType="com.bnmotor.icv.tsp.common.data.model.entity.GeoPo">
+        select <include refid="Base_Column_List"/>
+        from tb_geo where code in
+        <foreach item="item" index="index" collection="codes" open="(" separator="," close=")">
+            #{item}
+        </foreach> AND del_flag = 0
+    </select>
+
+</mapper>

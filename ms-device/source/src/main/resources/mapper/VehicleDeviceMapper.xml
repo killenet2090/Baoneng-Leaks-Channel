@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.device.mapper.VehicleDeviceMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.device.model.entity.VehicleDevicePo">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectId"/>
+        <result column="vin" property="vin"/>
+        <result column="device_type" property="deviceType"/>
+        <result column="device_id" property="deviceId"/>
+        <result column="device_name" property="deviceName"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, vin, device_type, device_id, device_name, del_flag, version, create_by, create_time, update_by, update_time
+    </sql>
+
+    <select id="listByVinAndDeviceType" resultType="VehicleDevicePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_vehicle_device
+        <where>
+            vin = #{vin} and del_flag = 0
+            <if test="deviceType != null">
+                and device_type = #{deviceType}
+            </if>
+        </where>
+    </select>
+
+    <select id="getByDeviceId" resultType="VehicleDevicePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_vehicle_device
+        where device_id = #{deviceId} and del_flag = 0
+        limit 1
+    </select>
+
+    <select id="listVehDeviceByVins" resultType="com.bnmotor.icv.tsp.device.service.mq.producer.dataaysn.VehicleDevice">
+        select veh.vin, dev.device_id, dev.product_sn as sn, dev.device_type as componentType, dev.device_model as componentModel,
+        dev.hardware_version as hardwareVersion, dev.software_version as softwareVersion, dev.iccid
+        from tb_vehicle_device as veh
+        join tb_device as dev on veh.device_id = dev.device_id and veh.device_type = dev.device_type
+        <where>
+            veh.del_flag = 0
+            <if test="vins != null and vins.size > 0">
+                and veh.vin in
+                <foreach collection="vins" item="vin" separator="," open="(" close=")">
+                    #{vin}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="listByVins" resultType="VehicleDevicePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_vehicle_device
+        <where>
+            del_flag = 0
+            <if test="vins != null and vins.size > 0">
+                and vin in
+                <foreach collection="vins" item="vin" separator="," open="(" close=")">
+                    #{vin}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <delete id="delete">
+        delete from tb_vehicle_device
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByVinAndType">
+        delete from tb_vehicle_device
+        where vin = #{vin} and device_type = #{deviceType}
+    </delete>
+</mapper>

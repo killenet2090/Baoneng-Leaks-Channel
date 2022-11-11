@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.UpgradeStrategyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.UpgradeStrategyPo">
+        <id column="id" property="id" />
+        <result column="ota_plan_id" property="otaPlanId" />
+        <!--<result column="task_id" property="taskId" />-->
+        <result column="firmware_id" property="firmwareId" />
+        <result column="firmware_version_id" property="firmwareVersionId" />
+        <result column="rollback_mode" property="rollbackMode" />
+        <result column="max_concurrent" property="maxConcurrent" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, ota_plan_id, firmware_id, firmware_version_id, rollback_mode, max_concurrent, version, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+    <!-- 以上为mybatis-plus自动生成 -->
+    <insert id="insertFirmwareStrategyList" parameterType="java.util.List">
+        INSERT INTO tb_upgrade_strategy(
+        <!-- task_id, -->
+        ota_plan_id,
+        firmware_id,
+        firmware_version_id,
+        rollback_mode,
+        max_concurrent,
+        create_by,
+        create_time
+        )
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            (
+            <!-- #{item.taskId}, -->
+            #{item.planId},
+            #{item.firmwareId},
+            #{item.firmwareVersionId},
+            #{item.rollbackMode},
+            #{item.maxConcurrent},
+            #{item.createBy},
+            #{item.createTime}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByOtaPlanIdPhysical" parameterType="Long">
+      DELETE FROM tb_upgrade_strategy WHERE ota_plan_id = #{value}
+    </delete>
+</mapper>

@@ -1,0 +1,105 @@
+#是否开启调试
+debug: false
+
+#端口号
+server:
+  port: 8083
+  tomcat:
+    max-threads: 50
+  servlet:
+    context-path: /fota
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ms-ota-service
+
+  main:
+    allow-bean-definition-overriding: true
+    devtools:
+      restart:
+        enabled: true
+  servlet:
+    multipart:
+      max-file-size: 2000MB
+      max-request-size: 2000MB
+
+#xxl-job:
+  #admin:
+    ##调度中心部署根地址：如调度中心集群部署存在多个地址则用逗号分隔
+    #addresses: http://xxl-job-admin-dev.dev.bnicvc.com/xxl-job-admin/
+  #executor:
+    ### 执行器AppName：执行器心跳注册分组依据；为空则关闭自动注册，建议非空
+    #app-name: ms-ota
+    ## 执行器通讯TOKEN [选填]：非空时启用；
+    #access-token: ewe
+    #默认为 logs/applogs/xxl-job/jobhandler
+    #log-path: logs/applogs/xxl-job/jobhandler
+    #默认为 10 限制值大于等于3时生效; 否则, 如-1, 关闭自动清理功能；
+    #log-retention-days: 10
+    ### 执行器IP [选填]：默认为空表示自动获取IP，多网卡时可手动设置指定IP
+    #ip: 10.138.60.75
+    ##默认为9999，小于等于0则自动获取；
+    #port: 6060
+
+# PKI加密开关
+pki:
+  encrypt:
+    switch: 0
+
+# 全局车辆缓存开关
+cache:
+  vehicle:
+    switch: true
+
+ribbon:
+  ReadTimeout: 3000
+  ConnectTimeout: 2000
+
+---
+spring:
+  profiles: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.17:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        group: OTA_GROUP
+        file-extension: yaml
+      discovery:
+        server-addr: http://10.210.100.17:8848/
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        #测试用，发布的时候需要移除
+        #ip: 10.228.2.24
+---
+spring:
+  profiles: svt2
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.120:8868
+        namespace: 5558a03a-10d4-4832-8473-d0cb3879ccb3
+        group: OTA_GROUP
+        file-extension: yaml
+      discovery:
+        server-addr: http://10.210.100.120:8868
+        #namespace: 5558a03a-10d4-4832-8473-d0cb3879ccb3
+        #测试用，发布的时候需要移除
+        #ip: 10.228.2.24
+
+---
+spring:
+  profiles: sit
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.18:8848
+        namespace: 5558a03a-10d4-4832-8473-d0cb3879ccb3
+        group: OTA_GROUP
+        file-extension: yaml
+      discovery:
+        server-addr: http://10.210.100.18:8848/
+        #namespace: 5558a03a-10d4-4832-8473-d0cb3879ccb3
+        #测试用，发布的时候需要移除
+        #ip: 10.228.2.24

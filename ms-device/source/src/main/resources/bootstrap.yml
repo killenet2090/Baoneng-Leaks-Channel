@@ -1,0 +1,39 @@
+server:
+  port: 8086
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ms-device
+
+---
+spring:
+  profiles: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.17:8848
+        #server-addr: http://10.24.152.1:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        group: TSP_GROUP
+        file-extension: yaml
+---
+spring:
+  profiles: test
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.120:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        group: TSP_GROUP
+        file-extension: yaml
+---
+spring:
+  profiles: prod
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.120:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        group: TSP_GROUP
+        file-extension: yaml

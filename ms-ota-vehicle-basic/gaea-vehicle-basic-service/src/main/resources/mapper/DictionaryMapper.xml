@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.vehicle.basic.service.dao.DictionaryMapper">
+
+    <insert id="insertDictionary" parameterType="gaea.vehicle.basic.service.models.domain.Dictionary" useGeneratedKeys="true" keyProperty="id">
+     INSERT INTO tb_dictionary
+     (
+    	dic_key,
+    	dic_value,
+    	create_time,
+    	update_time,
+    	is_active
+     ) 
+      VALUES 
+     (
+    	#{dicKey},
+    	#{dicValue},
+    	SYSDATE(),
+    	SYSDATE(),
+    	#{isActive}
+     )
+    </insert>
+  
+    <delete id="deleteById" parameterType="Long">
+      DELETE FROM tb_dictionary WHERE id = #{value}
+    </delete>
+  	
+  	<sql id="pageWhere">
+		<where>
+	    </where>
+  	</sql>
+  	  
+    <select id="countPage" resultType="int">
+     SELECT count(*) FROM tb_dictionary
+ 	  <include refid="pageWhere"/>
+    </select>
+  
+    <select id="queryPage" resultType="gaea.vehicle.basic.service.models.domain.Dictionary">
+      SELECT 
+    	id,
+    	dic_key dicKey,
+    	dic_value dicValue,
+    	create_time createTime,
+    	update_time updateTime,
+    	is_active isActive
+      FROM tb_dictionary
+      <include refid="pageWhere"/>
+      ORDER BY id DESC
+      LIMIT #{startRow},#{pageSize}
+    </select>
+  
+    <select id="queryById" parameterType="Long" resultType="gaea.vehicle.basic.service.models.domain.Dictionary">
+      SELECT
+    	id,
+    	dic_key dicKey,
+    	dic_value dicValue,
+    	create_time createTime,
+    	update_time updateTime,
+    	is_active isActive
+      FROM tb_dictionary
+      WHERE id = #{value}
+    </select>
+  
+    <update id="updateDictionary" parameterType="dictionary">
+      UPDATE tb_dictionary
+      SET
+    	dic_key = #{dicKey},
+    	dic_value = #{dicValue},
+    	update_time = SYSDATE(),
+    	is_active = #{isActive}
+      WHERE id = #{id}
+    </update>
+  
+</mapper>

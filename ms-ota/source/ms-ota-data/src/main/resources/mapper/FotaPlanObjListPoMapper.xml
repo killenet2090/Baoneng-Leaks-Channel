@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.FotaPlanObjListMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.FotaPlanObjListPo">
+        <id column="id" property="id" />
+        <result column="ota_plan_id" property="otaPlanId" />
+        <result column="ota_object_id" property="otaObjectId" />
+        <!--<result column="object_id" property="objectId" />-->
+        <result column="status" property="status" />
+        <!--<result column="task_id" property="taskId" />-->
+        <result column="vin" property="vin" />
+        <result column="current_area" property="currentArea" />
+        <result column="sale_area" property="saleArea" />
+        <result column="source_version" property="sourceVersion" />
+        <result column="target_version" property="targetVersion" />
+        <result column="current_version" property="currentVersion" />
+        <result column="result" property="result" />
+        <result column="notify_status" property="notifyStatus" />
+        <result column="notify_try_num" property="notifyTryNum" />
+        <result column="nofity_time" property="nofityTime" />
+        <result column="notify_callback_time" property="notifyCallbackTime" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, ota_plan_id, ota_object_id, status, vin, current_area, sale_area, source_version, target_version, current_version, result, notify_status, notify_try_num, nofity_time, notify_callback_time, version, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+    <!--
+        <sql id="Base_Column_List">
+        id, ota_plan_id, ota_object_id, object_id, status, task_id, vin, current_area, sale_area, source_version, target_version, current_version, result, version, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+    -->
+
+    <insert id="insertUpgradeTaskObjectList" parameterType="java.util.List">
+        INSERT INTO
+        tb_fota_plan_obj_list(ota_plan_id,<!-- task_id,-->ota_object_id,
+        object_id,current_area,sale_area,vin,create_by,create_time,update_by,update_time)
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            (
+            #{item.otaPlanId},
+            <!--#{item.taskId},-->
+            #{item.otaObjectId},
+            #{item.objectId},
+            #{item.currentArea},
+            #{item.saleArea},
+            #{item.vin},
+            #{item.createBy},
+            #{item.createTime},
+            #{item.updateBy},
+            #{item.updateTime}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteByIdPhysical" parameterType="Long">
+      DELETE FROM tb_fota_plan_obj_list WHERE id = #{value}
+    </delete>
+
+    <!--<delete id="deleteByTaskId" parameterType="Long">
+      DELETE FROM tb_fota_plan_obj_list WHERE task_id = #{value}
+    </delete>-->
+
+    <delete id="deleteByOtaPlanIdPhysical" parameterType="Long">
+      DELETE FROM tb_fota_plan_obj_list WHERE ota_plan_id = #{value}
+    </delete>
+
+    <select id="countPageByPlanId" resultType="int">
+        SELECT count(f.id) FROM tb_fota_plan_obj_list f LEFT JOIN tb_fota_plan p ON f.ota_plan_id = p.id
+        <where>
+            /*p.publish_state is not null*/
+            1 = 1
+             /*(p.publish_state=2 or p.publish_state=4 or p.publish_state=5 or p.publish_state=6)*/
+            <if test="taskId !=null and taskId !=-2 and taskId !=0 ">
+                AND f.ota_plan_id=#{taskId}
+            </if>
+            <if test="vin !=null and vin !=''">
+                AND f.vin  LIKE CONCAT('%',#{vin},'%')
+            </if>
+            <if test="taskStatus !=null and taskStatus !=-2 ">
+                AND p.publish_state=#{taskStatus}
+            </if>
+            <if test="executedStatus !=null and executedStatus !=-2">
+                AND f.result=#{executedStatus}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryDailyReport" resultType="java.util.Map">
+        SELECT DATE_FORMAT(create_time,'%Y-%m-%d') date,`status`, count(1) count
+        FROM tb_fota_plan_obj_list WHERE create_time  BETWEEN #{startTime} AND #{endTime} AND ota_plan_id=#{taskId} GROUP BY date,`status`
+   </select>
+
+    <select id="queryWeeklyReport" resultType="java.util.Map">
+        SELECT DATE_FORMAT(create_time,'%Y-%u') date,`status`, count(1) count
+        FROM tb_fota_plan_obj_list WHERE create_time  BETWEEN #{startTime} AND #{endTime} AND ota_plan_id=#{taskId} GROUP BY date,`status`
+    </select>
+
+    <select id="queryTimeReport" resultType="java.util.Map">
+        SELECT DATE_FORMAT( create_time, '%H:00:00-%H:59:59' ) date,`status`, count(1) count
+        FROM tb_fota_plan_obj_list WHERE DATE_FORMAT(create_time, '%Y-%m-%d' ) = #{endTime} AND ota_plan_id=#{taskId} GROUP BY HOUR (create_time ) ,`status` ORDER BY HOUR (create_time )
+    </select>
+
+    <select id="queryMonthlyReport" resultType="java.util.Map">
+        SELECT DATE_FORMAT( create_time, '%H:00:00-%H:59:59' ),count( 1 ),`status`
+        FROM tb_fota_plan_obj_list WHERE DATE_FORMAT(create_time, '%Y-%m-%d' ) = #{endTime} AND ota_plan_id=#{taskId}
+        GROUP BY HOUR (create_time ) ,`status` ORDER BY HOUR (create_time )
+    </select>
+
+    <!--<select id="queryPageByPlanId" resultType="com.bnmotor.icv.tsp.ota.model.resp.PlanObjectListDetailVo">-->
+    <select id="queryPageByPlanId" resultType="java.util.Map">
+        SELECT
+        f.id,
+        p.plan_name taskName,
+        f.vin vin,
+        f.source_version sourceVersion,
+        f.target_version targetVersion,
+        f.current_version currentVersion,
+        f.status executedStatusCode,
+        p.publish_state taskStatusCode,
+        f.result resultCode,
+        p.id taskId
+        FROM tb_fota_plan_obj_list f LEFT JOIN tb_fota_plan p ON f.ota_plan_id = p.id
+        <where>
+            /* p.publish_state is not null */
+            1 = 1
+                /*(p.publish_state=2 or p.publish_state=4 or p.publish_state=5 or p.publish_state=6)*/
+            <if test="taskId !=null and taskId !=-2 and taskId !=0 ">
+                AND f.ota_plan_id=#{taskId}
+            </if>
+            <if test="vin !=null and vin !=''">
+                AND f.vin  LIKE CONCAT('%',#{vin},'%')
+            </if>
+            <if test="taskStatus !=null and taskStatus !=-2 ">
+                AND p.publish_state=#{taskStatus}
+            </if>
+            <if test="executedStatus !=null and executedStatus !=-2">
+                AND f.result=#{executedStatus}
+            </if>
+        </where>
+        ORDER BY f.create_time DESC
+        LIMIT #{startRow},#{pageSize}
+    </select>
+
+    <!--<select id="queryVoById" resultType="com.bnmotor.icv.tsp.ota.model.resp.PlanObjectListDetailVo">-->
+    <select id="queryVoById" resultType="java.util.Map">
+        SELECT
+        f.id,
+        p.plan_name taskName,
+        f.vin vin,
+        f.source_version sourceVersion,
+        f.target_version targetVersion,
+        f.current_version currentVersion,
+        f.status executedStatusCode,
+        p.publish_state taskStatusCode,
+        f.result resultCode,
+        p.id taskId
+        FROM tb_fota_plan_obj_list f LEFT JOIN tb_fota_plan p ON f.ota_plan_id = p.id
+        <where>
+            <if test="id !=null and id !=-2 and id !=0 ">
+                f.id=#{id}
+            </if>
+        </where>
+        ORDER BY f.create_time DESC LIMIT 1;
+    </select>
+
+	<sql id="Base_Column_List_L">
+        l.id, l.ota_plan_id, l.ota_object_id, l.status, l.vin, l.current_area, l.sale_area, l.source_version, l.target_version, l.current_version, l.result, l.notify_status, l.notify_try_num, l.nofity_time, l.notify_callback_time, l.version, l.del_flag, l.create_by, l.create_time, l.update_by, l.update_time
+    </sql>
+
+    <select id = "queryPlanObjectListByTime" resultMap="BaseResultMap">
+	    SELECT <include refid="Base_Column_List_L" />
+	    FROM tb_fota_plan_obj_list l INNER JOIN tb_fota_plan p
+	    ON p.id = l.ota_plan_id
+	    WHERE l.ota_object_id = #{otaObjectId} AND p.plan_end_time > #{targetTime}
+    </select>
+    
+</mapper>

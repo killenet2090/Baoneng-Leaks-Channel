@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.device.mapper.VehicleLicenseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.device.model.entity.VehicleLicensePo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="vin" property="vin" />
+        <result column="user_id" property="userId" />
+        <result column="user_name" property="userName" />
+        <result column="engine_no" property="engineNo" />
+        <result column="register_date" property="registerDate" />
+        <result column="issue_date" property="issueDate" />
+        <result column="img_url" property="imgUrl" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, vin, user_id, user_name, engine_no, register_date, issue_date, img_url, version, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+    <sql id="BaseUpdateColumns">
+        <set>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag},
+            </if>
+        </set>
+    </sql>
+
+    <update id="deleteVehicleLicenseByUserId" parameterType="VehicleLicensePo">
+        UPDATE tb_vehicle_license
+        <include refid="BaseUpdateColumns" />
+        WHERE del_flag = 0 AND user_id = #{userId}
+    </update>
+
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.dao.PrivilegeMapper">
+    <resultMap id="BaseResultMap" type="gaea.user.center.service.models.domain.Privilege" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+        <result column="app_id" property="appId" jdbcType="INTEGER" />
+        <result column="privilege_name" property="privilegeName" jdbcType="VARCHAR" />
+        <result column="privilege_code" property="privilegeCode" jdbcType="VARCHAR" />
+        <result column="resource" property="resource" jdbcType="VARCHAR" />
+        <result column="level" property="level" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="is_active" property="isActive" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id,parent_id,app_id,privilege_name,privilege_code,resource,level,remark,is_active,create_time,update_time
+    </sql>
+  	<sql id="privilegdeWhere">
+        <where>
+	        <if test="id!=null">
+	        	id=#{id}
+	        </if>
+	        <if test="parentId!=null">
+	        	and parent_id=#{parentId}
+	        </if>
+	        <if test="appId!=null">
+	        	and app_id=#{appId}
+	        </if>
+	        <if test="privilegeName!=null">
+	        	and privilege_name like CONCAT('%',#{privilegeName},'%')
+	        </if>
+	        <if test="privilegeCode!=null">
+	        	and privilege_code=#{privilegeCode}
+	        </if>
+	        <if test="level!=null">
+	        	and level=#{level}
+	        </if>
+	        <if test="isActive!=null">
+	        	and is_active=#{isActive}
+	        </if>
+        </where>
+  	</sql>
+    <select id="queryPrivilegePageList" resultMap="BaseResultMap" parameterType="gaea.user.center.service.models.domain.Privilege">
+        SELECT 
+        <include refid="Base_Column_List" />
+         FROM tb_privilege 
+		<include refid="privilegdeWhere"/>
+		order by update_time desc
+        LIMIT #{startRow},#{pageSize}
+    </select>
+    <select id="queryPrivilege" resultMap="BaseResultMap" parameterType="gaea.user.center.service.models.domain.Privilege">
+        SELECT 
+        <include refid="Base_Column_List" />
+         FROM tb_privilege 
+		<include refid="privilegdeWhere"/>
+    </select>
+    <select id="queryPrivilegeByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT 
+	        distinct tp.id,
+	        tp.parent_id,
+	        tp.app_id,
+	        tp.privilege_name,
+	        tp.privilege_code,
+	        tp.resource,
+	        tp.level,
+	        tp.remark,
+	        tp.is_active,
+	        tp.create_time,
+	        tp.update_time
+		FROM
+		    tb_privilege tp
+		        INNER JOIN
+		    tb_subject_privilege tsp ON tp.id = tsp.privilege_id
+		        INNER JOIN
+		    tb_role tr ON tsp.subject_id = tr.id AND tr.id =#{roleId}
+    </select>
+    <select id="queryPrivilegeByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT 
+	        distinct tp.id,
+	        tp.parent_id,
+	        tp.app_id,
+	        tp.privilege_name,
+	        tp.privilege_code,
+	        tp.resource,
+	        tp.level,
+	        tp.remark,
+	        tp.is_active,
+	        tp.create_time,
+	        tp.update_time
+		FROM tb_privilege tp
+	        INNER JOIN
+	    tb_subject_privilege tsp ON tp.id = tsp.privilege_id
+	        INNER JOIN
+	    tb_role tr ON tsp.subject_id = tr.id 
+	        INNER JOIN
+		tb_user_role tur on tr.id = tur.role_id
+	        INNER JOIN
+		tb_user tu on tur.user_id = tu.id and tu.id=#{userId}
+    </select>
+    
+</mapper>

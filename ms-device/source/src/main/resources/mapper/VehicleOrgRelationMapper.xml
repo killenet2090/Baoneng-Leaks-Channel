@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.device.mapper.VehicleOrgRelationMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.device.model.entity.VehicleOrgRelationPo">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectId"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="brand_code" property="brandCode"/>
+        <result column="brand_name" property="brandName"/>
+        <result column="veh_series_id" property="vehSeriesId"/>
+        <result column="series_code" property="seriesCode"/>
+        <result column="veh_series_name" property="vehSeriesName"/>
+        <result column="veh_model_id" property="vehModelId"/>
+        <result column="model_code" property="modelCode"/>
+        <result column="veh_model_name" property="vehModelName"/>
+        <result column="year_style" property="yearStyle"/>
+        <result column="year_code" property="yearCode"/>
+        <result column="year_style_name" property="yearStyleName"/>
+        <result column="configuration_id" property="configurationId"/>
+        <result column="config_code" property="configCode"/>
+        <result column="config_name" property="configName"/>
+        <result column="veh_type" property="vehType"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, brand_id, brand_code, brand_name, veh_series_id, series_code, veh_series_name, veh_model_id,
+        model_code, veh_model_name, year_style, year_code, year_style_name, configuration_id, config_code, config_name,
+        veh_type, del_flag, version, create_by, create_time, update_by, update_time
+    </sql>
+
+    <select id="selectByModelCode" resultType="VehModelConfigVo">
+        SELECT
+        vor.id,
+        vor.year_style_name,
+        vor.config_name,
+        vor.veh_type
+        FROM tb_vehicle_model tvm, tb_vehicle_org_relation vor
+        WHERE tvm.del_flag = 0 AND vor.del_flag = 0 AND tvm.id = vor.veh_model_id
+        <if test="modelCode != null and '' != modelCode">
+            AND tvm.`code` = #{modelCode}
+        </if>
+        <if test="vehType != null and '' != vehType">
+            AND vor.veh_type = #{vehType}
+        </if>
+    </select>
+
+    <select id="selectAllStatistics" resultType="VehModelStatisticsVo">
+        SELECT
+        veh.veh_model_id,
+        veh.brand_name,
+        veh.veh_series_name,
+        model.`name` AS modelName,
+        model.`code` AS modelCode,
+        count(veh.veh_model_id) AS model_num
+        FROM tb_vehicle_org_relation as veh
+        left join tb_vehicle_model as model on veh.veh_model_id = model.id
+        <where>
+            veh.del_flag = 0 and model.del_flag = 0
+            <if test="searchKey != null and searchKey != ''">
+                and (model.name like CONCAT('%', #{searchKey}, '%') or model.code like CONCAT('%', #{searchKey}, '%'))
+            </if>
+            <if test="vehType != null">
+                and veh.veh_type = #{vehType}
+            </if>
+        </where>
+        group by veh.veh_model_id, veh.brand_name, veh.veh_series_name, model.`name`, model.`code`
+    </select>
+
+    <select id="selectAll" resultType="VehicleOrgRelationPo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_vehicle_org_relation
+        where del_flag = 0
+    </select>
+
+    <select id="listByFromId" resultType="VehicleOrgRelationPo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_vehicle_org_relation
+        where id > #{fromId} and del_flag = 0
+        limit #{limit}
+    </select>
+
+    <select id="listConfigByModelId" resultType="VehicleOrgRelationPo">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM tb_vehicle_org_relation
+        <where>
+            configuration_id > #{fromConfigId}
+            <if test="modelId != null">
+                and veh_model_id = #{modelId}
+            </if>
+            <if test="yearId != null">
+                and year_style = #{yearId}
+            </if>
+            <if test="configId != null">
+                and configuration_id = #{configId}
+            </if>
+            and del_flag = 0
+        </where>
+        order by configuration_id asc
+        limit #{limit}
+    </select>
+
+    <select id="countConfigByModelId" resultType="Integer">
+        SELECT count(1)
+        FROM tb_vehicle_org_relation
+        <where>
+            veh_model_id = #{modelId}
+            <if test="yearId != null">
+                and year_style = #{yearId}
+            </if>
+            and configuration_id is not null and del_flag = 0
+        </where>
+    </select>
+
+    <select id="selectByModelName" resultType="VehicleOrgRelationPo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_vehicle_org_relation
+        where veh_model_name = #{modelName} and year_style_name = #{yearName} and config_name = #{configName}
+    </select>
+
+    <select id="getVehModelList" resultType="com.bnmotor.icv.tsp.device.model.response.vehModel.VehicleModelVo">
+        SELECT
+        id as org_id,
+        veh_series_id,
+        veh_series_name,
+        brand_id,
+        brand_name,
+        veh_model_id,
+        veh_model_name,
+        year_style,
+        year_style_name,
+        configuration_id as config_id,
+        config_name
+        FROM tb_vehicle_org_relation
+        where del_flag = 0
+        <if test="dto.vehSeriesName != null and dto.vehSeriesName !=''">
+            and veh_series_name=#{dto.vehSeriesName}
+        </if>
+        <if test="dto.brandName != null and dto.brandName !=''">
+            and brand_name=#{dto.brandName}
+        </if>
+        <if test="dto.orgId != null">
+            and id=#{dto.orgId}
+        </if>
+        <if test="dto.vehModelName != null and dto.vehModelName !=''">
+            and veh_model_name=#{dto.vehModelName}
+        </if>
+        <if test="dto.yearStyle != null and dto.yearStyle !=''">
+            and year_style_name=#{dto.yearStyle}
+        </if>
+        <if test="dto.configName != null and dto.configName !=''">
+            and config_name=#{dto.configName}
+        </if>
+    </select>
+</mapper>

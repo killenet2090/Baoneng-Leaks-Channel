@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.device.mapper.VehicleImportRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.device.model.entity.VehicleImportRecordPo">
+        <id column="id" property="id"/>
+        <result column="task_no" property="taskNo"/>
+        <result column="vin" property="vin"/>
+        <result column="veh_model_name" property="vehModelName"/>
+        <result column="year_style_name" property="yearStyleName"/>
+        <result column="config_name" property="configName"/>
+        <result column="color_name" property="colorName"/>
+        <result column="engine_no" property="engineNo"/>
+        <result column="batch_no" property="batchNo"/>
+        <result column="manufacturer" property="manufacturer"/>
+        <result column="product_time" property="productTime"/>
+        <result column="downline_date" property="downlineDate"/>
+        <result column="certificate_date" property="certificateDate"/>
+        <result column="out_factory_time" property="outFactoryTime"/>
+        <result column="check_status" property="checkStatus"/>
+        <result column="reason" property="reason"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, task_no, vin, veh_model_name, year_style_name, config_name, color_name, engine_no, batch_no, manufacturer, product_time,
+        downline_date, certificate_date, out_factory_time, check_status, reason, del_flag, version, create_by, create_time,
+        update_by, update_time
+    </sql>
+
+    <delete id="deleteByTaskNo">
+        delete from tb_vehicle_import_record
+        where task_no = #{taskNo}
+    </delete>
+
+
+    <select id="listByTaskNoAndStatus" resultType="VehicleImportRecordPo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_vehicle_import_record
+        <where>
+            task_no = #{taskNo} and check_status = #{checkStatus} and del_flag = 0
+            <if test="vins != null and vins.size > 0">
+                and vin in
+                <foreach collection="vins" item="vin" separator="," open="(" close=")">
+                    #{vin}
+                </foreach>
+            </if>
+            <if test="fromId != null">
+                and id > #{fromId}
+            </if>
+        </where>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
+    </select>
+
+    <select id="listVinsByTaskNo" resultType="java.lang.String">
+        select vin from tb_vehicle_import_record
+        where task_no = #{taskNo} and check_status = #{checkStatus} and del_flag = 0
+    </select>
+</mapper>

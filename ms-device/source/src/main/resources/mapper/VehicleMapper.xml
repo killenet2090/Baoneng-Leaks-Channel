@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.device.mapper.VehicleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.device.model.entity.VehiclePo">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectId"/>
+        <result column="vin" property="vin"/>
+        <result column="org_id" property="orgId"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="brand_name" property="brandName"/>
+        <result column="veh_series_id" property="vehSeriesId"/>
+        <result column="veh_series_name" property="vehSeriesName"/>
+        <result column="veh_model_id" property="vehModelId"/>
+        <result column="veh_model_name" property="vehModelName"/>
+        <result column="year_style" property="yearStyle"/>
+        <result column="year_style_name" property="yearStyleName"/>
+        <result column="configuration_id" property="configurationId"/>
+        <result column="config_name" property="configName"/>
+        <result column="color_id" property="colorId"/>
+        <result column="veh_status" property="vehStatus"/>
+        <result column="veh_lifecircle" property="vehLifecircle"/>
+        <result column="certification_status" property="certificationStatus"/>
+        <result column="bind_status" property="bindStatus"/>
+        <result column="bind_date" property="bindDate"/>
+        <result column="quality_inspect_status" property="qualityInspectStatus"/>
+        <result column="activation_status" property="activationStatus"/>
+        <result column="activation_date" property="activationDate"/>
+        <result column="unactive_date" property="unactiveDate"/>
+        <result column="engine_no" property="engineNo"/>
+        <result column="batch_no" property="batchNo"/>
+        <result column="veh_type" property="vehType"/>
+        <result column="driving_lic_plate" property="drivingLicPlate"/>
+        <result column="manufacturer" property="manufacturer"/>
+        <result column="product_time" property="productTime"/>
+        <result column="downline_date" property="downlineDate"/>
+        <result column="out_factory_time" property="outFactoryTime"/>
+        <result column="publish_date" property="publishDate"/>
+        <result column="warranty_year" property="warrantyYear"/>
+        <result column="warranty_max_mileage" property="warrantyMaxMileage"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, vin, org_id, brand_id, brand_name, veh_series_id, veh_series_name, veh_model_id, veh_model_name, year_style,
+        year_style_name, configuration_id, config_name, color_id, veh_status, veh_lifecircle, certification_status, certificate_date,
+        bind_status, bind_date, quality_inspect_status, activation_status, activation_date, unactive_date, engine_no, batch_no, veh_type,
+        driving_lic_plate, manufacturer, product_time, downline_date, out_factory_time, publish_date, warranty_year, warranty_max_mileage,
+        del_flag,version, create_by, create_time, update_by, update_time
+    </sql>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Level_List">
+        id, project_id, vin, org_id, brand_id, brand_name, veh_series_id, veh_series_name, veh_model_id, veh_model_name,
+        year_style, configuration_id, color_id, veh_status, veh_lifecircle, certification_status, certificate_date,
+        bind_status, bind_date, quality_inspect_status, activation_status, engine_no, batch_no, veh_type, driving_lic_plate
+    </sql>
+
+    <sql id="BaseUpdateColumns">
+        <set>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy},
+            </if>
+            <if test="bindStatus != null">
+                bind_status = #{bindStatus},
+            </if>
+            <if test="bindDate != null">
+                bind_date = #{bindDate},
+            </if>
+            <if test="certificationStatus != null">
+                certification_status = #{certificationStatus},
+            </if>
+        </set>
+    </sql>
+
+    <select id="selectByVin" resultType="VehiclePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_vehicle
+        where vin = #{vin} and del_flag =0
+    </select>
+
+    <select id="selectAllByCondition" parameterType="com.bnmotor.icv.tsp.device.model.request.vehicle.QueryVehicleDto"
+            resultType="VehiclePo">
+        SELECT veh.id, veh.driving_lic_plate, veh.vin, veh.brand_id, veh.brand_name, veh.veh_series_id,
+        veh.veh_series_name,
+        veh.veh_model_id, veh.veh_model_name, veh.year_style, veh.year_style_name, veh.configuration_id,
+        veh.config_name, veh.color_id,
+        veh.veh_status, veh.certification_status, veh.engine_no, veh.veh_type, veh.create_time as publish_date
+        FROM tb_vehicle AS veh,tb_user_vehicle ucar
+        where veh.del_flag = 0 AND ucar.vin = veh.vin AND JSON_CONTAINS(ucar.user_id, JSON_ARRAY(#{dto.userID}))
+        <trim prefix="and veh.vin in(" suffix=")" suffixOverrides=" union all ">
+            <if test="dto.sn != null and '' != dto.sn">
+                select d.vin from tb_device as dev, tb_vehicle_device as d
+                where dev.device_id = d.device_id
+                and dev.device_type= d.device_type
+                and d.del_flag = 0
+                and dev.del_flag = 0
+                AND dev.product_sn like CONCAT('%', #{dto.sn}, '%') union all
+            </if>
+            <if test="dto.sim != null and '' != dto.sim">
+                select tds.vin from tb_device_sim tds where tds.del_flag = 0
+                AND tds.iccid like CONCAT('%', #{dto.sim}, '%') union all
+            </if>
+            <if test="dto.tagIds !=null and dto.tagIds.size() > 0">
+                select tvt.vin from tb_vehicle_tag tvt where tvt.del_flag = 0
+                <if test="dto.categoryId != null and '' != dto.categoryId">
+                    AND tvt.category_id = #{dto.categoryId}
+                </if>
+                <if test="dto.tagIds !=null and dto.tagIds.size() > 0">
+                    and tvt.tag_id in
+                    <foreach collection="dto.tagIds" item="tagId" separator="," open="(" close=")">
+                        #{tagId}
+                    </foreach>
+                </if>
+                union all
+            </if>
+        </trim>
+
+        <if test="dto.vin != null and '' != dto.vin">
+            AND veh.vin like CONCAT('%', #{dto.vin}, '%')
+        </if>
+        <if test="dto.plate != null and '' != dto.plate">
+            AND veh.driving_lic_plate like CONCAT('%', #{dto.plate}, '%')
+        </if>
+
+        <if test="dto.status != null and dto.status.size > 0">
+            AND veh.bind_status IN
+            <foreach collection="dto.status" item="itemStatus" separator="," open="(" close=")">
+                #{itemStatus}
+            </foreach>
+        </if>
+        <if test="dto.vehStatus != null and dto.vehStatus.size > 0">
+            AND veh.veh_status IN
+            <foreach collection="dto.vehStatus" item="vehStatus" separator="," open="(" close=")">
+                #{vehStatus}
+            </foreach>
+        </if>
+        <if test="dto.certificationStatus != null and dto.certificationStatus.size > 0">
+            AND veh.certification_status IN
+            <foreach collection="dto.certificationStatus" item="certificationStatus" separator="," open="(" close=")">
+                #{certificationStatus}
+            </foreach>
+        </if>
+        <if test="dto.vehType != null and dto.vehType.size > 0">
+            AND veh.veh_type IN
+            <foreach collection="dto.vehType" item="vehType" separator="," open="(" close=")">
+                #{vehType}
+            </foreach>
+        </if>
+        <if test="dto.brandIds !=null and dto.brandIds.size() > 0">
+            and veh.brand_id in
+            <foreach collection="dto.brandIds" item="brandId" separator="," open="(" close=")">
+                #{brandId}
+            </foreach>
+        </if>
+        <if test="dto.seriesIds !=null and dto.seriesIds.size() > 0">
+            and veh.veh_series_id in
+            <foreach collection="dto.seriesIds" item="seriesId" separator="," open="(" close=")">
+                #{seriesId}
+            </foreach>
+        </if>
+        <if test="dto.vehModelIds !=null and dto.vehModelIds.size() > 0">
+            and veh.veh_model_id in
+            <foreach collection="dto.vehModelIds" item="vehModelId" separator="," open="(" close=")">
+                #{vehModelId}
+            </foreach>
+        </if>
+        <if test="dto.vins !=null and dto.vins.size() > 0">
+            and veh.vin in
+            <foreach collection="dto.vins" item="vin" separator="," open="(" close=")">
+                #{vin}
+            </foreach>
+        </if>
+        ORDER BY veh.create_time DESC,RIGHT(veh.vin, 6) DESC
+    </select>
+
+    <select id="selectAllByVins" resultType="VehiclePo">
+        select
+        <include refid="Base_Level_List"/>
+        from tb_vehicle
+        <where>
+            del_flag = 0
+            <if test="vins != null and vins.size > 0">
+                and vin in
+                <foreach collection="vins" item="vin" separator="," open="(" close=")">
+                    #{vin}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAllVinsByOrgId" resultType="java.lang.String">
+        SELECT vin
+        FROM tb_vehicle
+        WHERE del_flag = 0 AND org_id = #{orgId}
+    </select>
+
+    <select id="checkValid" resultType="VehiclePo">
+        select id from tb_vehicle
+        where del_flag =0
+        <if test="vin != null and '' != vin">
+            and vin = #{vin}
+        </if>
+        <if test="vehStatus != null and '' != vehStatus">
+            and veh_status= #{vehStatus}
+        </if>
+    </select>
+
+    <update id="compareBindStatusAndUpdate" parameterType="VehiclePo">
+        UPDATE tb_vehicle
+        <include refid="BaseUpdateColumns"/>
+        WHERE del_flag = 0
+        <if test="id != null">
+            AND id = #{id}
+        </if>
+        AND bind_status=#{oldBindStatus}
+    </update>
+
+    <select id="listByConfigId" resultType="VehiclePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_vehicle
+        where id > #{from} and configuration_id = #{configId} and del_flag = 0
+        limit #{limit}
+    </select>
+
+    <update id="updateLicPlate">
+        UPDATE tb_vehicle
+        SET driving_lic_plate = #{drivingLicPlate}
+        WHERE
+            del_flag = 0
+            AND vin = #{vin}
+    </update>
+
+    <select id="existByLicPlate" resultType="Integer">
+        SELECT count(1) FROM tb_vehicle WHERE driving_lic_plate = #{drivingLicPlate} and del_flag=0
+    </select>
+
+    <select id="listByFromId" resultType="VehiclePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_vehicle
+        <where>
+            id > #{fromId}
+            <if test="createTime != null">
+                and create_time &lt; #{createTime}
+            </if>
+            <if test="modelIds != null and modelIds.size > 0">
+                and veh_model_id in
+                <foreach collection="modelIds" item="modelId" open="(" close=")" separator=",">
+                    #{modelId}
+                </foreach>
+            </if>
+        </where>
+        limit #{size}
+    </select>
+
+    <update id="compareCertificationStatusAndUpdate" parameterType="VehiclePo">
+        UPDATE tb_vehicle
+        <include refid="BaseUpdateColumns"/>
+        WHERE del_flag = 0
+        AND vin = #{vin}
+        AND certification_status=#{oldCertificationStatus}
+    </update>
+</mapper>

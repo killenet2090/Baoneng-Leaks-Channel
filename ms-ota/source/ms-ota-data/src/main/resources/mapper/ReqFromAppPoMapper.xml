@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.ReqFromAppMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.ReqFromAppPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="device_id" property="deviceId" />
+        <result column="device_type" property="deviceType" />
+        <result column="vin" property="vin" />
+        <result column="req_type" property="reqType" />
+        <result column="trans_id" property="transId" />
+        <result column="task_id" property="taskId" />
+        <result column="extra" property="extra" />
+        <result column="ack_status" property="ackStatus" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, device_id, device_type, vin, req_type, trans_id, task_id, extra, ack_status, version, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+</mapper>

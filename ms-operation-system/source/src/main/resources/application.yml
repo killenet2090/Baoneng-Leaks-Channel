@@ -1,0 +1,16 @@
+#mybatis-plus:
+#  mapper-locations: classpath:/mapper/*.xml
+#  type-aliases-package: gaea.user.center.service.model.*
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+sms:
+  email:
+    template: 您的TSP运营平台账户，管理员已创建完毕,账户信息如下，用户名：&{username}密码：&{password}请尽快登陆账户修改初始密码，防止遗失，系统访问路径为：
+              http://workbench-dev.dev.bnicvc.com/user/login?redirect=http://workbench-dev.dev.bnicvc.com/charts
+  phone:
+    template: 您的TSP运营平台账户激活路径为：&{url}
+  activation:
+    url: http://localhost:8017/usercenter/user/activation/url?phone=&{phone}
+
+

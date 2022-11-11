@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.vehicle.basic.service.dao.VehicleSubModelMapper">
+
+    <insert id="insertVehicleSubModel" parameterType="vehicleSubModel" useGeneratedKeys="true" keyProperty="id">
+     INSERT INTO tb_vehicle_sub_model
+     (
+    	sub_model_name,
+    	vehicle_model_id,
+    	remark,
+    	create_time,
+    	update_time
+
+     ) 
+      VALUES 
+     (
+    	#{subModelName},
+    	#{vehicleModelId},
+    	#{remark},
+    	SYSDATE(),
+    	SYSDATE()
+     )
+    </insert>
+  
+    <delete id="deleteById" parameterType="Long">
+      DELETE FROM tb_vehicle_sub_model WHERE id = #{value}
+    </delete>
+  	
+  	<sql id="pageWhere">
+		<where>
+	    </where>
+  	</sql>
+  	  
+    <select id="countPage" resultType="int">
+     SELECT count(*) FROM tb_vehicle_sub_model
+ 	  <include refid="pageWhere"/>
+    </select>
+  
+    <select id="queryPage" resultType="vehicleSubModel">
+      SELECT 
+    	id,
+    	sub_model_name subModelName,
+    	vehicle_model_id vehicleModelId,
+    	remark,
+    	create_time createTime,
+    	update_time updateTime,
+    	is_active isActive
+      FROM tb_vehicle_sub_model
+      <include refid="pageWhere"/>
+      ORDER BY id DESC
+      LIMIT #{startRow},#{pageSize}
+    </select>
+  
+    <select id="queryById" parameterType="Long" resultType="vehicleSubModel">
+      SELECT
+    	id,
+    	sub_model_name subModelName,
+    	vehicle_model_id vehicleModelId,
+    	remark,
+    	create_time createTime,
+    	update_time updateTime,
+    	is_active isActive
+      FROM tb_vehicle_sub_model
+      WHERE id = #{value}
+    </select>
+
+	<select id="queryNameAndId" parameterType="vehicleSubModel" resultType="vehicleSubModel">
+		SELECT
+		id,
+		sub_model_name subModelName
+		FROM tb_vehicle_sub_model
+		<where>
+			<if test="subModelName !=null and subModelName !=''">
+				AND sub_model_name = #{subModelName}
+			</if>
+			<if test="isActive !=null and isActive !=''">
+				AND is_active = #{isActive}
+			</if>
+		</where>
+		ORDER BY sub_model_name DESC
+	</select>
+
+    <update id="updateVehicleSubModel" parameterType="vehicleSubModel">
+      UPDATE tb_vehicle_sub_model
+      SET
+    	sub_model_name = #{subModelName},
+    	vehicle_model_id = #{vehicleModelId},
+    	remark = #{remark},
+    	update_time = SYSDATE(),
+    	is_active = #{isActive}
+      WHERE id = #{id}
+    </update>
+  
+</mapper>

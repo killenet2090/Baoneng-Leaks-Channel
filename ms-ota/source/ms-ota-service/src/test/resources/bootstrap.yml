@@ -1,0 +1,55 @@
+#是否开启调试
+debug: false
+
+
+services.beans.exclude: controllerAspect, otaMessageHandler, custOtaMessageHandler
+
+#端口号
+server:
+  port: 8083
+  tomcat:
+    max-threads: 50
+  servlet:
+    context-path: /fota
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ms-ota-service-xxc
+
+  main:
+    allow-bean-definition-overriding: true
+    devtools:
+      restart:
+        enabled: true
+  servlet:
+    multipart:
+      max-file-size: 2000MB
+      max-request-size: 2000MB
+
+---
+spring:
+  profiles: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.17:8848
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        group: OTA_GROUP
+        file-extension: yaml
+      discovery:
+        srver-addr: http://10.210.100.17:8848/
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+        #测试用，发布的时候需要移除
+        #ip: 10.24.146.11
+---
+spring:
+  profiles: svt2
+  cloud:
+    nacos:
+      config:
+        server-addr: http://10.210.100.120:8868
+        namespace: 5558a03a-10d4-4832-8473-d0cb3879ccb3
+        group: OTA_GROUP
+        file-extension: yaml

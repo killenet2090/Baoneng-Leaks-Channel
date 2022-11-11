@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.vehicle.basic.service.dao.VehicleBrandMapper">
+
+    <insert id="insertVehicleBrand" parameterType="vehicleBrand" useGeneratedKeys="true" keyProperty="id">
+     INSERT INTO tb_vehicle_brand
+     (
+    	brand_name,
+    	vehicle_oem_id,
+    	create_time,
+    	update_time
+     ) 
+      VALUES 
+     (
+    	#{brandName},
+    	#{vehicleOemId},
+    	SYSDATE(),
+    	SYSDATE()
+     )
+    </insert>
+  
+    <delete id="deleteById" parameterType="Long">
+      DELETE FROM tb_vehicle_brand WHERE id = #{value}
+    </delete>
+  	
+  	<sql id="pageWhere">
+		<where>
+	    </where>
+  	</sql>
+  	  
+    <select id="countPage" resultType="int">
+     SELECT count(*) FROM tb_vehicle_brand
+ 	  <include refid="pageWhere"/>
+    </select>
+  
+    <select id="queryPage" resultType="vehicleBrand">
+      SELECT 
+    	id,
+    	brand_name brandName,
+    	vehicle_oem_id vehicleOemId,
+    	create_time createTime,
+    	update_time updateTime
+      FROM tb_vehicle_brand
+      <include refid="pageWhere"/>
+      ORDER BY id DESC
+      LIMIT #{startRow},#{pageSize}
+    </select>
+  
+    <select id="queryById" parameterType="Long" resultType="vehicleBrand">
+      SELECT
+    	id,
+    	brand_name brandName,
+    	vehicle_oem_id vehicleOemId,
+    	create_time createTime,
+    	update_time updateTime
+      FROM tb_vehicle_brand
+      WHERE id = #{value}
+    </select>
+  
+    <update id="updateVehicleBrand" parameterType="vehicleBrand">
+      UPDATE tb_vehicle_brand
+      SET
+    	brand_name = #{brandName},
+    	vehicle_oem_id = #{vehicleOemId},
+    	update_time = SYSDATE()
+      WHERE id = #{id}
+    </update>
+
+    <select id="queryNameAndId" parameterType="vehicleBrand" resultType="vehicleBrand">
+        SELECT
+        id,
+        brand_name brandName
+        FROM tb_vehicle_brand
+        <where>
+            <if test="brandName !=null and brandName !=''">
+                AND brand_name like #{brandName} '%'
+            </if>
+            <if test="vehicleOemId !=null and vehicleOemId !=''">
+                AND vehicle_oem_id = #{vehicleOemId}
+            </if>
+        </where>
+        ORDER BY brand_name DESC
+    </select>
+  
+</mapper>

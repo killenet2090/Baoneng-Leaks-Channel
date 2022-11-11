@@ -1,0 +1,234 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.bnmotor.icv.gaea</groupId>
+  <artifactId>gaea-user-center</artifactId>
+  <version>0.0.1</version>
+  <packaging>pom</packaging>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.5.RELEASE</version>
+    </parent>
+
+    <name>gaea-user-center</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>1.8</java.version>
+    <springfox.version>2.9.0</springfox.version>
+  </properties>
+
+  <dependencies>
+      <dependency>
+          <groupId>com.bnmotor.icv.adam</groupId>
+          <artifactId>adam-spring-cloud-spring-boot-starter</artifactId>
+          <version>1.0.0</version>
+      </dependency>
+      <dependency>
+          <groupId>com.bnmotor.icv.adam</groupId>
+          <artifactId>adam-data-mysql-spring-boot-starter</artifactId>
+          <version>1.0.0</version>
+      </dependency>
+<!--       <dependency>
+          <groupId>com.bnmotor.icv.adam</groupId>
+          <artifactId>adam-data-redis-spring-boot-starter</artifactId>
+          <version>1.0.0</version>
+      </dependency> -->
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-log4j2</artifactId>
+          <version>2.2.6.RELEASE</version>
+      </dependency>
+      <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+          <version>1.2.17</version>
+      </dependency>
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-logging</artifactId>
+          <exclusions>
+              <exclusion>
+                  <groupId>*</groupId>
+                  <artifactId>*</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency>
+
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-aop</artifactId>
+          <version>2.2.6.RELEASE</version>
+      </dependency>
+      <dependency>
+          <groupId>com.lmax</groupId>
+          <artifactId>disruptor</artifactId>
+          <version>3.4.2</version>
+      </dependency>
+      <!--swagger-->
+      <dependency>
+          <groupId>io.springfox</groupId>
+          <artifactId>springfox-swagger2</artifactId>
+          <version>2.9.2</version>
+          <exclusions>
+          	<exclusion>
+          		<groupId>io.swagger</groupId>
+          		<artifactId>swagger-annotations</artifactId>
+          	</exclusion>
+          	<exclusion>
+          		<groupId>io.swagger</groupId>
+          		<artifactId>swagger-models</artifactId>
+          	</exclusion>
+          </exclusions>
+      </dependency>
+      <dependency>
+          <groupId>io.springfox</groupId>
+          <artifactId>springfox-swagger-ui</artifactId>
+          <version>2.9.2</version>
+      </dependency>
+      <dependency>
+          <groupId>com.github.xiaoymin</groupId>
+          <artifactId>swagger-bootstrap-ui</artifactId>
+          <version>1.9.3</version>
+      </dependency>
+      <dependency>
+          <groupId>io.springfox</groupId>
+          <artifactId>springfox-bean-validators</artifactId>
+          <version>2.9.2</version>
+      </dependency>
+
+      <dependency>
+          <groupId>io.swagger</groupId>
+          <artifactId>swagger-annotations</artifactId>
+          <version>1.5.22</version>
+      </dependency>
+      <dependency>
+          <groupId>io.swagger</groupId>
+          <artifactId>swagger-models</artifactId>
+          <version>1.5.22</version>
+      </dependency>
+      <dependency>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+          <version>20.0</version>
+      </dependency>
+
+  </dependencies>
+	<!-- 镜像仓库配置信息 -->
+    <profiles>
+        <profile>
+            <id>dockerDev</id>
+            <properties>
+                <registry_username>publish</registry_username>
+                <registry_password>Qoros@2019_QWEasd</registry_password>
+                <google.jib.version>1.2.0</google.jib.version>
+                <registry_url>qoros-docker.pelecan.net</registry_url>
+            </properties>
+        </profile>
+    </profiles>
+	<!-- 远程仓库 -->
+	<repositories>
+ 		<repository>
+            <id>nexus</id>
+            <name>Nexus Snapshot</name>
+			<url>http://10.24.3.243:8081/repository/maven-releases</url>
+		</repository>
+		<repository>
+			<id>public</id>
+			<name>central and jcenter</name>
+			<url>https://maven.aliyun.com/repository/public</url>
+		</repository>
+        <repository>
+            <id>central</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>snapshots</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-snapshots</id>
+            <name>Spring Snapshots</name>
+            <url>https://repo.spring.io/snapshot</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+	</repositories>
+	<!-- 远程插件仓库 -->
+ 	<pluginRepositories>
+		<pluginRepository>
+            <id>nexus</id>
+            <name>Nexus Snapshot</name>
+			<url>http://10.24.3.243:8081/repository/maven-releases</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+	<!-- 编译打包后发布jar包仓库 -->
+	<distributionManagement>
+<!--         <snapshotRepository>
+            <id>snapshots</id>
+            <name>Nexus Snapshot</name>
+            <url>http://10.24.3.243:8081/repository/maven-snapshots</url>
+            <uniqueVersion>true</uniqueVersion>
+        </snapshotRepository> -->
+          <repository>
+            <id>nexus</id>
+            <name>Nexus Snapshot</name>
+            <url>http://10.24.3.243:8081/repository/maven-releases</url>
+        </repository>
+    </distributionManagement>
+    <!-- 编译打包 -->
+ 	<build>
+		<defaultGoal>compile</defaultGoal>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+	</build>
+  <modules>
+  	<module>gaea-user-center-api</module>
+  	<module>gaea-user-center-service</module>
+  </modules>
+</project>

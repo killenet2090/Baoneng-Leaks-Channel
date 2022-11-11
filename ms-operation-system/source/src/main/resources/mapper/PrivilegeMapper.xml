@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.PrivilegeMapper">
+
+    <resultMap id="BaseResultMap" type="gaea.user.center.service.model.entity.PrivilegePo" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+		<result column="type_id" property="typeId" jdbcType="BIGINT" />
+        <result column="parent_id" property="parentId" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="resource" property="resource" jdbcType="VARCHAR" />
+        <result column="resource_interface" property="resourceInterface" jdbcType="VARCHAR" />
+        <result column="level" property="level" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="op_type" property="opType" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="create_by" property="createBy" jdbcType="VARCHAR" />
+		<result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="CustomerResultMap" type="gaea.user.center.service.model.response.PrivilegeResp" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+		<result column="type_id" property="typeId" jdbcType="BIGINT" />
+		<result column="type_name" property="typeName" jdbcType="VARCHAR" />
+        <result column="parent_id" property="pId" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="INTEGER" />
+        <result column="resource" property="path" jdbcType="VARCHAR" />
+        <result column="resource_interface" property="resourceInterface" jdbcType="VARCHAR" />
+		<result column="method" property="method" jdbcType="VARCHAR" />
+		<result column="level" property="level" jdbcType="INTEGER" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id,
+		type_id,
+        parent_id,
+        name,
+        code,
+        resource,
+        resource_interface,
+        level,
+        type,
+		op_type,
+        remark,
+		del_flag,
+        create_time,
+        update_time,
+		create_by,
+		update_by
+    </sql>
+  	<sql id="privilegdeWhere">
+        <where>
+	        <if test="id!=null">
+	        	id=#{id}
+	        </if>
+			<if test="typeId!=null">
+				and type_id=#{typeId}
+			</if>
+	        <if test="parentId!=null">
+	        	and parent_id=#{parentId}
+	        </if>
+	        <if test="name!=null and name!=''">
+	        	and name like CONCAT('%',#{name},'%')
+	        </if>
+	        <if test="code!=null and code!=''">
+	        	and code=#{code}
+	        </if>
+	        <if test="level!=null">
+	        	and level=#{level}
+	        </if>
+	        <if test="type!=null">
+	        	and type=#{type}
+	        </if>
+			<if test="opType!=null">
+				and op_type=#{opType}
+			</if>
+	        <if test="delFlag!=null">
+	        	and del_flag=#{delFlag}
+	        </if>
+			<if test="createBy!=null">
+				and create_by=#{createBy}
+			</if>
+			<if test="updateBy!=null">
+				and update_by=#{updateBy}
+			</if>
+        </where>
+  	</sql>
+    <select id="queryPrivilegePageList" resultMap="BaseResultMap" parameterType="gaea.user.center.service.model.entity.PrivilegePo">
+        SELECT
+			tp.id,
+			tp.type_id,
+			tpt.name as type_name,
+			tp.parent_id,
+			tp.type,
+			tp.op_type,
+			tp.name,
+			tp.code,
+			tp.resource,
+			tp.resource_interface,
+			tp.level,
+			tp.remark,
+			tp.del_flag,
+			tp.create_time,
+			tp.update_time,
+			tp.create_by,
+			tp.update_by
+         FROM tb_privilege tp
+		 LEFT JOIN tb_privilege_type tpt ON tpt.id = tp.type_id
+		<where>
+			tp.del_flag = 0
+			<if test="query.id!=null">
+				tp.id=#{query.id}
+			</if>
+			<if test="query.parentId!=null">
+				and tp.parent_id=#{query.parentId}
+			</if>
+			<if test="query.name!=null and query.name!=''">
+				and tp.name like CONCAT('%',#{query.name},'%')
+			</if>
+			<if test="query.code!=null and query.code!=''">
+				and tp.code=#{query.code}
+			</if>
+			<if test="query.level!=null">
+				and tp.level=#{query.level}
+			</if>
+			<if test="query.type!=null">
+				and tp.type=#{query.type}
+			</if>
+			<if test="query.opType!=null">
+				and tp.type=#{query.opType}
+			</if>
+			<if test="query.createBy!=null">
+				and tp.create_by=#{query.createBy}
+			</if>
+			<if test="query.updateBy!=null">
+				and tp.update_by=#{query.updateBy}
+			</if>
+			<if test="query.typeId !=null">
+				and tp.type_id = #{query.typeId}
+			</if>
+		</where>
+		order by tp.update_time desc
+    </select>
+    <select id="queryPrivilegeList" resultMap="BaseResultMap" parameterType="gaea.user.center.service.model.request.PrivilegeQuery">
+        SELECT
+			distinct tp.id,
+			tp.type_id,
+			tp.parent_id,
+			tp.name,
+			tp.code,
+			tp.type,
+			tp.op_type,
+			tp.resource,
+			tp.resource_interface,
+			tp.level,
+			tp.remark,
+			tp.del_flag,
+			tp.create_time,
+			tp.update_time,
+			tp.create_by,
+			tp.update_by
+		FROM
+			tb_privilege tp
+		WHERE
+			tp.del_flag = 0
+			<if test="query.id != null and query.id != ''">
+				and tp.id=#{query.id}
+			</if>
+			<if test="query.typeId != null and query.typeId != ''">
+				and tp.type_id = #{query.typeId}
+			</if>
+			<if test="query.parentId != null and query.parentId != ''">
+				and tp.parent_id=#{query.parentId}
+			</if>
+			<if test="query.name != null and query.name != ''">
+				and tp.name like CONCAT('%',#{query.name},'%')
+			</if>
+			<if test="query.resource != null and query.resource != ''">
+				and tp.resource = #{query.resource}
+			</if>
+			<if test="query.code != null and query.code != ''">
+				and tp.code=#{query.code}
+			</if>
+			<if test="query.level != null and query.level != ''">
+				and tp.level=#{query.level}
+			</if>
+			<if test="query.type != null and query.type != ''">
+				and tp.type=#{query.type}
+			</if>
+			<if test="query.opType != null and query.opType != ''">
+				and tp.op_type=#{query.opType}
+			</if>
+			<if test="query.delFlag != null and query.delFlag != ''">
+				and tp.del_flag=#{query.delFlag}
+			</if>
+			<if test="query.createBy != null and query.createBy != ''">
+				and tp.create_by=#{query.createBy}
+			</if>
+			<if test="query.updateBy != null and query.updateBy != ''">
+				and tp.update_by=#{query.updateBy}
+			</if>
+    </select>
+    <select id="queryPrivilegeByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT 
+	        distinct tp.id,
+			tp.type_id,
+			tpt.name as type_name,
+	        tp.parent_id,
+	        tp.name,
+	        tp.code,
+	        tp.resource,
+	        tp.resource_interface,
+	        tp.level,
+	        tp.remark,
+	        tp.del_flag,
+	        tp.create_time,
+	        tp.update_time,
+			tp.create_by,
+			tp.update_by
+		FROM
+		    tb_privilege tp
+		INNER JOIN
+			tb_role_privilege tsp ON tp.id = tsp.privilege_id
+		INNER JOIN
+		    tb_role tr ON tsp.role_id = tr.id AND tr.id =#{roleId}
+		LEFT JOIN
+			tb_privilege_type tpt ON tpt.id = tp.type_id
+		AND tpt.del_flag = 0 AND tp.del_flag = 0
+		ORDER BY
+			tp.id
+    </select>
+    <select id="queryUserPrivilege" resultMap="CustomerResultMap" parameterType="gaea.user.center.service.model.request.PrivilegeQueryReq">
+		SELECT DISTINCT
+			tp.id,
+			tp.parent_id,
+			tp.NAME,
+			tp.CODE,
+			tp.resource,
+			tp.resource_interface,
+			tp.method,
+			tp.LEVEL,
+			tp.type,
+			tp.op_type,
+			tpt.name as type_name
+		FROM
+			tb_privilege tp
+		INNER JOIN
+			tb_role_privilege tsp ON tp.id = tsp.privilege_id
+		AND
+			tp.del_flag = 0
+		INNER JOIN
+			tb_role tr ON tsp.role_id = tr.id
+		AND
+			tr.del_flag = 0
+		INNER JOIN
+			tb_user_role tur ON tr.id = tur.role_id
+		INNER JOIN
+			tb_user tu ON tur.user_id = tu.id
+		AND
+			tu.del_flag = 0
+		LEFT JOIN
+			tb_privilege_type tpt ON tpt.id = tp.type_id
+		WHERE
+			1 = 1
+	        <if test="query.typeId != null and query.typeId != ''">
+	        	and tp.type_id=#{query.typeId}
+	        </if>
+			<if test="query.userId != null and query.userId != ''">
+				and tu.id=#{query.userId}
+			</if>
+        order by tp.id asc
+    </select>
+	<!--根据id查询权限-->
+	<select id="queryPrivilege" resultMap="BaseResultMap" parameterType="gaea.user.center.service.model.dto.Privilege">
+		SELECT
+			distinct tp.id,
+			tp.type_id,
+			tpt.name as type_name,
+			tp.parent_id,
+			tp.name,
+			tp.code,
+			tp.type,
+			tp.op_type,
+			tp.resource,
+			tp.resource_interface,
+			tp.level,
+			tp.remark,
+			tp.del_flag,
+			tp.create_time,
+			tp.update_time,
+			tp.create_by,
+			tp.update_by
+		FROM
+			tb_privilege tp
+		WHERE
+			tp.del_flag = 0
+			<if test="query.id != null and query.id != ''">
+				and tp.id = #{query.id}
+			</if>
+			<if test="query.typeId != null and query.typeId != ''">
+				and tp.type_id = #{query.typeId}
+			</if>
+			<if test="query.name != null and query.name != ''">
+				and tp.name LIKE CONCAT("%",#{query.name},"%")
+			</if>
+			<if test="query.code != null and query.code != ''">
+				and tp.code LIKE CONCAT("%",#{query.code},"%")
+			</if>
+			<if test="query.level != null and query.level != ''">
+				and tp.level = #{query.level}
+			</if>
+			<if test="query.delFlag != null and query.delFlag != ''">
+				and tp.del_flag = #{query.delFlag}
+			</if>
+			<if test="query.createBy != null and query.createBy != ''">
+				and tp.create_by = #{query.createBy}
+			</if>
+	</select>
+	<!--查询一级菜单数量-->
+	<select id="queryPrivilegeCount" resultType="Integer">
+		SELECT
+			count( 1 )
+		FROM
+			tb_privilege
+		WHERE
+			ISNULL( parent_id )
+		AND type = 0
+	</select>
+	<select id="queryPrivilegeByCondition" resultMap="BaseResultMap" parameterType="gaea.user.center.service.model.request.PrivilegeQuery">
+		SELECT
+			distinct tp.id,
+			tp.type_id,
+			tp.parent_id,
+			tp.name,
+			tp.type,
+			tp.resource
+		FROM
+			tb_privilege tp
+		WHERE
+		tp.del_flag = 0
+		<if test="query.parentId != null and query.parentId != ''">
+			and tp.parent_id=#{query.parentId}
+		</if>
+		<if test="query.parentId == null">
+			and tp.parent_id is null
+		</if>
+		<if test="query.name != null and query.name != ''">
+			and tp.name = #{query.name}
+		</if>
+		<if test="query.resource != null and query.resource != ''">
+			and tp.resource = #{query.resource}
+		</if>
+		<if test="query.type != null and query.type != ''">
+			and tp.type=#{query.type}
+		</if>
+		<if test="query.createBy != null and query.createBy != ''">
+			and tp.create_by=#{query.createBy}
+		</if>
+	</select>
+</mapper>

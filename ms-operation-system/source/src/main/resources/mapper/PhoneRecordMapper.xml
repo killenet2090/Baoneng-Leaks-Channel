@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.PhoneRecordMapper">
+    <select id="getphoneRecordEffective" parameterType="gaea.user.center.service.model.entity.PhoneRecordPo" resultType="gaea.user.center.service.model.entity.PhoneRecordPo">
+		SELECT
+			id,
+			phone,
+			type,
+			key_word,
+			create_time,
+			expire_time
+		FROM
+			tb_phone_record
+		WHERE
+			1 = 1
+		<if test="type != null">
+			AND type = #{type}
+		</if>
+		<if test="phone != null and phone != ''">
+			AND phone = #{phone}
+		</if>
+		AND expire_time > now()
+		Order By create_time DESC
+	</select>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.FotaFirmwareMapper">
+
+    <!-- 开启二级缓存 -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/> -->
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.FotaFirmwarePo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="tree_node_id" property="treeNodeId" />
+        <result column="component_code" property="componentCode" />
+        <result column="component_model" property="componentModel" />
+        <result column="component_name" property="componentName" />
+        <result column="ota_channel" property="otaChannel" />
+        <result column="firmware_code" property="firmwareCode" />
+        <result column="firmware_name" property="firmwareName" />
+        <result column="description" property="description" />
+        <result column="update_model" property="updateModel" />
+        <result column="notified_to_mobile" property="notifiedToMobile" />
+        <result column="package_model" property="packageModel" />
+        <result column="encrypt_alg" property="encryptAlg" />
+        <result column="package_alg" property="packageAlg" />
+        <result column="apn_channel" property="apnChannel" />
+        <result column="ota_cond_express" property="otaCondExpress" />
+        <result column="diagnose" property="diagnose" />
+        <result column="response_id" property="responseId" />
+        <result column="flash_script_url" property="flashScriptUrl" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        
+        <result column="info_coll_ctrl_obj" property="infoCollCtrlObj" />
+        <result column="dl_ctrl_obj" property="dlCtrlObj" />
+        <result column="inst_tx_ctrl_obj" property="instTxCtrlObj" />
+        <result column="inst_ctrl_obj" property="instCtrlObj" />
+        <result column="inst_condition" property="instCondition" />
+        <result column="bus_type" property="busType" />
+        <result column="info_coll_script_type" property="infoCollScriptType" />
+        <result column="inst_algorithm_type" property="instAlgorithmType" />
+        <result column="inst_script_url" property="instScriptUrl" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, tree_node_id, component_code, component_model, component_name, ota_channel, firmware_code, firmware_name, description, update_model, notified_to_mobile, package_model, encrypt_alg, package_alg, apn_channel, ota_cond_express, diagnose, response_id, flash_script_url, version, del_flag, create_by, create_time, update_by, update_time,
+        info_coll_ctrl_obj, dl_ctrl_obj, inst_tx_ctrl_obj, inst_ctrl_obj, inst_condition, bus_type, info_coll_script_type, inst_algorithm_type, inst_script_url
+    </sql>
+</mapper>

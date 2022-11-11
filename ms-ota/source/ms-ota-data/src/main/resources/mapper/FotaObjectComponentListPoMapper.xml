@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.FotaObjectComponentListMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.FotaObjectComponentListPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="ota_object_id" property="otaObjectId" />
+        <result column="component_type" property="componentType" />
+        <result column="component_type_name" property="componentTypeName" />
+        <result column="component_model" property="componentModel" />
+        <result column="component_name" property="componentName" />
+        <result column="device_id" property="deviceId" />
+        <result column="sn" property="sn" />
+        <result column="software_version" property="softwareVersion" />
+        <result column="hardware_version" property="hardwareVersion" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, ota_object_id, component_type, component_type_name, component_model, component_name, device_id, sn, softwareVersion, hardwareVersion, version, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+    <delete id="delByFotaObjectIdPysical" parameterType="java.lang.Long">
+        delete from tb_fota_object_component_list
+        where ota_object_id =#{otaObjectId}
+    </delete>
+
+</mapper>

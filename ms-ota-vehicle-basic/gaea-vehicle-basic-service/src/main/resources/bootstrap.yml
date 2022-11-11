@@ -1,0 +1,20 @@
+server:
+  port: 8018
+  tomcat:
+    max-threads: 10
+  servlet:
+    context-path: /vehiclecenter
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: gaea-vehicle-basic-service
+  cloud:
+    nacos:
+      config:
+        group: DEFAULT_GROUP
+        server-addr: http://10.210.100.17:8848
+        file-extension: yaml
+      discovery:
+        server-addr: http://10.210.100.17:8848/

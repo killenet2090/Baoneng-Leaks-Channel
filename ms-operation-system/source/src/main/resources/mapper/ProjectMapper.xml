@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.ProjectMapper">
+	<!--分页查询项目信息-->
+	<select id="queryProjectPage" resultType="gaea.user.center.service.model.entity.ProjectPo">
+		SELECT 
+			<include refid="Base_Column_List"></include>
+		FROM
+			tb_project
+		WHERE
+			tb_project.del_flag = 0
+			<include refid="Where_Filed"></include>
+		ORDER BY update_time DESC
+	</select>
+	<!--根据项目id查询项目信息-->
+	<select id="queryProjectById" resultType="gaea.user.center.service.model.entity.ProjectPo">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			tb_project
+		WHERE
+			id = #{id,jdbcType=BIGINT}
+		AND
+			tb_project.del_flag = 0
+	</select>
+	<!--根据项目code查询项目信息-->
+	<select id="queryProjectByCode" resultType="gaea.user.center.service.model.entity.ProjectPo">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			tb_project
+		WHERE
+			code = #{code,jdbcType=VARCHAR}
+		AND
+			tb_project.del_flag = 0
+		ORDER BY update_time DESC
+	</select>
+	<!--查询用户名下管理的项目列表-->
+	<select id="queryListByUserId" resultType="gaea.user.center.service.model.entity.ProjectPo">
+		SELECT
+			tp.id,
+			tp.`name` as name,
+			tp.code as code,
+			tp.mechanism as mechanism,
+			tp.description as description,
+			tp.create_by as create_by,
+			tp.create_time as create_time,
+			tp.update_by as update_by,
+			tp.update_time as update_time,
+			tp.del_flag
+		FROM
+			tb_user_project tup
+		LEFT JOIN
+			tb_project tp
+		ON
+			tup.project_id = tp.id
+		WHERE
+			tup.user_id = #{userId}
+		AND
+			tp.del_flag = 0
+		ORDER BY
+			update_time DESC
+	</select>
+	<!--查询项目信息列表-->
+	<select id="queryProjectList" resultType="gaea.user.center.service.model.entity.ProjectPo">
+		SELECT
+			id,
+			`name` as name,
+			code as code,
+			mechanism as mechanism,
+			description as description,
+			create_by as create_by,
+			create_time as create_time,
+			update_by as update_by,
+			update_time as updateTime,
+			del_flag
+		FROM
+			tb_project
+		WHERE
+			del_flag = 0
+			<include refid="Where_Filed"></include>
+		ORDER BY update_time DESC
+	</select>
+	<sql id="Base_Column_List" >
+		id,
+		name,
+		code,
+		mechanism,
+		description,
+		create_by,
+		create_time,
+		update_by,
+		update_time,
+		del_flag
+	</sql>
+
+	<sql id="Where_Filed" >
+		<if test="query.id != null and query.id != ''">
+			and id = #{query.id,jdbcType=BIGINT}
+		</if>
+		<if test="query.name != null and query.name != ''">
+			and name LIKE CONCAT("%",#{query.name,jdbcType=VARCHAR},"%")
+		</if>
+		<if test="query.code != null and query.code != ''">
+			and code LIKE CONCAT("%",#{query.code,jdbcType=VARCHAR},"%")
+		</if>
+		<if test="query.mechanism != null and query.mechanism != ''">
+			and mechanism LIKE CONCAT("%",#{query.mechanism,jdbcType=VARCHAR},"%")
+		</if>
+		<if test="query.description != null and query.description != ''">
+			and description LIKE CONCAT("%",#{query.description,jdbcType=VARCHAR},"%")
+		</if>
+		<if test="query.createBy != null and query.createBy != ''">
+			and create_by LIKE CONCAT("%",#{query.createBy,jdbcType=VARCHAR},"%")
+		</if>
+<!--		<if test="create_time != null and create_time != ''">-->
+<!--			and create_time LIKE CONCAT("%",#{create_by,jdbcType=VARCHAR},"%")-->
+<!--		</if>-->
+		<if test="query.updateBy != null and query.updateBy != ''">
+			and update_by LIKE CONCAT("%",#{query.updateBy,jdbcType=VARCHAR},"%")
+		</if>
+<!--		<if test="create_time != null and create_time != ''">-->
+<!--			and update_by LIKE CONCAT("%",#{update_by,jdbcType=VARCHAR},"%")-->
+<!--		</if>-->
+<!--		<if test="query.delFlag != null and query.delFlag != ''">-->
+<!--			and del_flag = #{query.delFlag,jdbcType=INTEGER}-->
+<!--		</if>-->
+	</sql>
+</mapper>

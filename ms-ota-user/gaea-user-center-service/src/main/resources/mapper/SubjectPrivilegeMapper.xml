@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.dao.SubjectPrivilegeMapper">
+    <resultMap id="BaseResultMap" type="gaea.user.center.service.models.domain.SubjectPrivilege" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="subject_id" property="subjectId" jdbcType="INTEGER" />
+        <result column="subject_type" property="subjectType" jdbcType="INTEGER" />
+        <result column="privilege_id" property="privilegeId" jdbcType="INTEGER" />
+        <result column="privilege_code" property="privilegeCode" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+   <sql id="Base_Column_List" >
+        id,subject_id,subject_type,privilege_id,privilege_code,create_time,update_time
+    </sql>
+  	<sql id="subjectPrivilegeWhere">
+        <where>
+	        <if test="id!=null">
+	        	id=#{id}
+	        </if>
+	        <if test="subjectId!=null">
+	        	and subject_id=#{subjectId}
+	        </if>
+	        <if test="subjectType!=null">
+	        	and subject_type=#{subjectType}
+	        </if>
+	        <if test="privilegeId!=null">
+	        	and privilege_id=#{privilegeId}
+	        </if>
+	        <if test="privilegeCode!=null">
+	        	and privilege_code=#{privilegeCode}
+	        </if>
+        </where>
+  	</sql>
+    <select id="querySubjectPrivilegeBySubjectId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT 
+        <include refid="Base_Column_List" />
+         FROM tb_subject_privilege
+        where subject_id=#{subjectId}
+        order by update_time desc
+    </select>
+    <insert id="batchInsertSubjectPrivilege" parameterType="java.util.List">
+        INSERT INTO 
+        tb_subject_privilege(<include refid="Base_Column_List" />) 
+         VALUES 
+         <foreach collection="list" index="index" item="item" separator=",">
+         (#{item.id},
+          #{item.subjectId},
+          #{item.subjectType},
+          #{item.privilegeId},
+          #{item.privilegeCode},
+          #{item.createTime},
+          #{item.updateTime})
+          </foreach>
+    </insert>
+    <delete id="deleteSubjectPrivilegeById" parameterType="java.util.ArrayList">
+        delete FROM tb_subject_privilege WHERE id in 
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+           #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteSubjectPrivilegeBySubjectId" parameterType="java.util.ArrayList">
+        delete FROM tb_subject_privilege WHERE subject_id in 
+        <foreach collection="list" index="index" item="subjectId" open="(" separator="," close=")">
+           #{subjectId}
+        </foreach>
+    </delete>
+    <update id="updateSubjectPrivilege" parameterType="gaea.user.center.service.models.domain.SubjectPrivilege">
+        update tb_subject_privilege set
+         <if test="subjectId!=null">
+         	subject_id = #{subjectId},
+         </if>
+         <if test="subjectType!=null">
+         	subject_type = #{subjectType},
+         </if>
+         <if test="privilegeId!=null">
+         	privilege_id = #{privilegeId},
+         </if>
+         <if test="privilegeCode!=null">
+         	privilege_code = #{privilegeCode},
+         </if>
+         <if test="updateTime!=null">
+         	update_time = #{updateTime}
+         </if>
+        where id=#{id}
+    </update>
+</mapper>

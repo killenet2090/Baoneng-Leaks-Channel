@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.device.mapper.DeviceTypeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.device.model.entity.DeviceTypePo">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectId"/>
+        <result column="device_type" property="deviceType"/>
+        <result column="type_name" property="typeName"/>
+        <result column="device_ext" property="deviceExt"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, device_type, type_name, device_ext, del_flag, version, create_by, create_time, update_by, update_time
+    </sql>
+
+    <select id="selectAllByCondition" resultType="DeviceTypePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device_type
+        <where>
+            del_flag = 0
+            <if test="searchKey != null">
+                and type_name like CONCAT('%',#{searchKey}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectAll" resultType="DeviceTypePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device_type
+        <where>
+            del_flag = 0
+        </where>
+    </select>
+
+    <select id="selectByDeviceType" resultType="DeviceTypePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device_type
+        <where>
+            device_type = #{deviceType} and del_flag = 0
+        </where>
+    </select>
+
+    <select id="selectByDeviceTypes" resultType="DeviceTypePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device_type
+        <where>
+            del_flag = 0
+            <if test="deviceTypes != null and deviceTypes.size > 0">
+                and device_type in
+                <foreach collection="deviceTypes" separator="," item="deviceType" open="(" close=")">
+                    #{deviceType}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByTypeName" resultType="DeviceTypePo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_device_type
+        <where>
+            type_name = #{typeName} and del_flag = 0
+        </where>
+        limit 1
+    </select>
+
+</mapper>

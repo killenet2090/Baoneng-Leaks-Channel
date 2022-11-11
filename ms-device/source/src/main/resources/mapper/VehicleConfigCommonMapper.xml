@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.device.mapper.VehicleConfigCommonMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.device.model.entity.VehicleConfigCommonPo">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectId"/>
+        <result column="config_id" property="configId"/>
+        <result column="color_name" property="colorName"/>
+        <result column="img_url" property="imgUrl"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="version" property="version"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, config_id, color_name, img_url, del_flag, version, create_by, create_time, update_by, update_time
+    </sql>
+
+    <select id="listByConfigIds" resultType="VehicleConfigCommonPo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_vehicle_config_common
+        <where>
+            del_flag = 0
+            <if test="configIds != null and configIds.size > 0">
+                and config_id in
+                <foreach collection="configIds" item="configId" open="(" close=")" separator=",">
+                    #{configId}
+                </foreach>
+            </if>
+        </where>
+        limit 500
+    </select>
+
+    <select id="getByConfigIdAndColorName" resultType="VehicleConfigCommonPo">
+        select
+        <include refid="Base_Column_List"/>
+        from tb_vehicle_config_common
+        where config_id = #{configId} and color_name = #{colorName} and del_flag = 0
+    </select>
+
+</mapper>

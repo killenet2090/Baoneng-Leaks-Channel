@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.RolePrivilegeMapper">
+    <resultMap id="BaseResultMap" type="gaea.user.center.service.model.dto.RolePrivilege" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="role_id" property="roleId" jdbcType="INTEGER" />
+        <result column="subject_type" property="subjectType" jdbcType="INTEGER" />
+        <result column="privilege_id" property="privilegeId" jdbcType="INTEGER" />
+        <result column="select_status" property="selectStatus" jdbcType="INTEGER" />
+        <result column="privilege_code" property="privilegeCode" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+  	<sql id="subjectPrivilegeWhere">
+        <where>
+	        <if test="id!=null">
+	        	id=#{id}
+	        </if>
+	        <if test="subjectId!=null">
+	        	and role_id=#{roleId}
+	        </if>
+	        <if test="subjectType!=null">
+	        	and subject_type=#{subjectType}
+	        </if>
+	        <if test="privilegeId!=null">
+	        	and privilege_id=#{privilegeId}
+	        </if>
+	        <if test="privilegeCode!=null">
+	        	and privilege_code=#{privilegeCode}
+	        </if>
+        </where>
+  	</sql>
+    <select id="queryRolePrivilegeByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT 
+		    tsp.id,
+		    tsp.role_id,
+		    tsp.subject_type,
+		    tsp.privilege_id,
+		    tp.code as privilege_code,
+		    tsp.select_status,
+        	tp.create_time,
+        	tp.update_time
+		FROM
+            tb_role_privilege tsp,
+		    tb_privilege tp
+		WHERE
+		    tsp.privilege_id = tp.id
+              and tsp.role_id=#{roleId}
+        order by tp.update_time desc
+    </select>
+    <select id="queryPrivilegeIdByRoleId" resultType="java.lang.String">
+        SELECT DISTINCT
+            tsp.privilege_id
+        FROM
+            tb_role_privilege tsp,
+            tb_privilege tp
+        WHERE
+            tsp.privilege_id = tp.id
+            AND tsp.role_id = #{roleId}
+            AND tsp.select_status = #{selectStatus}
+    </select>
+    <insert id="batchInsertSubjectPrivilege" parameterType="java.util.List">
+        INSERT INTO
+            tb_role_privilege(role_id,subject_type,privilege_id,select_status)
+         VALUES 
+         <foreach collection="list" index="index" item="item" separator=",">
+          (#{item.roleId},
+          #{item.subjectType},
+          #{item.privilegeId},
+          #{item.selectStatus})
+          </foreach>
+    </insert>
+    <delete id="deleteSubjectPrivilegeById" parameterType="java.util.ArrayList">
+        delete FROM tb_role_privilege WHERE id in
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+           #{id}
+        </foreach>
+    </delete>
+    <delete id="deleteSubjectPrivilegeBySubjectId" parameterType="java.util.ArrayList">
+        delete FROM tb_role_privilege WHERE del_flag=0 and role_id in
+        <foreach collection="list" index="index" item="subjectId" open="(" separator="," close=")">
+           #{subjectId}
+        </foreach>
+    </delete>
+    <update id="deleteSubjectPrivilegeByRoleId" parameterType="java.util.ArrayList">
+        update tb_role_privilege set del_flag=1 WHERE role_id in
+        <foreach collection="list" index="index" item="roleId" open="(" separator="," close=")">
+           #{roleId}
+        </foreach>
+    </update>
+    <update id="updateSubjectPrivilege" parameterType="gaea.user.center.service.model.dto.RolePrivilege">
+        update tb_role_privilege set
+        <trim suffixOverrides=",">
+             <if test="subjectId!=null">
+                 role_id = #{roleId},
+             </if>
+             <if test="subjectType!=null">
+                subject_type = #{subjectType},
+             </if>
+             <if test="privilegeId!=null">
+                privilege_id = #{privilegeId},
+             </if>
+             <if test="selectStatus!=null">
+                select_status = #{selectStatus}
+             </if>
+        </trim>
+        where id=#{id}
+    </update>
+    <!--根据角色RoleIds查询所有权限信息列表-->
+    <select id="queryPrivilegeListByRoleIds" parameterType="java.util.ArrayList" resultType="gaea.user.center.service.model.dto.RolePrivilege">
+        SELECT
+            DISTINCT privilege_id
+        FROM
+            tb_role_privilege
+        WHERE
+            role_id in
+            <foreach collection="list" index="index" item="roleId" open="(" separator="," close=")">
+                #{roleId}
+            </foreach>
+        AND
+            del_flag = 0
+        ORDER BY privilege_id
+    </select>
+    <!--根据条件查询角色权限关系信息列表-->
+    <select id="queryRolePrivilegeByCondition" parameterType="gaea.user.center.service.model.entity.RolePrivilegePo" resultMap="BaseResultMap">
+        SELECT
+            id,
+            role_id,
+            subject_type,
+            privilege_id,
+            select_status
+        FROM
+            tb_role_privilege
+        WHERE
+        del_flag = 0
+        <if test="query.privilegeId != null">
+            and privilege_id = #{query.privilegeId}
+        </if>
+        <if test="query.roleId != null ">
+            and role_id = #{query.roleId}
+        </if>
+        <if test="query.selectStatus != null">
+            and select_status = #{query.selectStatus}
+        </if>
+        <if test="query.subjectType != null">
+            and subject_type = #{query.subjectType}
+        </if>
+    </select>
+</mapper>

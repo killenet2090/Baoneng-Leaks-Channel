@@ -1,0 +1,27 @@
+#端口号
+server:
+  port: 8017
+  tomcat:
+    max-threads: 10
+  servlet:
+    context-path: /usercenter
+#  ssl:
+#    key-store: classpath:tomcat.keystore
+#    key-store-password: 123456
+#    key-store-type: JKS
+#    key-alias: tomcat
+spring:
+  profiles:
+    active: dev
+  application:
+    name: gaea-user-center-service
+  cloud:
+    nacos:
+      config:
+        group: DEFAULT_GROUP
+        server-addr: http://10.210.100.17:8848
+        file-extension: yaml
+      discovery:
+        server-addr: http://10.210.100.17:8848/
+
+

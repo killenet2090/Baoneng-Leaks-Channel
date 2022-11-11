@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.vehicle.basic.service.dao.VehicleMapper">
+
+    <insert id="insertVehicle" parameterType="gaea.vehicle.basic.service.models.domain.Vehicle" useGeneratedKeys="true" keyProperty="id">
+     INSERT INTO tb_vehicle
+     (
+    	vehicle_submodel_id,
+    	vin,
+    	plate_color,
+    	plate_no,
+    	material_no,
+    	prod_area,
+    	plate_area,
+    	sale_area,
+    	current_area,
+    	remark,
+    	create_time,
+    	update_time     )
+      VALUES 
+     (
+    	#{vehicleSubModelId},
+    	#{vin},
+    	#{plateColor},
+    	#{plateNo},
+    	#{materialNo},
+    	#{prodArea},
+    	#{plateArea},
+    	#{saleArea},
+    	#{currentArea},
+    	#{remark},
+    	SYSDATE(),
+    	SYSDATE()     )
+    </insert>
+  
+    <delete id="deleteById" parameterType="Long">
+      DELETE FROM tb_vehicle WHERE id = #{value}
+    </delete>
+  	
+  	<sql id="pageWhere">
+		<where>
+	    </where>
+  	</sql>
+  	  
+    <select id="countPage" resultType="int">
+     SELECT count(*) FROM tb_vehicle
+ 	  <include refid="pageWhere"/>
+    </select>
+
+	<sql id="pageConditionsWhere">
+		<where>
+			<if test="brandId !=null and brandId !=''">
+				AND tvb.id = #{brandId}
+			</if>
+			<if test="seriesId !=null and seriesId !=''">
+				AND tvs.id = #{seriesId}
+			</if>
+			<if test="modelId !=null and modelId !=''">
+				AND tvm.id = #{modelId}
+			</if>
+			<if test="modelYear !=null and modelYear !=''">
+				AND tvm.model_year = #{modelYear}
+			</if>
+			<if test="subModelId !=null and subModelId !=''">
+				AND tvsm.id = #{subModelId}
+			</if>
+			<if test="currentArea !=null and currentArea !=''">
+				AND tv.current_area = #{currentArea}
+			</if>
+			<if test="saleArea !=null and saleArea !=''">
+				AND tv.sale_area = #{saleArea}
+			</if>
+			<if test="vin !=null and vin !=''">
+				AND tv.vin = #{vin}
+			</if>
+		</where>
+	</sql>
+
+	<select id="countConditionsPage" parameterType="gaea.vehicle.basic.service.models.query.VehicleConditionQuery" resultType="int">
+		SELECT count(*) FROM (
+		SELECT a.vin,a.brandName,a.seriesName,a.modelName,a.modelYear,a.subModelName, ta.area_name as saleArea, tb.area_name as currentArea from (select
+		vin,
+		tvb.brand_name brandName,
+		tvs.series_name seriesName,
+		tvm.model_name modelName,
+		tvm.model_year modelYear,
+		tvsm.sub_model_name subModelName,
+		tv.sale_area,
+		tv.current_area
+		from
+		tb_vehicle_brand tvb
+		LEFT JOIN
+		tb_vehicle_series tvs
+		ON
+		tvs.vehicle_brand_id = tvb.id
+		LEFT JOIN
+		tb_vehicle_model tvm
+		ON
+		tvm.vehicle_series_id = tvs.id
+		LEFT JOIN
+		tb_vehicle_sub_model tvsm
+		ON
+		tvsm.vehicle_model_id = tvm.id
+		LEFT JOIN
+		tb_vehicle tv
+		ON
+		tv.vehicle_submodel_id = tvsm.id
+		<include refid="pageConditionsWhere"/>
+
+		) a
+		left JOIN tb_area ta
+		ON
+		a.sale_area = ta.area_code
+		left join tb_area tb
+		ON
+		a.current_area = tb.area_code
+		ORDER BY a.vin DESC
+
+		) b
+	</select>
+  
+    <select id="queryPage" resultType="vehicle">
+      SELECT
+    	id,
+    	vehicle_model_id vehicleModelId,
+    	vin,
+    	plate_color plateColor,
+    	plate_no plateNo,
+    	material_no materialNo,
+    	prod_area prodArea,
+    	plate_area plateArea,
+    	sale_area saleArea,
+    	current_area currentArea,
+    	remark,
+    	create_time createTime,
+    	update_time updateTime,
+    	is_active isActive
+      FROM tb_vehicle
+      <include refid="pageWhere"/>
+      ORDER BY id DESC
+      LIMIT #{startRow},#{pageSize}
+    </select>
+
+	<select id="queryByConditions" parameterType="gaea.vehicle.basic.service.models.query.VehicleConditionQuery" resultType="gaea.vehicle.basic.service.models.vo.VehicleConditionPageVO">
+		SELECT a.vin,a.brandName,a.seriesName,a.modelName,a.modelYear,a.subModelName, ta.area_name as saleArea, tb.area_name as currentArea from (select
+		vin,
+		tvb.brand_name brandName,
+		tvs.series_name seriesName,
+		tvm.model_name modelName,
+		tvm.model_year modelYear,
+		tvsm.sub_model_name subModelName,
+		tv.sale_area,
+		tv.current_area
+		from
+		tb_vehicle_brand tvb
+		LEFT JOIN
+		tb_vehicle_series tvs
+		ON
+		tvs.vehicle_brand_id = tvb.id
+		LEFT JOIN
+		tb_vehicle_model tvm
+		ON
+		tvm.vehicle_series_id = tvs.id
+		LEFT JOIN
+		tb_vehicle_sub_model tvsm
+		ON
+		tvsm.vehicle_model_id = tvm.id
+		LEFT JOIN
+		tb_vehicle tv
+		ON
+		tv.vehicle_submodel_id = tvsm.id
+		<where>
+			<if test="brandId !=null and brandId !=''">
+				AND tvb.id = #{brandId}
+			</if>
+			<if test="seriesId !=null and seriesId !=''">
+				AND tvs.id = #{seriesId}
+			</if>
+			<if test="modelId !=null and modelId !=''">
+				AND tvm.id = #{modelId}
+			</if>
+			<if test="modelYear !=null and modelYear !=''">
+				AND tvm.model_year = #{modelYear}
+			</if>
+			<if test="subModelId !=null and subModelId !=''">
+				AND tvsm.id = #{subModelId}
+			</if>
+			<if test="currentArea !=null and currentArea !=''">
+				AND tv.current_area = #{currentArea}
+			</if>
+			<if test="saleArea !=null and saleArea !=''">
+				AND tv.sale_area = #{saleArea}
+			</if>
+			<if test="vin !=null and vin !=''">
+				AND tv.vin = #{vin}
+			</if>
+
+		</where>
+		) a
+		left JOIN tb_area ta
+		ON
+		a.sale_area = ta.area_code
+		left join tb_area tb
+		ON
+		a.current_area = tb.area_code
+		ORDER BY a.vin DESC
+		LIMIT #{startRow},#{pageSize}
+	</select>
+
+	<select id="queryNameAndId" parameterType="gaea.vehicle.basic.service.models.domain.Vehicle" resultType="vehicle">
+		SELECT
+		id,
+		vehicle_model_id vehicleModelId,
+		vin,
+		plate_color plateColor,
+		plate_no plateNo,
+		material_no materialNo,
+		prod_area prodArea,
+		plate_area plateArea,
+		sale_area saleArea,
+		current_area currentArea,
+		remark,
+		create_time createTime,
+		update_time updateTime,
+		is_active isActive
+		FROM tb_vehicle
+
+		<where>
+			<if test="vehicleModelId !=null and vehicleModelId !=''">
+				AND vehicle_model_id = #{vehicleModelId}
+			</if>
+
+		</where>
+		ORDER BY id DESC
+    </select>
+  
+    <select id="queryById" parameterType="Long" resultType="vehicle">
+      SELECT
+    	id,
+    	vehicle_model_id vehicleModelId,
+    	vin,
+    	plate_color plateColor,
+    	plate_no plateNo,
+    	material_no materialNo,
+    	prod_area prodArea,
+    	plate_area plateArea,
+    	sale_area saleArea,
+    	current_area currentArea,
+    	remark,
+    	create_time createTime,
+    	update_time updateTime,
+    	is_active isActive
+      FROM tb_vehicle
+      WHERE id = #{value}
+    </select>
+
+  
+    <update id="updateVehicle" parameterType="vehicle">
+      UPDATE tb_vehicle
+      SET
+    	vehicle_model_id = #{vehicleModelId},
+    	vin = #{vin},
+    	plate_color = #{plateColor},
+    	plate_no = #{plateNo},
+    	material_no = #{materialNo},
+    	prod_area = #{prodArea},
+    	plate_area = #{plateArea},
+    	sale_area = #{saleArea},
+    	current_area = #{currentArea},
+    	remark = #{remark},
+    	update_time = SYSDATE(),
+    	is_active = #{isActive}
+      WHERE id = #{id}
+    </update>
+
+
+</mapper>

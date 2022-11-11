@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.UserMapper">
+	<resultMap id="CustomResultMap" type="gaea.user.center.service.model.response.UserResp" >
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+	</resultMap>
+    <insert id="insertUser" parameterType="gaea.user.center.service.model.dto.User" useGeneratedKeys="true" keyProperty="id" >
+     INSERT INTO tb_user
+     (
+    	name,
+    	email,
+    	phone,
+    	password,
+    	is_enable,
+    	display_name,
+    	org_id,
+    	create_time,
+    	update_time,
+    	create_by,
+    	update_by,
+		del_flag,
+		expire_time,
+		remark
+     ) 
+      VALUES 
+     (
+    	#{name},
+    	#{email},
+    	#{phone},
+    	#{password},
+    	#{isEnable},
+    	#{displayName},
+    	#{orgId},
+    	SYSDATE(),
+    	SYSDATE(),
+    	#{createBy},
+    	#{updateBy},
+    	#{delFlag},
+		#{expireTime},
+		#{remark}
+     )
+    </insert>
+
+	<!--       DELETE FROM tb_user WHERE id = #{value} -->
+    <delete id="deleteById" parameterType="Long">
+		UPDATE
+			tb_user
+		SET
+			del_flag = 1
+		WHERE
+			id = #{value}
+    </delete>
+  	
+  	<sql id="userFiled">
+		<where>
+			<if test="id!=null">
+				AND tu.id = #{id}
+			</if>
+			<if test="name !=null and name !=''">
+				AND tu.name = #{name}
+			</if>
+			<if test="displayName !=null and displayName !=''">
+				AND tu.display_name = #{displayName}
+			</if>
+			<if test="email !=null and email !=''">
+				AND tu.email = #{email}
+			</if>
+			<if test="password !=null and password !=''">
+				AND tu.password = #{password}
+			</if>
+			<if test="isEnable !=null and isEnable !=''">
+				AND tu.is_enable = #{isEnable}
+			</if>
+			<if test="phone !=null and phone !=''">
+				AND tu.phone = #{phone}
+			</if>
+			<if test="remark !=null and remark !=''">
+				AND tu.remark = #{remark}
+			</if>
+			AND tu.del_flag = 0
+	    </where>
+  	</sql>
+
+	<sql id="pageWhere">
+		<where>
+			<if test="query.name !=null and query.name !=''">
+				AND tu.name like CONCAT('%',#{query.name},'%')
+			</if>
+			<if test="query.displayName !=null and query.displayName !=''">
+				AND tu.display_name like CONCAT('%',#{query.displayName},'%')
+			</if>
+			<if test="query.roleId !=null and query.roleId !=''">
+				AND tr.id = #{query.roleId}
+			</if>
+			<if test="query.isEnable != null">
+				AND tu.is_enable = #{query.isEnable}
+			</if>
+			<if test="query.phone !=null and query.phone !=''">
+				AND tu.phone LIKE CONCAT('%',#{query.phone},'%')
+			</if>
+			<choose>
+				<otherwise>
+					AND 1 = 1
+				</otherwise>
+			</choose>
+		</where>
+	</sql>
+    <select id="countPage" resultType="int">
+     SELECT count(*) FROM (
+		SELECT
+		tu.id as userId,
+		tu.name as name,
+		tu.phone as phone,
+		tu.email as email,
+		tu.display_name as displayName,
+<!--		tor.name as orgName,-->
+		GROUP_CONCAT(tr.name SEPARATOR ' / ') as roleName
+		FROM tb_user tu
+<!--		INNER JOIN tb_organization tor-->
+<!--		ON-->
+<!--		tu.org_id = tor.id-->
+		INNER JOIN tb_user_role tur
+		on
+		tu.id = tur.user_id
+		INNER JOIN
+		tb_role tr
+		ON
+		tur.role_id = tr.id
+		<include refid="pageWhere"/>
+		GROUP BY tu.id
+		ORDER BY tu.create_time DESC
+		) a
+    </select>
+  
+    <select id="queryPage" resultType="gaea.user.center.service.model.response.UserPageVo">
+		SELECT
+			tu.id AS id,
+			tu.NAME AS NAME,
+			tu.phone AS phone,
+			tu.email AS email,
+			tu.display_name AS displayName,
+			tu.create_by AS createBy,
+			tu.update_by AS updateBy,
+			tu.create_time AS createTime,
+			tu.update_time AS updateTime,
+			tu.expire_time AS expireTime,
+			tu.is_enable AS is_enable,
+			tu.remark AS remark,
+			GROUP_CONCAT( tr.NAME SEPARATOR ' / ' ) AS roleName
+		FROM tb_user tu
+		INNER JOIN tb_user_role tur ON tu.id = tur.user_id
+		AND tu.del_flag = 0
+		INNER JOIN tb_role tr ON tur.role_id = tr.id
+		AND tr.del_flag = 0
+		<include refid="pageWhere"/>
+	  GROUP BY tu.id
+      ORDER BY tu.create_time DESC
+    </select>
+  
+    <select id="queryById" parameterType="Long" resultType="gaea.user.center.service.model.response.UserDetailVO">
+      SELECT
+		tu.id as userId,
+		tu.name as name,
+		tu.phone as phone,
+		tu.email as email,
+		tu.expire_time AS expireTime,
+		tu.is_enable AS isEnable,
+		tu.remark AS remark,
+		tu.display_name as displayName,
+		GROUP_CONCAT( tr.NAME SEPARATOR ' / ' ) AS roleName
+<!--		tor.name as orgName,-->
+<!--		tor.id as orgId-->
+		FROM tb_user tu
+<!--		INNER JOIN tb_organization tor-->
+<!--		ON-->
+<!--		tu.org_id = tor.id-->
+		INNER JOIN tb_user_role tur
+		on
+		tu.id = tur.user_id
+		INNER JOIN
+		tb_role tr
+		ON
+		tur.role_id = tr.id
+      	WHERE tu.id = #{value}
+      	AND tu.del_flag = 0
+      	AND tr.del_flag = 0
+      	AND tur.del_flag = 0
+      	GROUP BY
+		tu.id
+		ORDER BY tu.create_time DESC
+    </select>
+
+	<select id="queryByUserFiled" parameterType="gaea.user.center.service.model.dto.User" resultType="gaea.user.center.service.model.dto.User">
+      SELECT
+		tu.id,
+		tu.name as name,
+		tu.phone as phone,
+		tu.org_id as orgId,
+		tu.email as email,
+		tu.password as password,
+		tu.expire_time AS expireTime,
+		tu.is_enable AS isEnable,
+		tu.remark AS remark,
+		tu.display_name as displayName
+	  FROM
+	  	tb_user tu
+	  <include refid="userFiled"/>
+		LIMIT	1
+    </select>
+
+    <update id="updateUser" parameterType="gaea.user.center.service.model.dto.User">
+      UPDATE tb_user
+      SET
+		<if test="name !=null and name !=''">
+			name = #{name},
+		</if>
+		<if test="password !=null and password !=''">
+			password = #{password},
+		</if>
+		<if test="email !=null and email !=''">
+			email = #{email},
+		</if>
+		<if test="phone !=null and phone !=''">
+			phone = #{phone},
+		</if>
+		<if test="isEnable !=null">
+			is_enable = #{isEnable},
+		</if>
+		<if test="displayName !=null and displayName !=''">
+			display_name = #{displayName},
+		</if>
+		<if test="orgId !=null and orgId !=''">
+			org_id = #{orgId},
+		</if>
+		<if test="delFlag !=null and delFlag !=''">
+			del_flag = #{delFlag},
+		</if>
+		<if test="remark !=null and remark !=''">
+			remark = #{remark},
+		</if>
+		<if test="expireTime !=null">
+			expire_time = #{expireTime},
+		</if>
+		<if test="updateBy !=null and updateBy !=''">
+			update_by = #{updateBy},
+		</if>
+    	update_time = SYSDATE()
+      WHERE id = #{id}
+    </update>
+	<!--根据项目id查询该项目分配用户列表-->
+	<select id="queryUserListByProjectId" parameterType="Long" resultType="gaea.user.center.service.model.dto.User">
+		SELECT
+			tu.id AS id,
+			tu.org_id,
+			tu.email,
+			tu.phone,
+			tu.display_name,
+			tu.is_enable
+		FROM
+			tb_user tu
+		LEFT JOIN tb_user_project tup ON tu.id = tup.user_id
+		WHERE
+			tup.project_id = #{projectId}
+	</select>
+
+	<select id="getUserList" resultType="gaea.user.center.service.model.entity.UserPo" parameterType="gaea.user.center.service.model.request.UserQuery">
+		SELECT
+			id,
+			org_id,
+			name,
+			password,
+			email,
+			phone,
+			display_name,
+			create_time,
+			update_time,
+			create_by,
+			update_by,
+			del_flag,
+			is_enable,
+			data_control,
+			expire_time,
+			remark
+		FROM
+			tb_user
+		WHERE
+			del_flag = 0
+			<if test="query.expireTime != null">
+				AND DATE_FORMAT(NOW(),'%Y-%m-%d') > DATE_FORMAT(expire_time,'%Y-%m-%d')
+			</if>
+			<if test="query.isEnable != null">
+				AND is_enable = #{query.isEnable}
+			</if>
+	</select>
+	<!--根据用户名精确查询用户信息-->
+	<select id="queryByUserName" parameterType="String" resultType="gaea.user.center.service.model.entity.UserPo">
+		SELECT
+			id,
+			name,
+			password,
+			email,
+			phone,
+			display_name AS displayName,
+			create_time AS createTime,
+			update_time AS updateTime,
+			create_by AS createBy,
+			update_by AS updateBy,
+			del_flag AS delFlag,
+			is_enable AS isEnable,
+			data_control AS dataControl,
+			expire_time AS expireTime,
+			remark
+		FROM tb_user
+		WHERE 1 = 1
+		<if test="name != null and name != ''">
+			AND name = #{name}
+		</if>
+	</select>
+	<select id="queryUserListByRoleId" resultMap="CustomResultMap">
+		SELECT
+			tu.id,
+			tu.NAME
+		FROM
+			tb_user tu
+			INNER JOIN tb_user_role tur ON tu.id = tur.user_id
+			INNER JOIN tb_role tr ON tur.role_id = tr.id
+		WHERE
+			tu.del_flag = 0
+			AND tur.del_flag = 0
+			AND tr.del_flag = 0
+			AND tur.role_id in
+			<foreach collection="roleIds" item="roleId" index="index" open="(" close=")" separator=",">
+				#{roleId}
+			</foreach>
+	</select>
+
+	<select id="getUserInfoByIds" resultType="gaea.user.center.service.model.response.UserVo">
+		SELECT id,
+				name,
+				display_name displayName
+		FROM `tb_user`
+		where del_flag=0
+		and id in
+		<foreach collection="userIds" item="id" index="index" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</select>
+</mapper>

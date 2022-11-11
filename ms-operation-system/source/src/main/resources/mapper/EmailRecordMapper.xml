@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.EmailRecordMapper">
+    <select id="getEmailRecordList" parameterType="gaea.user.center.service.model.entity.EmailRecordPo" resultType="gaea.user.center.service.model.entity.EmailRecordPo">
+		SELECT
+			id,
+			email,
+			type,
+			key_word,
+			create_time,
+			expire_time,
+			subject,
+			is_send
+		FROM
+			tb_email_record
+		WHERE
+			1 = 1
+		<if test="type != null">
+			AND type = #{type}
+		</if>
+		<if test="email != null and email != ''">
+			AND email = #{email}
+		</if>
+		<if test="isSend != null">
+			AND is_send = #{isSend}
+		</if>
+		AND expire_time > now()
+		Order By create_time ASC
+	</select>
+</mapper>

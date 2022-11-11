@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.UserProjectMapper">
+	<!--根据用户id批量删除中间表数据-->
+    <delete id="deleteBatchByUserId" parameterType="Long">
+		DELETE
+		FROM
+			tb_user_project
+		WHERE
+			user_id = #{userId}
+    </delete>
+
+	<!--根据项目id批量删除中间表数据-->
+	<delete id="deleteBatchByProjectId" parameterType="Long">
+		DELETE
+		FROM
+			tb_user_project
+		WHERE
+			project_id = #{projectId}
+	</delete>
+
+	<!--根据项目id查询项目分配的列表-->
+	<select id="queryUserProjectListByProjectId" parameterType="Long" resultType="gaea.user.center.service.model.entity.UserProjectPo">
+		SELECT
+			user_id,
+			project_id
+		FROM
+			tb_user_project
+		WHERE
+			project_id = #{projectId}
+	</select>
+	<!--新增用户项目关联表数据-->
+	<insert id="insertUserRelProject" parameterType="gaea.user.center.service.model.dto.UserProjectRel">
+		insert into tb_user_project
+		(user_id,project_id)
+		values
+		<foreach collection="projects" item="item" index="index" separator=",">
+			(
+			#{userId},
+			#{item}
+			)
+		</foreach>
+	</insert>
+	<delete id="deleteUserRelProjectByUserId" parameterType="gaea.user.center.service.model.dto.UserProjectRel">
+        delete from
+			tb_user_project
+		WHERE
+			user_id = #{userId}
+    </delete>
+	<!--根据用户id查询项目分配的列表-->
+	<select id="queryUserProjectListByUserId" parameterType="Long" resultType="gaea.user.center.service.model.entity.UserProjectPo">
+		SELECT
+			user_id,
+			project_id
+		FROM
+			tb_user_project
+		WHERE
+			user_id = #{userId}
+	</select>
+</mapper>

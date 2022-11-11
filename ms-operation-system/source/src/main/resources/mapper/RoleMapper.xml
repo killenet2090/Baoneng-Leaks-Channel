@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.RoleMapper">
+
+    <resultMap id="BaseResultMap" type="gaea.user.center.service.model.entity.RolePo" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="org_id" property="orgId" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="del_flag" property="delFlag" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="CustomResultMap" type="gaea.user.center.service.model.response.RoleResp" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+    </resultMap>
+   <sql id="Base_Column_List" >
+        id,
+        org_id,
+        name,
+	    del_flag,
+        remark,
+        create_time,
+        update_time,
+        create_by,
+        update_by
+    </sql>
+  	<sql id="roleWhere">
+        <where>
+	        <if test="id!=null">
+	        	id=#{id}
+	        </if>
+	        <if test="name!=null">
+	        	and name like CONCAT('%',#{name},'%')
+	        </if>
+	        <if test="remark!=null">
+	        	and remark like CONCAT('%',#{remark},'%')
+	        </if>
+	        <if test="createTime!=null">
+	        	<![CDATA[
+	        	and DATE_FORMAT(create_time, '%Y-%m-%d')=DATE_FORMAT(#{createTime}, '%Y-%m-%d')
+	        	]]>
+	        </if>
+            and del_flag=0
+        </where>
+  	</sql>
+  	<select id="queryRoleCountByName" resultType="int" parameterType="gaea.user.center.service.model.dto.Role">
+  		SELECT 
+			count(1) as count
+		FROM
+			tb_role 
+		WHERE
+            del_flag = 0
+            <if test="name!=null">
+                and name=#{name}
+            </if>
+            <if test="id!=null">
+                and id != #{id}
+            </if>
+  	</select>
+    <select id="queryRoleCount" resultType="int" parameterType="gaea.user.center.service.model.dto.Role">
+        SELECT 
+			count(1) as count
+		FROM
+			tb_role tr
+		WHERE tr.del_flag = 0
+	        <if test="name!=null">
+	        	and tr.name like CONCAT('%',#{name},'%')
+	        </if>
+	        <if test="remark!=null">
+	        	and tr.remark like CONCAT('%',#{remark},'%')
+	        </if>
+	        <if test="createTime!=null">
+	        	<![CDATA[
+	        	and DATE_FORMAT(tr.create_time, '%Y-%m-%d')=DATE_FORMAT(#{createTime}, '%Y-%m-%d')
+	        	]]>
+	        </if>
+    </select>
+    <select id="queryRolePageList" resultType="gaea.user.center.service.model.response.RoleVo" parameterType="gaea.user.center.service.model.request.RoleQuery">
+        SELECT 
+            tr.id as id,
+	        tr.name as name,
+	        tr.del_flag as delFlag,
+	        tr.remark as remark,
+            ( SELECT count( DISTINCT tur.user_id ) AS account_number FROM tb_user_role tur WHERE tur.del_flag = '0' AND tur.role_id = tr.id ) AS AccountNum,
+	        tr.create_time as createTime,
+	        tr.update_time as updateTime,
+	        tr.create_by as createBy,
+	        tr.update_by as updateBy
+		FROM
+		    tb_role tr
+		WHERE tr.del_flag=0
+            <if test="query.id!=null">
+                and tr.id=#{query.id}
+            </if>
+	        <if test="query.name!=null and query.name!=''">
+	        	and tr.name like CONCAT('%',#{query.name},'%')
+	        </if>
+	        <if test="query.remark!=null and query.remark!=''">
+	        	and tr.remark like CONCAT('%',#{query.remark},'%')
+	        </if>
+            <if test="query.createBy!=null and query.createBy!=''">
+                and tr.create_by=#{query.createBy}
+            </if>
+	        <if test="query.createTime!=null">
+	        	<![CDATA[
+	        	and DATE_FORMAT(tr.create_time, '%Y-%m-%d')=DATE_FORMAT(#{query.createTime}, '%Y-%m-%d')
+	        	]]>
+	        </if>
+        order by tr.create_time desc
+    </select>
+     <select id="queryRole" resultMap="BaseResultMap" parameterType="gaea.user.center.service.model.request.RoleQuery">
+        SELECT 
+        <include refid="Base_Column_List" />
+         FROM tb_role
+        <include refid="roleWhere"/>
+        order by update_time desc
+    </select>
+    <select id="queryAllRole" resultMap="CustomResultMap" parameterType="java.lang.Integer">
+        SELECT 
+	        tr.id,
+	        tr.name
+         FROM tb_role tr
+         where tr.del_flag=#{delFlag}
+        order by update_time desc
+    </select>
+
+    <select id="queryRoleIdsByUserId" parameterType="Long" resultType="Long">
+        SELECT
+	        tr.role_id
+		FROM
+		    tb_user_role tr
+		where tr.user_id = #{userId}
+    </select>
+    <insert id="insertRole" useGeneratedKeys="true" keyProperty="id" parameterType="gaea.user.center.service.model.entity.RolePo">
+        INSERT INTO 
+        tb_role(<include refid="Base_Column_List" />) 
+         VALUES (#{id},
+          #{orgId},
+          #{name},
+          #{delFlag},
+          #{remark},
+          #{createTime},
+          #{updateTime},
+          #{createBy},
+          #{updateBy})
+    </insert>
+
+    <insert id="insertUserRelRole" parameterType="gaea.user.center.service.model.dto.UserRoleRel">
+        insert into tb_user_role
+          (user_id,role_id)
+        values
+        <foreach collection="roles" item="item" index="index" separator=",">
+            (
+            #{userId},
+            #{item}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteUserRelRoleByUserId" parameterType="gaea.user.center.service.model.dto.UserRoleRel">
+        delete from
+			tb_user_role
+		WHERE
+			user_id = #{userId}
+    </delete>
+
+    <delete id="deleteRoleById" parameterType="java.util.ArrayList">
+        delete FROM tb_role WHERE id in 
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+           #{id}
+        </foreach>
+    </delete>
+    <update id="updateRole" parameterType="gaea.user.center.service.model.entity.RolePo">
+        update tb_role set
+        <if test="name!=null and name!=''">
+            name = #{name},
+        </if>
+         <if test="remark!=null and remark!=''">
+         	remark = #{remark},
+         </if>
+         <if test="delFlag!=null">
+			 del_flag = #{delFlag},
+         </if>
+         <if test="updateBy!=null and updateBy!=''">
+         	update_by = #{updateBy},
+         </if>
+         <if test="updateTime!=null">
+         	update_time = #{updateTime}
+         </if>
+        where id=#{id}
+    </update>
+    <update id="batchUpdateRoleById" parameterType="java.util.ArrayList">
+        update tb_role set del_flag=1 WHERE id in
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+           #{id}
+        </foreach>
+    </update>
+    <select id="queryUsedRoleByRoleIds" resultMap="CustomResultMap" parameterType="java.util.ArrayList">
+        SELECT 
+	        distinct tr.id,
+	        tr.name
+		FROM
+		    tb_role tr
+		        INNER JOIN
+		    tb_user_role tur ON tur.role_id = tr.id
+		WHERE
+			tr.del_flag='1' AND tr.id in
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+           #{id}
+        </foreach>
+    </select>
+    <select id="queryUsedRolesByRoleId" resultMap="CustomResultMap" parameterType="Long">
+        SELECT
+            distinct tr.id,
+            tr.name
+        FROM
+            tb_role tr
+        INNER JOIN
+            tb_user_role tur ON tur.role_id = tr.id
+        WHERE
+            tr.del_flag='0'
+            AND tr.id=#{id}
+    </select>
+    <select id="queryRoleById" parameterType="Long" resultType="gaea.user.center.service.model.entity.RolePo">
+        SELECT
+            tr.id as id,
+	        tr.org_id as orgId,
+	        tr.name as name,
+	        tr.del_flag as delFlag,
+	        tr.remark as remark,
+	        tr.create_time as createTime,
+	        tr.update_time as updateTime,
+	        tr.create_by as createBy,
+	        tr.update_by as updateBy
+		FROM
+		    tb_role tr
+		where tr.id = #{id}
+    </select>
+    <select id="queryRoleListByUserId" parameterType="java.lang.Long" resultMap="CustomResultMap">
+        SELECT
+            tr.id,
+            tr.NAME
+        FROM
+            tb_role tr
+            INNER JOIN tb_user_role tur ON tr.id = tur.role_id
+            INNER JOIN tb_user tu ON tur.user_id = tu.id
+        WHERE
+            tu.del_flag = 0
+            AND tur.del_flag = 0
+            AND tr.del_flag = 0
+            AND tur.user_id = #{userId}
+	</select>
+</mapper>

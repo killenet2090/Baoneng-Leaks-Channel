@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.FotaPlanTaskDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.FotaPlanTaskDetailPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="ota_plan_id" property="otaPlanId" />
+        <result column="ota_plan_obj_id" property="otaPlanObjId" />
+        <result column="ota_plan_firmware_id" property="otaPlanFirmwareId" />
+        <result column="start_time" property="startTime" />
+        <result column="finish_time" property="finishTime" />
+        <result column="failed_time" property="failedTime" />
+        <result column="failed_reason" property="failedReason" />
+        <result column="retry_count" property="retryCount" />
+        <result column="retry_time" property="retryTime" />
+        <result column="task_status" property="taskStatus" />
+        <result column="remarks" property="remarks" />
+        <result column="source_version" property="sourceVersion" />
+        <result column="target_version" property="targetVersion" />
+        <result column="current_version" property="currentVersion" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+        <result column="failed_code" property="failedCode" />
+        <result column="file_path" property="filePath" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, ota_plan_id, ota_plan_obj_id, ota_plan_firmware_id, start_time, finish_time, failed_time, failed_reason, retry_count, retry_time, task_status, remarks, source_version, target_version, current_version, version, del_flag, create_by, create_time, update_by, update_time, status, failed_code, file_path
+    </sql>
+
+    <!--<delete id="deleteById" parameterType="Long">
+      DELETE FROM tb_fota_plan_task_detail WHERE id = #{value}
+    </delete>-->
+
+    <delete id="deleteByOtaPlanIdPhysical" parameterType="Long">
+      DELETE FROM tb_fota_plan_task_detail WHERE ota_plan_id = #{value}
+    </delete>
+
+    <delete id="deleteByOtaPlanObjIdPhysical">
+      DELETE FROM tb_fota_plan_task_detail WHERE ota_plan_id = #{otaPlanId} and ota_plan_obj_id = #{otaPlanObjId}
+    </delete>
+
+    <select id="queryTaskFailReport" resultType="java.util.Map">
+    <!--<select id="queryTaskFailReport" resultType="com.bnmotor.icv.tsp.ota.model.resp.TaskFailStatisticsVo">-->
+      select p.plan_name as taskName,o.vin as vin,f.component_name as ecuName,p.plan_desc as taskDesc,d.failed_code as failedCode
+      ,d.file_path as filePath,n3.node_name as modelName
+      from tb_fota_plan_task_detail d LEFT JOIN tb_fota_plan_obj_list o on d.ota_plan_obj_id = o.id
+      LEFT JOIN tb_fota_plan_firmware_list l on d.ota_plan_firmware_id = l.id LEFT JOIN tb_fota_firmware f on f.id = l.firmware_id
+      LEFT JOIN tb_fota_plan p on p.id = o.ota_plan_id LEFT JOIN tb_fota_object t on t.id=o.ota_object_id
+      LEFT JOIN tb_device_tree_node n on n.id=t.tree_node_id  LEFT JOIN tb_device_tree_node n2 on n2.id=n.parent_id
+      LEFT JOIN tb_device_tree_node n3 on n3.id=n2.parent_id
+      <where>
+          d.status=2
+          <if test="vin !=null and vin !=''">
+              and  o.vin=#{vin}
+          </if>
+          <if test="ecuId !=null and ecuId !='' and ecuId!=0">
+              and  l.firmware_id =#{ecuId}
+          </if>
+          <if test="taskName !=null and taskName !=''">
+              and p.plan_name like CONCAT('%',#{taskName},'%' )
+          </if>
+      </where>
+    </select>
+
+    <!--<select id="queryTaskFailReportByTreeNodeId" resultType="com.bnmotor.icv.tsp.ota.model.resp.TaskFailStatisticsVo">-->
+    <select id="queryTaskFailReportByTreeNodeId" resultType="java.util.Map">
+        select p.plan_name as taskName,o.vin as vin,f.component_name as ecuName,p.plan_desc as taskDesc,d.failed_code as failedCode
+        ,d.file_path as filePath,n3.node_name as modelName
+        from tb_fota_plan_task_detail d LEFT JOIN tb_fota_plan_obj_list o on d.ota_plan_obj_id = o.id
+        LEFT JOIN tb_fota_plan_firmware_list l on d.ota_plan_firmware_id = l.id LEFT JOIN tb_fota_firmware f on f.id = l.firmware_id
+        LEFT JOIN tb_fota_plan p on p.id = o.ota_plan_id LEFT JOIN tb_fota_object t on t.id=o.ota_object_id
+        LEFT JOIN tb_device_tree_node n on n.id=t.tree_node_id  LEFT JOIN tb_device_tree_node n2 on n2.id=n.parent_id
+        LEFT JOIN tb_device_tree_node n3 on n3.id=n2.parent_id
+        <where>
+            d.status=2 and  f.tree_node_id in
+            <foreach collection="list" item="treeNodeId" open="(" close=")" separator=",">
+                #{treeNodeId}
+            </foreach>
+        </where>
+    </select>
+
+    <select id="countByPlanObjId" resultType="int">
+        SELECT count(1) FROM tb_fota_plan_task_detail
+        <where>
+            <if test="id !=null ">
+                ota_plan_obj_id=#{id}
+            </if>
+        </where>
+    </select>
+
+    <!--<select id="queryByPlanObjId" resultType="com.bnmotor.icv.tsp.ota.model.resp.PlanFirmwareDetailVo">-->
+    <select id="queryByPlanObjId" resultType="java.util.Map">
+        SELECT
+        p.id Id,
+        f.upgrade_seq rank,
+        i.component_name componentName,
+        i.component_code componentCode,
+        i.firmware_name firmwareName,
+        i.firmware_code firmwareCode,
+        p.source_version sourceVersion,
+        v.firmware_version_no targetVersion,
+        p.current_version currentVersion,
+        f.group_seq,
+        f.rollback_mode  rollbackMode,
+        p.status statusCode
+        FROM tb_fota_plan_task_detail p LEFT JOIN tb_fota_plan_firmware_list f ON p.ota_plan_firmware_id = f.id
+        LEFT JOIN tb_fota_firmware i on f.firmware_id= i.id LEFT JOIN tb_fota_firmware_version v on f.firmware_version_id= v.id
+        <where>
+            p.del_flag = 0
+            <if test="id !=null">
+                and p.ota_plan_obj_id=#{id}
+            </if>
+        </where>
+        ORDER BY f.create_time DESC
+    </select>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.FotaFirmwareListMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.FotaFirmwareListPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="ota_object_id" property="otaObjectId" />
+        <result column="component_id" property="componentId" />
+        <result column="batch_no" property="batchNo" />
+        <result column="serial_no" property="serialNo" />
+        <result column="hardware_version" property="hardwareVersion" />
+        <result column="made_date" property="madeDate" />
+        <result column="firmware_id" property="firmwareId" />
+        <result column="init_firmware_version" property="initFirmwareVersion" />
+        <result column="running_firmware_version" property="runningFirmwareVersion" />
+        <result column="need_upgrade_firmware_version" property="needUpgradeFirmwareVersion" />
+        <result column="upgrade_time" property="upgradeTime" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, ota_object_id, component_id, batch_no, serial_no, hardware_version, made_date, firmware_id, init_firmware_version, running_firmware_version, need_upgrade_firmware_version, upgrade_time, version, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+</mapper>

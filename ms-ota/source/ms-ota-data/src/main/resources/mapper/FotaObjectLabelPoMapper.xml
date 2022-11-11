@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.FotaObjectLabelMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.FotaObjectLabelPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="object_id" property="objectId" />
+        <result column="label_key" property="labelKey" />
+        <result column="label_value" property="labelValue" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, object_id, label_key, label_value, version, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+    <!-- 物理删除车辆标签记录-->
+    <delete id="delByVinAndKeysPyhsical">
+        delete from where vin = #{vin}
+        and lable_key in
+        <foreach collection="labelKeys" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

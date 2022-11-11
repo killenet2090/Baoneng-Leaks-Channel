@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.UserVehicleMapper">
+    <resultMap id="BaseResultMap" type="gaea.user.center.service.model.entity.UserVehiclePo" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="vin" property="vin" jdbcType="VARCHAR" />
+        <result column="user_id" property="userIds" typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler" />
+    </resultMap>
+    <select id="queryUserVehiclePage" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+            id,
+            user_id,
+            vin
+        FROM
+            tb_user_vehicle
+        WHERE
+            vin = #{vin}
+    </select>
+    <!--删除user_id字段中包含指定的用户ID-->
+    <update id="deleteUserId">
+        update tb_user_vehicle set user_id=JSON_REMOVE(`user_id`, JSON_UNQUOTE(JSON_SEARCH(`user_id`, 'one', #{userId})))
+        <where>
+            <if test="vin!=null and vin!=''">
+                vin=#{vin}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and JSON_CONTAINS(user_id,JSON_ARRAY(#{userId}))
+            </if>
+        </where>
+    </update>
+    <!--根据vin吗删除掉user_id字段中包含的所有用户ID-->
+    <update id="deleteAllUserIdByVin" parameterType="java.lang.String">
+        update tb_user_vehicle set user_id=JSON_ARRAY() where vin = #{vin}
+    </update>
+    <!--更新用户ID-->
+    <update id="updateUserId" parameterType="gaea.user.center.service.model.entity.UserVehiclePo">
+        update tb_user_vehicle set user_id=#{query.userIds, typeHandler=com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler} where vin = #{query.vin}
+    </update>
+    <!--插入车辆信息-->
+    <insert id="insertUserVehicles" parameterType="gaea.user.center.service.model.entity.UserVehiclePo">
+        insert into tb_user_vehicle
+            (user_id,vin)
+        values
+        <foreach collection="userVehiclePoList" item="userVehicle" index="index" separator=",">
+            (
+            #{userVehicle.userIds, typeHandler=com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler},
+            #{userVehicle.vin}
+            )
+        </foreach>
+    </insert>
+    <!--根据vin码查询用户车辆关系数据-->
+    <select id="queryUserVehicles" resultMap="BaseResultMap">
+        SELECT
+            id,
+            user_id,
+            vin
+        FROM
+            tb_user_vehicle
+        <where>
+            <if test="vin!=null and vin!=''">
+                vin=#{vin}
+            </if>
+            <if test="userId!=null and userId!=''">
+                and JSON_CONTAINS(user_id,JSON_ARRAY(#{userId}))
+            </if>
+        </where>
+    </select>
+    <!--根据vin码删除掉用户车辆关系记录-->
+    <delete id="deleteUserVehicleByVin" parameterType="java.lang.String">
+        delete from tb_user_vehicle where vin = #{vin}
+    </delete>
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.cpsp.mapper.SceneGeofenceMapper">
+    <select id="getSceneGeofence" parameterType="com.bnmotor.icv.tsp.cpsp.domain.request.SceneGeofenceVo" resultType="com.bnmotor.icv.tsp.cpsp.domain.entity.SceneGeofencePo">
+		SELECT
+			id,
+			scene_id,
+			geofence_id,
+			prerequisite,
+			vin
+		FROM
+			tb_cpsp_smarthome_scene_geofence_link
+		WHERE
+			1 = 1
+		<if test="vo.sceneId != null and vo.sceneId != ''">
+			and scene_id = #{vo.sceneId}
+		</if>
+	</select>
+
+	<select id="getSceneGeofenceList" parameterType="com.bnmotor.icv.tsp.cpsp.domain.request.SceneGeofenceVo" resultType="com.bnmotor.icv.tsp.cpsp.domain.entity.SceneGeofencePo">
+		SELECT
+			id,
+			scene_id,
+			geofence_id,
+			prerequisite,
+			vin
+		FROM
+			tb_cpsp_smarthome_scene_geofence_link
+		WHERE
+			1 = 1
+		<if test="vo.sceneId != null and vo.sceneId != ''">
+			and scene_id = #{vo.sceneId}
+		</if>
+		<if test="vo.geofenceId != null and vo.geofenceId != ''">
+			and geofence_id = #{vo.geofenceId}
+		</if>
+		<if test="vo.prerequisite != null">
+			and prerequisite = #{vo.prerequisite}
+		</if>
+	</select>
+
+	<update id="updateScene">
+		update tb_cpsp_smarthome_scene_geofence_link
+		<set>
+			update_time = NOW(),
+			update_by = #{dto.uid},
+			<if test="dto.sceneId != null">
+				scene_id = #{dto.sceneId},
+			</if>
+			<if test="dto.geofenceId != null">
+				geofence_id = #{dto.geofenceId},
+			</if>
+			<if test="dto.prerequisite != null">
+				prerequisite = #{dto.prerequisite},
+			</if>
+			<if test="dto.isAuto != null">
+				is_auto = #{dto.isAuto},
+			</if>
+			<if test="dto.vin != null">
+				vin = #{dto.vin},
+			</if>
+			<if test="dto.uid != null">
+				uid = #{dto.uid}
+			</if>
+		</set>
+	</update>
+</mapper>

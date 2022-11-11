@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.vehicle.basic.service.dao.VehicleModelMapper">
+
+    <insert id="insertVehicleModel" parameterType="vehicleModel" useGeneratedKeys="true" keyProperty="id">
+     INSERT INTO tb_vehicle_model
+     (
+    	model_name,
+    	model_code,
+    	vehicle_series_id,
+    	model_year,
+    	max_speed,
+    	cruising_mileage,
+    	driving_mode,
+    	displacement,
+    	emission_standard,
+    	battery_capacity,
+    	gearbox_type,
+    	remark,
+    	create_time,
+    	update_time
+
+     )
+      VALUES 
+     (
+    	#{modelName},
+    	#{modelCode},
+    	#{vehicleSeriesId},
+    	#{modelYear},
+    	#{maxSpeed},
+    	#{cruisingMileage},
+    	#{drivingMode},
+    	#{displacement},
+    	#{emissionStandard},
+    	#{batteryCapacity},
+    	#{gearboxType},
+    	#{remark},
+    	SYSDATE(),
+    	SYSDATE()
+     )
+    </insert>
+  
+    <delete id="deleteById" parameterType="Long">
+      DELETE FROM tb_vehicle_model WHERE id = #{value}
+    </delete>
+  	
+  	<sql id="pageWhere">
+		<where>
+	    </where>
+  	</sql>
+  	  
+    <select id="countPage" resultType="int">
+     SELECT count(*) FROM tb_vehicle_model
+ 	  <include refid="pageWhere"/>
+    </select>
+  
+    <select id="queryPage" resultType="vehicleModel">
+      SELECT 
+    	id,
+    	model_name modelName,
+    	model_code modelCode,
+    	vehicle_series_id vehicleSeriesId,
+    	model_year modelYear,
+    	max_speed maxSpeed,
+    	cruising_mileage cruisingMileage,
+    	driving_mode drivingMode,
+    	displacement,
+    	emission_standard emissionStandard,
+    	battery_capacity batteryCapacity,
+    	gearbox_type gearboxType,
+    	remark,
+    	create_time createTime,
+    	update_time updateTime,
+    	is_active isActive
+      FROM tb_vehicle_model
+      <include refid="pageWhere"/>
+      ORDER BY id DESC
+      LIMIT #{startRow},#{pageSize}
+    </select>
+  
+    <select id="queryById" parameterType="Long" resultType="vehicleModel">
+      SELECT
+    	id,
+    	model_name modelName,
+    	model_code modelCode,
+    	vehicle_series_id vehicleSeriesId,
+    	model_year modelYear,
+    	max_speed maxSpeed,
+    	cruising_mileage cruisingMileage,
+    	driving_mode drivingMode,
+    	displacement,
+    	emission_standard emissionStandard,
+    	battery_capacity batteryCapacity,
+    	gearbox_type gearboxType,
+    	remark,
+    	create_time createTime,
+    	update_time updateTime,
+    	is_active isActive
+      FROM tb_vehicle_model
+      WHERE id = #{value}
+    </select>
+
+	<select id="queryNameAndId" parameterType="vehicleModel" resultType="vehicleModel">
+		SELECT
+		id,
+		model_name modelName,
+		model_year modelYear
+		FROM tb_vehicle_model
+		<where>
+			<if test="modelName !=null and modelName !=''">
+				AND model_name = #{modelName}
+			</if>
+			<if test="modelYear !=null and modelYear !=''">
+				AND model_year = #{modelYear}
+			</if>
+
+			<if test="modelCode !=null and modelCode !=''">
+				AND model_code = #{modelCode}
+			</if>
+			<if test="isActive !=null">
+				AND is_active = #{isActive}
+			</if>
+		</where>
+		ORDER BY modelName DESC
+	</select>
+  
+    <update id="updateVehicleModel" parameterType="vehicleModel">
+      UPDATE tb_vehicle_model
+      SET
+    	model_name = #{modelName},
+    	model_code = #{modelCode},
+    	vehicle_series_id = #{vehicleSeriesId},
+    	model_year = #{modelYear},
+    	max_speed = #{maxSpeed},
+    	cruising_mileage = #{cruisingMileage},
+    	driving_mode = #{drivingMode},
+    	displacement = #{displacement},
+    	emission_standard = #{emissionStandard},
+    	battery_capacity = #{batteryCapacity},
+    	gearbox_type = #{gearboxType},
+    	remark = #{remark},
+    	update_time = SYSDATE(),
+    	is_active = #{isActive}
+      WHERE id = #{id}
+    </update>
+  
+</mapper>

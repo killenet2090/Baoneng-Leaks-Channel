@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.dao.UserMapper">
+
+	<!---->
+    <insert id="insertUser" parameterType="gaea.user.center.service.models.domain.User" useGeneratedKeys="true" keyProperty="id" >
+     INSERT INTO tb_user
+     (
+    	app_id,
+    	login_name,
+    	email,
+    	phone,
+    	login_pwd,
+    	is_enable,
+    	display_name,
+    	org_id,
+    	create_time,
+    	update_time,
+    	is_active
+     ) 
+      VALUES 
+     (
+    	#{appId},
+    	#{loginName},
+    	#{email},
+    	#{phone},
+    	#{loginPwd},
+    	#{isEnable},
+    	#{displayName},
+    	#{orgId},
+    	SYSDATE(),
+    	SYSDATE(),
+    	#{isActive}
+     )
+    </insert>
+  
+    <delete id="deleteById" parameterType="Long">
+      DELETE FROM tb_user WHERE id = #{value}
+    </delete>
+  	
+  	<sql id="pageWhere">
+		<where>
+			<if test="loginName !=null and loginName !=''">
+				AND tu.login_name like CONCAT('%',#{loginName},'%')
+			</if>
+			<if test="displayName !=null and displayName !=''">
+				AND tu.display_name like CONCAT('%',#{displayName},'%')
+			</if>
+			<if test="orgId !=null and orgId !=''">
+				AND tor.id = #{orgId}
+			</if>
+			<if test="roleId !=null and roleId !=''">
+				AND tr.id = #{roleId}
+			</if>
+	    </where>
+  	</sql>
+  	  
+    <select id="countPage" resultType="int">
+     SELECT count(*) FROM tb_user tu
+		LEFT JOIN tb_organization tor
+		ON
+		tu.org_id = tor.id
+		LEFT JOIN tb_user_role tur
+		on
+		tu.id = tur.user_id
+		LEFT JOIN
+		tb_role tr
+		ON
+		tur.role_id = tr.id
+ 	  <include refid="pageWhere"/>
+    </select>
+  
+    <select id="queryPage" resultType="gaea.user.center.service.models.vo.UserPageVO">
+		SELECT
+		tu.id as userId,
+		tu.login_name as loginName,
+		tu.phone as phone,
+		tu.email as email,
+		tu.display_name as displayName,
+		tor.org_name as orgName,
+		GROUP_CONCAT(tr.role_name SEPARATOR ' / ') as roleName
+		FROM tb_user tu
+		INNER JOIN tb_organization tor
+		ON
+		tu.org_id = tor.id
+		INNER JOIN tb_user_role tur
+		on
+		tu.id = tur.user_id
+		INNER JOIN
+		tb_role tr
+		ON
+		tur.role_id = tr.id
+      <include refid="pageWhere"/>
+	  GROUP BY tu.id
+      ORDER BY tu.login_name DESC
+      LIMIT #{startRow},#{pageSize}
+    </select>
+  
+    <select id="queryById" parameterType="Long" resultType="gaea.user.center.service.models.vo.UserDetailVO">
+      SELECT
+		tu.id as userId,
+		tu.login_name as loginName,
+		tu.phone as phone,
+		tu.email as email,
+		tu.display_name as displayName,
+		tor.org_name as orgName,
+		tor.id as orgId
+		FROM tb_user tu
+		INNER JOIN tb_organization tor
+		ON
+		tu.org_id = tor.id
+		INNER JOIN tb_user_role tur
+		on
+		tu.id = tur.user_id
+		INNER JOIN
+		tb_role tr
+		ON
+		tur.role_id = tr.id
+      	WHERE tu.id = #{value}
+      	GROUP BY
+		tu.id
+		ORDER BY tu.login_name DESC
+
+    </select>
+
+	<!--login_pwd = #{loginPwd},-->
+    <update id="updateUser" parameterType="gaea.user.center.service.models.domain.User">
+      UPDATE tb_user
+      SET
+    	app_id = #{appId},
+    	login_name = #{loginName},
+    	email = #{email},
+    	phone = #{phone},
+
+    	is_enable = #{isEnable},
+    	display_name = #{displayName},
+    	org_id = #{orgId},
+    	update_time = SYSDATE(),
+    	is_active = #{isActive}
+      WHERE id = #{id}
+    </update>
+  
+</mapper>

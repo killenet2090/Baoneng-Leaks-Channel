@@ -1,0 +1,59 @@
+spring:
+  datasource:
+    name: druidDataSource
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://10.210.100.17:3306/db_sms?useUnicode=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=utf-8
+      #url: jdbc:mysql://192.168.56.101:3306/db_push?useUnicode=true&zeroDateTimeBehavior=convertToNull&autoReconnect=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+      username: root
+      password: Bnqc@2020
+      #password: 123456
+
+    mvc:
+      throw-exception-if-no-handler-found: true
+    jackson:
+      time-zone: GMT+8
+
+  logging:
+    level:
+      java.sql.PreparedStatement: debug
+    path: logs/
+    file:
+      max-size: 1GB
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*.xml
+  typeAliasesPackage: com.bnmotor.icv.tsp.sms.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+adam:
+  logging:
+    path: logs/
+    config: log4j2-dev.xml
+
+veh:
+  event:
+    jsmsSettingMap:
+      - sendType: 1 #对应宝能汽车账户
+        appKey: ece1ce735877184065dc522d  #极光推送appKey
+        masterSecret: eb43f86b9866005b0f979752  #极光推送密钥 必填，每个应用都对应一个masterSecret
+    templateSettingMap:
+      - mappingTemplateId: 11  #映射模板id 11-锁定业务:发送锁车验证码 12-锁定业务:锁车成功提醒 13-锁定业务:发送解锁验证码 14-锁定业务:解锁成功提醒
+        templateId: 182234 #对于极光模板id
+        useSendType: 1 #使用哪个账户发送短信 对应veh.event.jpushSettingMap.sendType的值 默认配1
+
+      - mappingTemplateId: 12
+        templateId: 182235
+        useSendType: 1
+
+      - mappingTemplateId: 13
+        templateId: 182236
+        useSendType: 1
+
+      - mappingTemplateId: 14
+        templateId: 182237
+        useSendType: 1
+

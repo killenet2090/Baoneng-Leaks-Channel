@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.UpgradeTaskConditionMapper">
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.UpgradeTaskConditionPo">
+		<id column="id" property="id" />
+		<result column="project_id" property="projectId" />
+		<result column="ota_plan_id" property="otaPlanId" />
+		<result column="condition_id" property="conditionId" />
+		<result column="version" property="version" />
+		<result column="del_flag" property="delFlag" />
+		<result column="create_by" property="createBy" />
+		<result column="create_time" property="createTime" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_time" property="updateTime" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+        id, project_id, ota_plan_id, condition_id, version, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+
+	<delete id="deleteByOtaPlanIdPhysical" parameterType="Long">
+      DELETE FROM tb_upgrade_task_condition WHERE ota_plan_id = #{value}
+    </delete>
+
+	<select id="queryByOtaPlanId" parameterType="Long" resultType="com.bnmotor.icv.tsp.ota.model.entity.UpgradeTaskConditionPo">
+      SELECT
+      	tfuc.id as id,
+		tutc.ota_plan_id as otaPlanId,
+		tutc.ota_plan_id as taskId,
+		tfuc.cond_name as condName,
+		tfuc.cond_code as condCode,
+		tfuc.value as value
+		FROM tb_upgrade_task_condition tutc
+		LEFT JOIN
+		tb_fota_upgrade_condition tfuc
+		ON
+		tutc.condition_id = tfuc.id
+		WHERE
+		tutc.ota_plan_id = #{otaPlanId}
+    </select>
+</mapper>

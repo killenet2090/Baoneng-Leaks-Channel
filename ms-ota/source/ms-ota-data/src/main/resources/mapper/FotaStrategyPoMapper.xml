@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.FotaStrategyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.FotaStrategyPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="tree_node_id" property="treeNodeId" />
+        <result column="tree_node_code_path" property="treeNodeCodePath" />
+        <result column="brand" property="brand" />
+        <result column="brand_code" property="brandCode" />
+        <result column="series" property="series" />
+        <result column="series_code" property="seriesCode" />
+        <result column="model" property="model" />
+        <result column="model_code" property="modelCode" />
+        <result column="year" property="year" />
+        <result column="year_code" property="yearCode" />
+        <result column="conf" property="conf" />
+        <result column="conf_code" property="confCode" />
+        <result column="name" property="name" />
+        <result column="entire_version_no" property="entireVersionNo" />
+        <result column="rollback_mode" property="rollbackMode" />
+        <result column="estimate_upgrade_time" property="estimateUpgradeTime" />
+        <result column="status" property="status" />
+        <result column="is_enable" property="isEnable" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, tree_node_id, tree_node_code_path, brand, brand_code, series, series_code, model, model_code, year, year_code, conf, conf_code, name, entire_version_no, rollback_mode, estimate_upgrade_time, status, is_enable, version, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+</mapper>

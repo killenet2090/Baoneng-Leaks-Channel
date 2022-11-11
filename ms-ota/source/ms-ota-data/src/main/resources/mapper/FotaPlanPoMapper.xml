@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.FotaPlanMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.FotaPlanPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="plan_name" property="planName" />
+        <result column="plan_start_time" property="planStartTime" />
+        <result column="plan_end_time" property="planEndTime" />
+        <result column="plan_status" property="planStatus" />
+        <result column="batch_size" property="batchSize" />
+        <result column="plan_desc" property="planDesc" />
+        <result column="publish_by" property="publishBy" />
+        <result column="publish_date" property="publishDate" />
+        <result column="plan_type" property="planType" />
+        <result column="target_version" property="targetVersion" />
+        <result column="plan_stop_rate" property="planStopRate" />
+        <result column="retry_count" property="retryCount" />
+        <result column="remarks" property="remarks" />
+        <result column="new_version_tips" property="newVersionTips" />
+        <result column="download_tips" property="downloadTips" />
+        <result column="disclaimer" property="disclaimer" />
+        <result column="task_tips" property="taskTips" />
+        <result column="upgrade_mode" property="upgradeMode" />
+        <result column="fota_strategy_id" property="fotaStrategyId" />
+        <result column="is_enable" property="isEnable" />
+        <result column="upgrade_notify_status" property="upgradeNotifyStatus" />
+        <result column="upgrade_notify_start_time" property="upgradeNotifyStartTime" />
+        <result column="upgrade_notify_end_time" property="upgradeNotifyEndTime" />
+        <result column="approve_state" property="approveState" />
+        <result column="publish_state" property="publishStatus" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, plan_name, plan_start_time, plan_end_time, plan_status, batch_size, plan_desc, publish_by, publish_date, plan_type, target_version, plan_stop_rate, retry_count, remarks, new_version_tips, download_tips, disclaimer, task_tips, upgrade_mode, fota_strategy_id, is_enable, upgrade_notify_status, upgrade_notify_start_time, upgrade_notify_end_time, approve_state, publish_state, version, del_flag, create_by, create_time, update_by, update_time
+    </sql>
+
+    <delete id="deleteByIdPhysical" parameterType="Long">
+      DELETE FROM tb_fota_plan WHERE id = #{value}
+    </delete>
+
+</mapper>

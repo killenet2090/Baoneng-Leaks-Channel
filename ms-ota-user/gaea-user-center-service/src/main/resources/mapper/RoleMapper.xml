@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.dao.RoleMapper">
+    <resultMap id="BaseResultMap" type="gaea.user.center.service.models.domain.Role" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="app_id" property="appId" jdbcType="INTEGER" />
+        <result column="org_id" property="orgId" jdbcType="INTEGER" />
+        <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+        <result column="is_active" property="isActive" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    </resultMap>
+   <sql id="Base_Column_List" >
+        id,
+        app_id,
+        org_id,
+        role_name,
+        is_active,
+        remark,
+        create_time,
+        update_time,
+        create_by,
+        update_by
+    </sql>
+  	<sql id="roleWhere">
+        <where>
+	        <if test="id!=null">
+	        	id=#{id}
+	        </if>
+	        <if test="appId!=null">
+	        	and app_id=#{appId}
+	        </if>
+	        <if test="orgId!=null">
+	        	and org_id=#{orgId}
+	        </if>
+	        <if test="roleName!=null">
+	        	and role_name like CONCAT('%',#{roleName},'%')
+	        </if>
+	        <if test="remark!=null">
+	        	and remark like CONCAT('%',#{remark},'%')
+	        </if>
+	        <if test="isActive!=null">
+	        	and is_active=#{isActive}
+	        </if>
+	        <if test="createTime!=null">
+	        	<![CDATA[
+	        	and DATE_FORMAT(create_time, '%Y-%m-%d')=DATE_FORMAT(#{createTime}, '%Y-%m-%d')
+	        	]]>
+	        </if>
+        </where>
+  	</sql>
+    <select id="queryRolePageList" resultMap="BaseResultMap" parameterType="gaea.user.center.service.models.domain.Role">
+        SELECT 
+        <include refid="Base_Column_List" />
+         FROM tb_role
+        <include refid="roleWhere"/>
+        order by update_time desc
+        LIMIT #{startRow},#{pageSize}
+    </select>
+     <select id="queryRole" resultMap="BaseResultMap" parameterType="gaea.user.center.service.models.domain.Role">
+        SELECT 
+        <include refid="Base_Column_List" />
+         FROM tb_role
+        <include refid="roleWhere"/>
+        order by update_time desc
+    </select>
+    <select id="queryRoleByOgranizationId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT 
+	        tr.id,
+	        tr.app_id,
+	        tr.org_id,
+	        tr.role_name,
+	        tr.is_active,
+	        tr.remark,
+	        tr.create_time,
+	        tr.update_time,
+	        tr.create_by,
+	        tr.update_by
+		FROM
+		    tb_role tr,
+		    tb_organization tbo
+		WHERE
+		    tr.org_id = tbo.id AND tbo.id =#{ogranizationId}
+    </select>
+
+    <select id="queryRoleIdsByUserId" parameterType="Long" resultType="Long">
+        SELECT
+	        tr.id,
+	        tr.role_id
+		FROM
+		    tb_user_role tr
+		where   tr.user_id = #{userId}
+    </select>
+
+    <select id="queryRoleIdsByUserId" parameterType="Long" resultType="Long">
+        SELECT
+	        tr.id,
+	        tr.role_id
+		FROM
+		    tb_user_role tr
+		where   tr.user_id = #{userId}
+    </select>
+    <insert id="insertRole" useGeneratedKeys="true" keyProperty="id" parameterType="gaea.user.center.service.models.domain.Role">
+        INSERT INTO 
+        tb_role(<include refid="Base_Column_List" />) 
+         VALUES (#{id},
+          #{appId},
+          #{orgId},
+          #{roleName},
+          #{isActive},
+          #{remark},
+          #{createTime},
+          #{updateTime},
+          #{createBy},
+          #{updateBy})
+    </insert>
+
+    <insert id="insertUserRelRole" parameterType="gaea.user.center.service.models.domain.UserRoleRel">
+
+        insert into tb_user_role
+            ( user_id,role_id)
+        values
+        <foreach collection="roles" item="item" index="index" separator=",">
+            (
+            #{userId},
+            #{item}
+            )
+        </foreach>
+    </insert>
+
+    <delete id="deleteUserRelRoleByUserId" parameterType="gaea.user.center.service.models.domain.UserRoleRel">
+        delete
+        FROM tb_user_role
+        WHERE user_id = #{userId}
+    </delete>
+
+    <delete id="deleteRoleById" parameterType="java.util.ArrayList">
+        delete FROM tb_role WHERE id in 
+        <foreach collection="list" index="index" item="id" open="(" separator="," close=")">
+           #{id}
+        </foreach>
+    </delete>
+    <update id="updateRole" parameterType="gaea.user.center.service.models.domain.Role">
+        update tb_role set
+         <if test="roleName!=null">
+         	role_name = #{roleName},
+         </if>
+         <if test="remark!=null">
+         	remark = #{remark},
+         </if>
+         <if test="isActive!=null">
+         	is_active = #{isActive},
+         </if>
+         <if test="updateTime!=null">
+         	update_time = #{updateTime},
+         </if>
+         <if test="updateBy!=null">
+         	update_by = #{updateBy}
+         </if>
+        where id=#{id}
+    </update>
+</mapper>

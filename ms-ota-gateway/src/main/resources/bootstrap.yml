@@ -1,0 +1,41 @@
+﻿#端口号
+server:
+  port: 8013
+  tomcat:
+    max-threads: 10
+spring:
+  profiles:
+    active: dev
+  application:
+    name: gaea-user-gateway
+  cloud:
+    nacos:
+      config:
+        group: DEFAULT_GROUP
+        server-addr: http://10.210.100.17:8848
+        file-extension: yaml
+      discovery:
+        server-addr: http://10.210.100.17:8848/
+        namespace: 9cb6ff52-e400-4685-8063-c9e1c7d7c2b7
+
+
+  thymeleaf:
+    prefix: classpath:/static/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      

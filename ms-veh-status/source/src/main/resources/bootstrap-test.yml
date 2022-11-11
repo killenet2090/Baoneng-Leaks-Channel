@@ -1,0 +1,43 @@
+spring:
+  redis:
+    host: 10.210.100.17
+    #host: 127.0.0.1
+    password: Bnqc@2020
+    port: 6379
+    timeout: 3000
+    lettuce:
+      pool:
+        max-active: 1000
+        max-idle: 100
+        min-idle: 10
+        max-wait: 3000
+
+    mvc:
+      throw-exception-if-no-handler-found: true
+    jackson:
+      time-zone: GMT+8
+
+  logging:
+    level:
+      java.sql.PreparedStatement: debug
+    path: logs/
+    file:
+      max-size: 1GB
+
+adam:
+  kafka:
+    consumer:
+      brokers: http://10.210.100.17:9092
+      concurrency:
+        num: 4
+      topics: tsp-vehicle-status-rt
+      id: ms_veh_status
+      group:
+        id: ms_veh_status_consumer
+  logging:
+    path: logs/
+    config: log4j2-dev.xml
+
+
+
+

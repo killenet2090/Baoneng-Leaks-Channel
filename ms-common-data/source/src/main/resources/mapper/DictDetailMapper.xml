@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.common.data.mapper.DictDetailMapper">
+
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.common.data.model.entity.DictDetailPo">
+        <id column="code" jdbcType="VARCHAR" property="code"/>
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="dict_code" jdbcType="VARCHAR" property="dictCode"/>
+        <result column="item_name" jdbcType="VARCHAR" property="itemName"/>
+        <result column="item_value" jdbcType="VARCHAR" property="itemValue"/>
+        <result column="sort" jdbcType="INTEGER" property="sort"/>
+        <result column="status" jdbcType="SMALLINT" property="status"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="del_flag" jdbcType="SMALLINT" property="delFlag"/>
+        <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
+        <result column="cresate_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        code, id, dict_code, item_name, item_value, sort, `status`, remark, del_flag, version,
+    create_by, cresate_time, update_by, update_time
+    </sql>
+
+
+    <select id="getDictValueByIdOrCode" resultType="com.bnmotor.icv.tsp.common.data.model.response.DictDetailVo">
+
+        select item_name, item_value
+        from db_tsp_common_data.tb_dict t1
+        inner join db_tsp_common_data.tb_dict_detail t2 on t1.code = t2.dict_code
+        <where>
+                t1.code= #{code}
+        </where>
+    </select>
+
+</mapper>

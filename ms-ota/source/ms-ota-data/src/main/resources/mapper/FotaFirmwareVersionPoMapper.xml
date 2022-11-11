@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.ota.mapper.FotaFirmwareVersionMapper">
+
+    <!-- 开启二级缓存 -->
+    <!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/> -->
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bnmotor.icv.tsp.ota.model.entity.FotaFirmwareVersionPo">
+        <id column="id" property="id" />
+        <result column="project_id" property="projectId" />
+        <result column="firmware_id" property="firmwareId" />
+        <result column="firmware_version_name" property="firmwareVersionName" />
+        <result column="firmware_version_no" property="firmwareVersionNo" />
+        <result column="version_digital_no" property="versionDigitalNo" />
+        <result column="parent_version_id" property="parentVersionId" />
+        <result column="applied_firmware_version" property="appliedFirmwareVersion" />
+        <result column="applied_hardware_version" property="appliedHardwareVersion" />
+        <result column="release_notes" property="releaseNotes" />
+        <result column="full_pkg_id" property="fullPkgId" />
+        <result column="status" property="status" />
+        <result column="is_force_full_update" property="isForceFullUpdate" />
+        <result column="release_user" property="releaseUser" />
+        <result column="release_dt" property="releaseDt" />
+        <result column="approval_user" property="approvalUser" />
+        <result column="approval_dt" property="approvalDt" />
+        <result column="approval_comment" property="approvalComment" />
+        <result column="version" property="version" />
+        <result column="del_flag" property="delFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="package_model" property="packageModel" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, project_id, firmware_id, firmware_version_name, firmware_version_no, version_digital_no, parent_version_id, applied_firmware_version, applied_hardware_version, release_notes, full_pkg_id, status, is_force_full_update, release_user, release_dt, approval_user, approval_dt, approval_comment, version, del_flag, create_by, create_time, update_by, update_time,package_model
+    </sql>
+
+    <!-- 物理删除-->
+    <delete id ="deleteBatchIdsPhysical" parameterType="java.util.List">
+        DELETE FROM tb_fota_firmware_version
+        WHERE id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+        </foreach>
+    </delete>
+
+</mapper>

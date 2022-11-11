@@ -1,0 +1,47 @@
+variables:
+  SONAR_HOST_URL: "http://sonar.bnicvc.com"
+  SONAR_LOGIN: "7123b0a7033b2ba850385da73af8a305ad0a904f"
+stages:
+  - scanner
+  - email
+
+sonar-scanner:
+  before_script:
+    - echo "start sonar scan"
+  after_script:
+    - echo "sonar scan done"
+  allow_failure: true
+  only:
+    - merge_requests
+    - master
+    - develop
+    - dev
+  except:
+    changes:
+      - ".gitlab-ci.yml"
+
+  stage: scanner
+  # tags:
+  #   - scanner
+  image: maven:3.6.3-openjdk-11
+  script:
+    - cd source && mvn clean package -Dmaven.test.skip=true sonar:sonar -Dsonar.host.url=http://sonar.bnicvc.com -Dsonar_login="7123b0a7033b2ba850385da73af8a305ad0a904f" -Dsonar.projectName=$CI_PROJECT_NAME -Dsonar.projectKey=$CI_PROJECT_PATH_SLUG
+
+sonar-email:
+  before_script:
+    - echo "start email"
+  after_script:
+    - echo "email done"
+  allow_failure: true
+  only:
+    - merge_requests
+    - master
+    - develop
+    - dev
+  except:
+    changes:
+      - ".gitlab-ci.yml"
+  stage: email
+  image: reg.bnicvc.com/library/python-sonar:1.1
+  script:
+    - cd /app/sonar/ && python3 /app/sonar/SonarEmail.py http://sonar.bnicvc.com 7123b0a7033b2ba850385da73af8a305ad0a904f $CI_PROJECT_PATH_SLUG $CI_COMMIT_REF_NAME $GITLAB_USER_EMAIL

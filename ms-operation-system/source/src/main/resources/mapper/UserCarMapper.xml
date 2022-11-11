@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.mapper.UserCarMapper">
+	<!--批量插入用户-车辆关系列表-->
+	<insert id="insertUserCarBatchList" parameterType="gaea.user.center.service.model.entity.UserCarPo">
+		insert into tb_user_car
+		(user_id,vin)
+		values
+		<foreach collection="userCarPoList" item="usercar" index="index" separator=",">
+			(
+			#{usercar.userId},
+			#{usercar.vin}
+			)
+		</foreach>
+	</insert>
+	<!--根据vin码删除原有用户-车辆关系-->
+	<delete id="deleteUserCarBatchByVin" parameterType="String">
+		DELETE
+		FROM
+			tb_user_car
+		WHERE
+			vin = #{vin}
+	</delete>
+	<!--根据用户id删除用户-车辆关系-->
+	<delete id="deleteUserCarBatchByUserId" parameterType="Long">
+		DELETE
+		FROM
+		tb_user_car
+		WHERE
+		user_id = #{userId}
+	</delete>
+	<!--根據用戶id和vin刪除用户车辆关系-->
+	<delete id="deleteUserCarBatchByUserIdAndVin">
+		DELETE
+		FROM
+		tb_user_car
+		WHERE
+		1 = 1
+		<if test="userId != null">
+			and user_id = #{userId}
+		</if>
+		<if test="vin != null and vin != ''">
+			and vin = #{vin}
+		</if>
+	</delete>
+
+</mapper>

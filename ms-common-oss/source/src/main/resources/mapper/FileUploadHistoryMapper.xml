@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bnmotor.icv.tsp.commons.oss.dao.FileUploadHisMapper">
+
+    <sql id="baseColumns">
+	 id, user_id, file_size, origin_name, file_name, file_source, file_name, bucket,
+	 relative_path, file_suffix, file_group, upload_time
+    </sql>
+
+    <sql id="whereClause">
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="dto.userId != null and dto.userId != ''">
+                AND user_id = #{dto.userId}
+            </if>
+            <if test="dto.bucket != null and dto.bucket != '' ">
+                AND bucket = #{dto.bucket}
+            </if>
+            <if test="dto.fileGroup !=null and dto.fileGroup != '' ">
+                AND file_group = #{dto.fileGroup}
+            </if>
+            <if test="dto.uploadTimeStart !=null ">
+                AND upload_time >=  #{dto.uploadTimeStart}
+            </if>
+            <if test="dto.uploadTimeEnd !=null ">
+                AND upload_time <![CDATA[  <=  #{dto.uploadTimeEnd} ]]>
+           </if>
+        </trim>
+    </sql>
+
+
+
+
+    <insert id="saveBatch" parameterType="map" >
+
+          insert into  tsp_common_oss.file_upload_his
+          (user_id , file_size , origin_name , file_name ,
+          file_source , bucket , relative_path , file_suffix , file_group , upload_time)
+          values
+          <foreach collection="list" item="it" separator="," >
+            (#{it.userId}, #{it.fileSize}, #{it.originName}, #{it.fileName} , #{it.fileSource} ,
+              #{it.bucket} , #{it.relativePath} , #{it.fileSuffix} , #{it.fileGroup} , #{it.uploadTime})
+          </foreach>
+
+    </insert>
+
+
+
+
+    <insert id="save" parameterType="com.bnmotor.icv.tsp.commons.oss.entity.FileUploadHisPo">
+
+         insert into  tsp_common_oss.file_upload_his
+          (user_id , file_size , origin_name , file_name ,
+          file_source , bucket , relative_path , file_suffix , file_group , upload_time)
+          value
+         (#{userId}, #{fileSize}, #{originName}, #{fileName} , #{fileSource} ,
+          #{bucket} , #{relativePath} , #{fileSuffix} , #{fileGroup} , #{uploadTime})
+
+    </insert>
+
+
+
+    <resultMap id="fileUploadHisMap" type="com.bnmotor.icv.tsp.commons.oss.entity.FileUploadHisPo">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="file_size" property="fileSize"/>
+        <result column="origin_name" property="originName"/>
+        <result column="file_name" property="fileName"/>
+        <result column="file_source" property="fileSource"/>
+        <result column="bucket" property="bucket"/>
+        <result column="relative_path" property="relativePath"/>
+        <result column="file_suffix" property="fileSuffix"/>
+        <result column="file_group" property="fileGroup"/>
+        <result column="upload_time" property="uploadTime"/>
+    </resultMap>
+
+    <select id="getFileUploadHisListBy" parameterType="map" resultMap="fileUploadHisMap">
+
+          select  <include refid="baseColumns"/> from tsp_common_oss.file_upload_his
+          INNER JOIN
+          ( SELECT id FROM file_upload_his
+             <include refid="whereClause"/>
+              LIMIT #{pageNum},#{pageSize}
+          ) AS t USING ( id )
+
+
+
+
+
+    </select>
+
+
+</mapper>

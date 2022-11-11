@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gaea.user.center.service.dao.OrganizationMapper">
+    <resultMap id="BaseResultMap" type="gaea.user.center.service.models.domain.Organization" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="app_id" property="appId" jdbcType="INTEGER" />
+        <result column="org_name" property="orgName" jdbcType="VARCHAR" />
+        <result column="org_code" property="orgCode" jdbcType="VARCHAR" />
+        <result column="level" property="level" jdbcType="INTEGER" />
+        <result column="is_active" property="isActive" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id,
+        app_id,
+        org_name,
+        org_code,
+        level,
+        is_active,
+        create_time,
+        update_time
+    </sql>
+    <select id="queryOrganization" resultMap="BaseResultMap" parameterType="gaea.user.center.service.models.domain.Organization">
+        SELECT 
+        <include refid="Base_Column_List" />
+         FROM tb_organization 
+        <where>
+	        <if test="id!=null">
+	        	id=#{id}
+	        </if>
+	        <if test="appId!=null">
+	        	and app_id=#{appId}
+	        </if>
+	        <if test="orgName!=null">
+	        	and org_name like #{orgName}
+	        </if>
+	        <if test="orgCode!=null">
+	        	and org_code=#{orgCode}
+	        </if>
+	        <if test="level!=null">
+	        	and level=#{level}
+	        </if>
+	        <if test="isActive!=null">
+	        	and is_active=#{isActive}
+	        </if>
+        </where>
+    </select>
+    <select id="queryOrganizationByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT 
+	        tbo.id,
+	        tbo.app_id,
+	        tbo.org_name,
+	        tbo.org_code,
+	        tbo.level,
+	        tbo.is_active,
+	        tbo.create_time,
+	        tbo.update_time
+		FROM
+		    tb_organization tbo,
+		    tb_user tu
+		WHERE
+		    tbo.id = tu.org_id AND tu.id = #{userId}
+    </select>
+</mapper>
